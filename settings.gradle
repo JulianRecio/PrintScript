@@ -12,4 +12,5 @@ include('app', 'list', 'utilities')
 include 'interpreter'
 include 'formatter'
 include 'staticCodeAnalyser'
+include 'formatter'
 

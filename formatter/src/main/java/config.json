@@ -1,0 +1,6 @@
+{
+  "spaceBeforeColonInDeclaration": true,
+  "spaceAfterColonInDeclaration": true,
+  "spaceBeforeAndAfterEqualSignInAssignment": true,
+  "AmountOfLineBreaksBeforePrintLn": 1
+}
