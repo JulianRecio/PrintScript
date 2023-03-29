@@ -3,119 +3,69 @@ package parser;
 import java.util.ArrayList;
 import java.util.List;
 import lexer.*;
+import parser.ast.AST;
+import parser.ast.BinaryNode;
+import parser.ast.Node;
+import parser.ast.SimpleNode;
 
 public class Parser {
 
     private List<Token> tokens;
     private int pos;
 
-    public Parser(List<Token> tokens) {
+    public Parser(List<Token> tokens){
         this.tokens = tokens;
         this.pos = 0;
     }
 
-    public Node parse() {
-        return expression();
-    }
-
-    private Node expression() {
-        Node left = term();
+    public AST parse() throws Exception {
+        List<Node> ast = new ArrayList<>();
         while (pos < tokens.size()) {
-            Token token = tokens.get(pos);
-            if (token.getType() == TokenType.OPERATOR && "+-".contains(token.getValue())) {
+            if (tokens.get(pos).getType() == TokenType.KEYWORD){
+                Node keyword = new SimpleNode(tokens.get(pos).getValue());
                 pos++;
-                Node right = term();
-                left = new BinaryOperatorNode(token.getValue(), left, right);
-            } else {
-                break;
-            }
-        }
-        return left;
-    }
-
-    private Node term() {
-        Node left = factor();
-        while (pos < tokens.size()) {
-            Token token = tokens.get(pos);
-            if (token.getType() == TokenType.OPERATOR && "*/".contains(token.getValue())) {
-                pos++;
-                Node right = factor();
-                left = new BinaryOperatorNode(token.getValue(), left, right);
-            } else {
-                break;
-            }
-        }
-        return left;
-    }
-
-    private Node factor() {
-        Token token = tokens.get(pos);
-        if (token.getType() == TokenType.NUMBER) {
-            pos++;
-            return new NumberNode(token.getValue());
-        } else if (token.getType() == TokenType.IDENTIFIER) {
-            pos++;
-            if (pos < tokens.size() && tokens.get(pos).getType() == TokenType.PUNCTUATION && tokens.get(pos).getValue().equals("(")) {
-                pos++;
-                Node expr = expression();
-                if (pos < tokens.size() && tokens.get(pos).getType() == TokenType.PUNCTUATION && tokens.get(pos).getValue().equals(")")) {
-                    pos++;
-                    return new FunctionCallNode(token.getValue(), expr);
-                } else {
-                    throw new RuntimeException("Expected ')' at position " + pos);
+                Node declaration = new BinaryNode("declaration", keyword, allocate());
+                if (tokens.get(pos).getType() == TokenType.END){
+                    pos ++;
+                    ast.add(declaration);
                 }
-            } else {
-                return new VariableNode(token.getValue());
+                else if (tokens.get(pos).getType() == TokenType.EQUAL) {
+                    Node equal = new BinaryNode(tokens.get(pos).getValue(), declaration, expression());
+                }
             }
-        } else if (pos < tokens.size() && token.getType() == TokenType.PUNCTUATION && token.getValue().equals("(")) {
-            pos++;
-            Node expr = expression();
-            if (pos < tokens.size() && tokens.get(pos).getType() == TokenType.PUNCTUATION && tokens.get(pos).getValue().equals(")")) {
-                pos++;
-                return expr;
-            } else {
-                throw new RuntimeException("Expected ')' at position " + pos);
+            else if (tokens.get(pos).getType() == TokenType.IDENTIFIER){
+
             }
-        } else {
-            throw new RuntimeException("Unexpected token at position " + pos);
+        }
+       return new AST(ast);
+    }
+
+    public Node allocate() throws Exception {
+        if (tokens.get(pos).getType() == TokenType.IDENTIFIER){
+            Node identifier = new SimpleNode(tokens.get(pos).getValue());
+            pos ++;
+            if (tokens.get(pos).getType() == TokenType.ALLOCATOR){
+                pos ++;
+                if (tokens.get(pos).getType() == TokenType.TYPE) {
+                    Node type = new SimpleNode(tokens.get(pos).getValue());
+                    Node allocator = new BinaryNode(":", identifier, type);
+                    pos ++;
+                    return allocator;
+                }
+                else {
+                    throw new Exception("There is no type after allocation");
+                }
+            }
+            else {
+                throw new Exception("There is no : after variable");
+            }
+        }
+        else {
+            throw new Exception("There is no variable name after keyword");
         }
     }
-}
 
-abstract class Node {}
-
-class NumberNode extends Node {
-    private String value;
-
-    public NumberNode(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-}
-
-class VariableNode extends Node {
-    private String name;
-
-    public VariableNode(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-}
-
-class BinaryOperatorNode extends Node {
-    private String operator;
-    private Node left;
-    private Node right;
-
-    public BinaryOperatorNode(String operator, Node left, Node right) {
-        this.operator = operator;
-        this.left = left;
-        this.right = right;
+    public Node expression(){
+        return null;
     }
 }

@@ -1,9 +1,10 @@
 package parser.ast;
 
-public class NumberAST extends AST{
+public class StringNode extends Node {
+
     private String value;
 
-    public NumberAST(String value) {
+    public StringNode(String value) {
         this.value = value;
     }
 
