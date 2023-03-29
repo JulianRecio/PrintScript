@@ -219,5 +219,29 @@ public class LexerTest {
         }
     }
 
+    @Test
+    public void testPrintMethodExpression(){
+        List<Token> expResult = new ArrayList<>();
+        expResult.add(keyWord);
+        expResult.add(simpleIdentifier);
+        expResult.add(allocator);
+        expResult.add(numberType);
+        expResult.add(equal);
+        expResult.add(simpleNumberValue);
+        expResult.add(end);
+        expResult.add(print);
+        expResult.add(leftPar);
+        expResult.add(complexStringValue);
+        expResult.add(plus);
+        expResult.add(simpleIdentifier);
+        expResult.add(rightPar);
+        expResult.add(end);
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x: number = 3; PrintLn(\"Hola como\" + x);");
+        for (int i = 0; i < list.size(); i++) {
+            Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
+            Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+        }
+    }
+
 
 }

@@ -37,7 +37,7 @@ public class CodigoChat {
             Node left = factor();
             while (pos < tokens.size()) {
                 Token token = tokens.get(pos);
-                if (token.getType() == TokenType.OPERATOR && "*//*".contains(token.getValue())) {
+                if (token.getType() == TokenType.OPERATOR && "*///".contains(token.getValue())) {
       /*              pos++;
                     Node right = factor();
                     left = new BinaryOperatorNode(token.getValue(), left, right);
