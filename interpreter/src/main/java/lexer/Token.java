@@ -2,7 +2,7 @@ package lexer;
 
 public class Token {
 
-    private TokenType type;
+    private final TokenType type;
     private String value;
 
     public Token(TokenType type, String value) {
@@ -16,5 +16,9 @@ public class Token {
 
     public String getValue() {
         return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
