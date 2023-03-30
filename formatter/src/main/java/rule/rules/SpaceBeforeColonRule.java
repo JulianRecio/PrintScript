@@ -11,8 +11,7 @@ public class SpaceBeforeColonRule implements Rule {
     public void applyRule(List<Token> tokens) {
         for (Token token:tokens){
             if (token.getType().equals(TokenType.ALLOCATOR)){
-                String value = token.getValue();
-
+                token.setValue(" " + token.getValue());
             }
         }
     }

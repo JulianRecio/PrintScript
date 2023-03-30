@@ -11,7 +11,7 @@ public class SpaceAfterColonRule implements Rule {
     public void applyRule(List<Token> tokens) {
         for (Token token:tokens){
             if (token.getType().equals(TokenType.ALLOCATOR)){
-                token.setValue(": ");
+                token.setValue(token.getValue() + " ");
             }
         }
     }
