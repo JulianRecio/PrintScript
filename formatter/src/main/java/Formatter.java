@@ -13,16 +13,16 @@ import java.io.File;
 
 public class Formatter {
 
-    public static void useFormatter(String path) throws Exception {
+    public static void useFormatter(String path) {
         String input = "";
         List<Token> tokens = Lexer.tokenize(input);
-        List<Rule> rules = getRulesFromConfig();
+        List<Rule> rules = getRulesFromConfig("formatter\\src\\main\\java\\config.json");
         format(tokens, rules);
     }
 
-    private static List<Rule> getRulesFromConfig() throws Exception {
-        Map<String, String> ruleMap = readConfig();
-        if (ruleMap == null) throw new Exception();
+    public static List<Rule> getRulesFromConfig(String path) {
+        Map<String, String> ruleMap = readConfig(path);
+        if (ruleMap == null) throw new RuntimeException();
 
         List<Rule> rules = new ArrayList<>();
 
@@ -31,17 +31,18 @@ public class Formatter {
         if (ruleMap.containsKey("spaceBeforeAndAfterEqualSignInAssignment") && ruleMap.get("spaceBeforeAndAfterEqualSignInAssignment").equals("true")) rules.add(new SpaceBeforeAndAfterEqualSignRule());
         if (ruleMap.containsKey("AmountOfLineBreaksBeforePrintLn")) rules.add(new LineBreakBeforePrintLnRule(Integer.parseInt(ruleMap.get("AmountOfLineBreaksBeforePrintLn"))));
 
-        rules.add(new LineBreakAfterSemiColonRule());
+//        rules.add(new LineBreakAfterSemiColonRule());
         rules.add(new SpaceBeforeAndAfterOperatorRule());
+        rules.add(new SpaceAfterKeywordRule());
         rules.add(new MaximumOf1SpaceBetweenTokensRule());
 
         return rules;
     }
 
-    private static Map<String, String> readConfig() {
+    private static Map<String, String> readConfig(String path) {
         ObjectMapper mapper = new ObjectMapper();
 
-        File fileObj = new File("formatter\\src\\main\\java\\config.json");
+        File fileObj = new File(path);
 
         try {
             return mapper.readValue(
@@ -53,7 +54,7 @@ public class Formatter {
         return null;
     }
 
-    public static void format(List<Token> tokens, List<Rule> rules){
+    public static List<String> format(List<Token> tokens, List<Rule> rules){
         List<String> formattedCode = new ArrayList<>();
         List<Token> currentList = new ArrayList<>();
         for (Token currentToken : tokens){
@@ -68,6 +69,7 @@ public class Formatter {
             }
         }
         printLines(formattedCode);
+        return formattedCode;
     }
     private static String formatLine(List<Token> tokens, List<Rule> rules){
         for (Rule rule: rules){
