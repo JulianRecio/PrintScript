@@ -177,11 +177,13 @@ public class FormatterTest {
     public void testMultipleLines()  {
         List<Rule> rules = createTestConfigFileAndReturnRules("testMultipleLines", true, true, true, 1);
         List<Token> tokens = createTokensFromString("let x:number=3.6;" +
-                                                          "let x:string=\"Hola como\";");
+                                                          "let x:string=\"Hola como\";" +
+                                                          "PrintLn(\"Hola como\");" );
 
         List<String> expected = new ArrayList<>();
         expected.add("let x : number = 3.6;");
         expected.add("let x : string = \"Hola como\";");
+        expected.add("\nPrintLn(\"Hola como\");");
 
         List<String> formattedCode = Formatter.format(tokens, rules);
 
@@ -190,5 +192,4 @@ public class FormatterTest {
             Assertions.assertEquals(expected.get(i), formattedCode.get(i));
         }
     }
-
 }

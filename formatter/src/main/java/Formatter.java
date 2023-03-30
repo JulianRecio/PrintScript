@@ -13,10 +13,9 @@ import java.io.File;
 
 public class Formatter {
 
-    public static void useFormatter(String path) {
-        String input = "";
+    public static void useFormatter(String input) {
         List<Token> tokens = Lexer.tokenize(input);
-        List<Rule> rules = getRulesFromConfig("formatter\\src\\main\\java\\config.json");
+        List<Rule> rules = getRulesFromConfig("src\\main\\resources\\config.json");
         format(tokens, rules);
     }
 
