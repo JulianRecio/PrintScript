@@ -6,6 +6,7 @@ public class TokenExamples {
     public static final Token KEYWORD = new Token(TokenType.KEYWORD, "let");
     public static final Token SIMPLE_IDENTIFIER = new Token(TokenType.IDENTIFIER, "x");
     public static final Token COMPLEX_IDENTIFIER = new Token(TokenType.IDENTIFIER, "variable");
+    public static final Token UNARY_VALUE = new Token(TokenType.UNARY_VALUE, "-variableA");
     public static final Token ALLOCATOR = new Token(TokenType.ALLOCATOR, ":");
     public static final Token NUMBER_TYPE = new Token(TokenType.TYPE, "number");
     public static final Token STRING_TYPE = new Token(TokenType.TYPE, "string");

@@ -1,7 +1,5 @@
 package parser.expr;
 
-import lexer.Token;
-
 public class VariableExpression implements Expression<Object>{
 
     private final String variableName;
@@ -10,8 +8,12 @@ public class VariableExpression implements Expression<Object>{
         this.variableName = variableName;
     }
 
+    public String getVariableName() {
+        return variableName;
+    }
+
     @Override
     public Object accept(ExpressionVisitor<Object> visitor) {
-        return visitor.visit(this);
+        return visitor.visitExpr(this);
     }
 }

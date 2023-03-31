@@ -225,5 +225,21 @@ public class LexerTest {
         }
     }
 
+    @Test
+    public void testUnaryToken(){
+        List<Token> expResult = new ArrayList<>();
+        expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+        expResult.add(TokenExamples.EQUAL);
+        expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
+        expResult.add(TokenExamples.PLUS);
+        expResult.add(TokenExamples.UNARY_VALUE);
+        expResult.add(TokenExamples.END);
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("x = 3 + -variableA;");
+        for (int i = 0; i < list.size(); i++) {
+            Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
+            Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+        }
+    }
+
 
 }

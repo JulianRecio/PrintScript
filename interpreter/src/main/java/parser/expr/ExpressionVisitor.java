@@ -2,8 +2,8 @@ package parser.expr;
 
 public interface ExpressionVisitor<T> {
 
-    T visit(BinaryExpression binaryExpression);
-    T visit(LiteralExpression literalExpression);
-    T visit(UnaryExpression unaryExpression);
-    T visit(VariableExpression variableExpression);
+    T visitExpr(BinaryExpression binaryExpression);
+    T visitExpr(LiteralExpression literalExpression);
+    T visitExpr(UnaryExpression unaryExpression);
+    T visitExpr(VariableExpression variableExpression);
 }

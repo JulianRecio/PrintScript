@@ -1,7 +1,5 @@
 package parser.expr;
 
-import lexer.Token;
-
 public class BinaryExpression implements Expression<Object>{
 
     private final String operator;
@@ -14,8 +12,20 @@ public class BinaryExpression implements Expression<Object>{
         this.right = right;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public Expression<Object> getLeft() {
+        return left;
+    }
+
+    public Expression<Object> getRight() {
+        return right;
+    }
+
     @Override
     public Object accept(ExpressionVisitor<Object> visitor) {
-        return visitor.visit(this);
+        return visitor.visitExpr(this);
     }
 }

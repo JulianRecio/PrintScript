@@ -11,8 +11,12 @@ public class PrintNode implements Node{
         this.expression = expression;
     }
 
+    public Expression<?> getExpression() {
+        return expression;
+    }
+
     @Override
     public void accept(NodeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 }

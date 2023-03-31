@@ -4,16 +4,18 @@ import lexer.Token;
 
 public class UnaryExpression implements Expression<Object>{
 
-    private final Token operator;
-    private final Expression<Object> right;
+    private final String value;
 
-    public UnaryExpression(Token operator, Expression<Object> right) {
-        this.operator = operator;
-        this.right = right;
+    public UnaryExpression(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override
     public Object accept(ExpressionVisitor<Object> visitor) {
-        return visitor.visit(this);
+        return visitor.visitExpr(this);
     }
 }

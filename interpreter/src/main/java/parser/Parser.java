@@ -2,10 +2,11 @@ package parser;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import lexer.*;
+import org.javatuples.Pair;
 import parser.expr.*;
 import parser.node.*;
-import org.javatuples.Pair;
 
 public class Parser {
 
@@ -29,19 +30,34 @@ public class Parser {
                     ast.add(declarationNode);
                 }
                 else if (tokens.get(pos).getType() == TokenType.EQUAL) {
+                    pos++;
                     Node declarationNode = new DeclarationNode(declaration.getValue0(), declaration.getValue1(), expression());
-                    ast.add(declarationNode);
+                    if (tokens.get(pos).getType() == TokenType.END){
+                        pos++;
+                        ast.add(declarationNode);
+                    }
+                    else {
+                        throw new RuntimeException("; was expected but not found");
+                    }
                 }
                 else {
                     throw new RuntimeException("= or ; tokens were expected but not found");
                 }
             }
             else if (tokens.get(pos).getType() == TokenType.IDENTIFIER){
-                Expression<Object> left = new VariableExpression(tokens.get(pos).getValue());
+                String variable = tokens.get(pos).getValue();
                 pos ++;
-                Expression<Object> right = expression();
-                Node assignationNode = new AssignationNode(left, right);
-                ast.add(assignationNode);
+                if (tokens.get(pos).getType() == TokenType.EQUAL) {
+                    pos++;
+                    Expression<Object> right = expression();
+                    Node assignationNode = new AssignationNode(variable, right);
+                    if (tokens.get(pos).getType() == TokenType.END){
+                        pos++;
+                        ast.add(assignationNode);
+                    }
+                    else throw new RuntimeException("; was expected but not found");
+                }
+                else throw new RuntimeException("= was expected but not found");
             }
             else if (tokens.get(pos).getType() == TokenType.PRINT) {
                 pos++;
@@ -49,8 +65,13 @@ public class Parser {
                     pos++;
                     Expression<Object> expression = expression();
                     if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
+                        pos++;
                         Node print = new PrintNode(expression);
-                        ast.add(print);
+                        if (tokens.get(pos).getType() == TokenType.END){
+                            pos++;
+                            ast.add(print);
+                        }
+                        else throw new RuntimeException("; was expected but not found");
                     }
                     else {
                         throw new RuntimeException("')' expected but not found");
@@ -77,7 +98,7 @@ public class Parser {
                     String type = tokens.get(pos).getValue();
                     pos++;
                     if (type.equalsIgnoreCase("number")){
-                        return new Pair<>(identifier, VariableType.INTEGER);
+                        return new Pair<>(identifier, VariableType.NUMBER);
                     }
                     else {
                         return new Pair<>(identifier, VariableType.STRING);
@@ -130,7 +151,7 @@ public class Parser {
 
     private Expression<Object> factor(){
         if (tokens.get(pos).getType() == TokenType.NUMBER_VALUE) {
-            Expression<Object> numberExpr = new LiteralExpression(Integer.parseInt(tokens.get(pos).getValue()));
+            Expression<Object> numberExpr = new LiteralExpression(Double.parseDouble(tokens.get(pos).getValue()));
             pos ++;
             return numberExpr;
         }
@@ -143,6 +164,11 @@ public class Parser {
             Expression<Object> identifierExpr = new VariableExpression(tokens.get(pos).getValue());
             pos++;
             return identifierExpr;
+        }
+        else if (tokens.get(pos).getType() == TokenType.UNARY_VALUE) {
+            Expression<Object> unaryExpr = new UnaryExpression(tokens.get(pos).getValue());
+            pos++;
+            return unaryExpr;
         }
         else {
             throw new RuntimeException("Expected number, string value or a variable in expression");

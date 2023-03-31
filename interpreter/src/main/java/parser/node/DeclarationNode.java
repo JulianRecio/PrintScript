@@ -1,6 +1,7 @@
 package parser.node;
 
 
+import parser.VariableType;
 import parser.expr.Expression;
 
 public class DeclarationNode implements Node{   //When I only declare the variable with no value
@@ -15,9 +16,21 @@ public class DeclarationNode implements Node{   //When I only declare the variab
         this.initializer = initializer;
     }
 
+    public String getVariableName() {
+        return variableName;
+    }
+
+    public VariableType getType() {
+        return type;
+    }
+
+    public Expression<?> getInitializer() {
+        return initializer;
+    }
+
     @Override
     public void accept(NodeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 

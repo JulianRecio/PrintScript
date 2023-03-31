@@ -5,17 +5,24 @@ import parser.expr.Expression;
 
 public class AssignationNode implements Node{
 
-    private final Expression<?> variable;
+    private final String variable;
     private final Expression<?> expression;
 
-    public AssignationNode(Expression<?> variable, Expression<?> expression) {
+    public AssignationNode(String variable, Expression<?> expression) {
         this.variable = variable;
         this.expression = expression;
     }
 
+    public String getVariable() {
+        return variable;
+    }
+
+    public Expression<?> getExpression() {
+        return expression;
+    }
 
     @Override
     public void accept(NodeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 }

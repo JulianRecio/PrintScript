@@ -8,6 +8,7 @@ public enum TokenType {
     OPERATOR,           //+ - * /
     EQUAL,              //=
     NUMBER_VALUE,
+    UNARY_VALUE,
     STRING_VALUE,
     STRING_SYMBOL,
     PRINT,              //PrintLn()
