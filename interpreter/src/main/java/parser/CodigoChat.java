@@ -4,7 +4,7 @@ import lexer.*;
 
 public class CodigoChat {
 
-    public class Parser {
+    /*public class Parser {
 
         private List<Token> tokens;
         private int pos;
@@ -37,8 +37,8 @@ public class CodigoChat {
             Node left = factor();
             while (pos < tokens.size()) {
                 Token token = tokens.get(pos);
-                if (token.getType() == TokenType.OPERATOR && "*/".contains(token.getValue())) {
-                    pos++;
+                if (token.getType() == TokenType.OPERATOR && "*///".contains(token.getValue())) {
+      /*              pos++;
                     Node right = factor();
                     left = new BinaryOperatorNode(token.getValue(), left, right);
                 } else {

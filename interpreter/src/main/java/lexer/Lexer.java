@@ -1,8 +1,8 @@
 package lexer;
-        import java.util.ArrayList;
-        import java.util.List;
-        import java.util.regex.Matcher;
-        import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Lexer {
 
@@ -12,6 +12,7 @@ public class Lexer {
     private static final Pattern TYPE_PATTERN = Pattern.compile("number|string");
     private static final Pattern EQUAL_PATTERN = Pattern.compile("=");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");
+    private static final Pattern UNARY_PATTERN = Pattern.compile("-[a-zA-Z][a-zA-Z0-9]*");
     private static final Pattern STRING_PATTERN = Pattern.compile("\"[a-zA-Z][a-zA-Z0-9 ]*\"");
     private static final Pattern OPERATOR_PATTERN = Pattern.compile("[+\\-*/]");
     private static final Pattern PRINT_PATTERN = Pattern.compile("PrintLn");
@@ -32,6 +33,7 @@ public class Lexer {
             Matcher typeMatcher = TYPE_PATTERN.matcher(remainder);
             Matcher equalMatcher = EQUAL_PATTERN.matcher(remainder);
             Matcher numberMatcher = NUMBER_PATTERN.matcher(remainder);
+            Matcher unartMatcher = UNARY_PATTERN.matcher(remainder);
             Matcher stringMatcher = STRING_PATTERN.matcher(remainder);
             Matcher operatorMatcher = OPERATOR_PATTERN.matcher(remainder);
             Matcher printMatcher = PRINT_PATTERN.matcher(remainder);
@@ -73,6 +75,11 @@ public class Lexer {
                 String number = numberMatcher.group();
                 tokens.add(new Token(TokenType.NUMBER_VALUE, number));
                 pos += number.length();
+            }
+            else if (unartMatcher.lookingAt()){
+                String unary = unartMatcher.group();
+                tokens.add(new Token(TokenType.UNARY_VALUE, unary));
+                pos += unary.length();
             }
             else if (endMatcher.lookingAt()){
                 String end = endMatcher.group();

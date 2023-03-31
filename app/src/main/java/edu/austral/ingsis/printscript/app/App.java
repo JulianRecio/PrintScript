@@ -3,19 +3,10 @@
  */
 package edu.austral.ingsis.printscript.app;
 
-import edu.austral.ingsis.printscript.list.LinkedList;
-
-import static edu.austral.ingsis.printscript.utilities.StringUtils.join;
-import static edu.austral.ingsis.printscript.utilities.StringUtils.split;
-import static edu.austral.ingsis.printscript.app.MessageUtils.getMessage;
 
 import org.apache.commons.text.WordUtils;
 
 public class App {
     public static void main(String[] args) {
-        LinkedList tokens;
-        tokens = split(getMessage());
-        String result = join(tokens);
-        System.out.println(WordUtils.capitalize(result));
     }
 }
