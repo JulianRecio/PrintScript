@@ -3,11 +3,13 @@ package parser;
 import java.util.ArrayList;
 import java.util.List;
 import lexer.*;
-import parser.ast.*;
+import parser.expr.*;
+import parser.node.*;
+import org.javatuples.Pair;
 
 public class Parser {
 
-    private List<Token> tokens;
+    private final List<Token> tokens;
     private int pos;
 
     public Parser(List<Token> tokens){
@@ -15,36 +17,40 @@ public class Parser {
         this.pos = 0;
     }
 
-    public AST parse() throws Exception {
+    public AST parse() {
         List<Node> ast = new ArrayList<>();
         while (pos < tokens.size()) {
             if (tokens.get(pos).getType() == TokenType.KEYWORD){
-                Node keyword = new SimpleNode(tokens.get(pos).getValue());
                 pos++;
-                Node declaration = new BinaryNode("declaration", keyword, allocate());
+                Pair<String, VariableType> declaration = setType();
                 if (tokens.get(pos).getType() == TokenType.END){
                     pos ++;
-                    ast.add(declaration);
+                    Node declarationNode = new DeclarationNode(declaration.getValue0(), declaration.getValue1(), null);
+                    ast.add(declarationNode);
                 }
                 else if (tokens.get(pos).getType() == TokenType.EQUAL) {
-                    Node equal = new BinaryNode(tokens.get(pos).getValue(), declaration, expression());
-                    ast.add(equal);
+                    Node declarationNode = new DeclarationNode(declaration.getValue0(), declaration.getValue1(), expression());
+                    ast.add(declarationNode);
                 }
                 else {
                     throw new RuntimeException("= or ; tokens were expected but not found");
                 }
             }
             else if (tokens.get(pos).getType() == TokenType.IDENTIFIER){
-                Node expression = expression();
-                ast.add(expression);
+                Expression<Object> left = new VariableExpression(tokens.get(pos).getValue());
+                pos ++;
+                Expression<Object> right = expression();
+                Node assignationNode = new AssignationNode(left, right);
+                ast.add(assignationNode);
             }
             else if (tokens.get(pos).getType() == TokenType.PRINT) {
                 pos++;
                 if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
                     pos++;
-                    Node expression = expression();
+                    Expression<Object> expression = expression();
                     if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
                         Node print = new PrintNode(expression);
+                        ast.add(print);
                     }
                     else {
                         throw new RuntimeException("')' expected but not found");
@@ -61,17 +67,21 @@ public class Parser {
        return new AST(ast);
     }
 
-    public Node allocate() {
+    private Pair<String, VariableType> setType() {
         if (tokens.get(pos).getType() == TokenType.IDENTIFIER){
-            Node identifier = new SimpleNode(tokens.get(pos).getValue());
+            String identifier = tokens.get(pos).getValue();
             pos ++;
             if (tokens.get(pos).getType() == TokenType.ALLOCATOR){
                 pos ++;
                 if (tokens.get(pos).getType() == TokenType.TYPE) {
-                    Node type = new SimpleNode(tokens.get(pos).getValue());
-                    Node allocator = new BinaryNode(":", identifier, type);
-                    pos ++;
-                    return allocator;
+                    String type = tokens.get(pos).getValue();
+                    pos++;
+                    if (type.equalsIgnoreCase("number")){
+                        return new Pair<>(identifier, VariableType.INTEGER);
+                    }
+                    else {
+                        return new Pair<>(identifier, VariableType.STRING);
+                    }
                 }
                 else {
                     throw new RuntimeException("There is no type after allocation");
@@ -86,14 +96,14 @@ public class Parser {
         }
     }
 
-    public Node expression(){
-        Node left = term();
-        while (tokens.get(pos).getType() == TokenType.END){
+    private Expression<Object> expression(){
+        Expression<Object> left = term();
+        while (tokens.get(pos).getType() != TokenType.END){
             Token token = tokens.get(pos);
             if (token.getType() == TokenType.OPERATOR && "+-".contains(token.getValue())) {
                 pos++;
-                Node right = factor();
-                left = new BinaryNode(token.getValue(), left, right);
+                Expression<Object> right = term();
+                left = new BinaryExpression(token.getValue(), left, right);
             }
             else {
                 break;
@@ -102,14 +112,14 @@ public class Parser {
         return left;
     }
 
-    public Node term(){
-        Node left = factor();
-        while (tokens.get(pos).getType() == TokenType.END){
+    private Expression<Object> term(){
+        Expression<Object> left = factor();
+        while (tokens.get(pos).getType() != TokenType.END){
             Token token = tokens.get(pos);
             if (token.getType() == TokenType.OPERATOR && "/*".contains(token.getValue())) {
                 pos++;
-                Node right = factor();
-                left = new BinaryNode(token.getValue(), left, right);
+                Expression<Object> right = factor();
+                left = new BinaryExpression(token.getValue(), left, right);
             }
             else {
                 break;
@@ -118,24 +128,24 @@ public class Parser {
         return left;
     }
 
-    public Node factor(){
+    private Expression<Object> factor(){
         if (tokens.get(pos).getType() == TokenType.NUMBER_VALUE) {
-            Node numberNode = new NumberNode(tokens.get(pos).getValue());
+            Expression<Object> numberExpr = new LiteralExpression(Integer.parseInt(tokens.get(pos).getValue()));
             pos ++;
-            return numberNode;
+            return numberExpr;
         }
         else if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
-            Node stringNode = new SimpleNode(tokens.get(pos).getValue());
+            Expression<Object> stringExpr = new LiteralExpression(tokens.get(pos).getValue());
             pos++;
-            return stringNode;
+            return stringExpr;
         }
         else if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
-            Node identifier = new SimpleNode(tokens.get(pos).getValue());
+            Expression<Object> identifierExpr = new VariableExpression(tokens.get(pos).getValue());
             pos++;
-            return identifier;
+            return identifierExpr;
         }
         else {
-            throw new RuntimeException("Expected number or string value");
+            throw new RuntimeException("Expected number, string value or a variable in expression");
         }
     }
 }
