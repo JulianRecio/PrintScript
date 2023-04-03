@@ -181,7 +181,7 @@ public class FormatterTest {
                                                           "PrintLn(\"Hola como\");" );
 
         List<String> expected = new ArrayList<>();
-        expected.add("et x : number = 3.6;");
+        expected.add("let x : number = 3.6;");
         expected.add("let x : string = \"Hola como\";");
         expected.add("\nPrintLn(\"Hola como\");");
 
