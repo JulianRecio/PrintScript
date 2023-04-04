@@ -1,5 +1,6 @@
 package staticCodeAnalyser;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lexer.Lexer;
 import parser.AST;
@@ -12,23 +13,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StaticCodeAnalyser implements NodeVisitor, ExpressionVisitor {
 
     private final String namingConvention;
     private final boolean printlnCondition;
-    private final HashMap<String, Object> map = new HashMap<>();
 
 
     public StaticCodeAnalyser(String configFile) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Config config = objectMapper.readValue(new File(configFile), Config.class);
-
-        this.namingConvention = config.getNamingConvention();
-        this.printlnCondition = config.getPrintlnCondition();
+        ObjectMapper mapper = new ObjectMapper();
+        File fileObj = new File(configFile);
+        Map<String, String> map;
+        map =  mapper.readValue(
+                    fileObj, new TypeReference<>() {
+                });
+        this.namingConvention = map.get("identifierCase");
+        this.printlnCondition = Boolean.parseBoolean(map.get("printlnCondition"));
     }
 
-    private void analyze(String source){
+    public List<String> analyze(String source){
         Parser parser = new Parser(Lexer.tokenize(source));
         AST ast = parser.parse();
 
@@ -48,6 +52,7 @@ public class StaticCodeAnalyser implements NodeVisitor, ExpressionVisitor {
                 messages) {
             System.out.println(message);
         }
+        return messages;
     }
 
     @Override
@@ -56,11 +61,11 @@ public class StaticCodeAnalyser implements NodeVisitor, ExpressionVisitor {
 
         if (namingConvention.equals("snake case")){
             if (!variable.matches("[a-z]+(_[a-z]+)*")){
-                throw new RuntimeException("Variable not written in snake case in line: ");
+                throw new RuntimeException("Variable not written in snake case: " + node.getVariableName());
             }
         }else{
             if (!variable.matches("[a-z]+([A-Z][a-z]+)*")){
-                throw new RuntimeException("Variable not written in camel case in line: ");
+                throw new RuntimeException("Variable not written in camel case: " + node.getVariableName());
             }
         }
     }
@@ -76,7 +81,7 @@ public class StaticCodeAnalyser implements NodeVisitor, ExpressionVisitor {
             Object printExpression = node.getExpression().accept(this);
 
             if (printExpression.equals(ExpressionType.BINARY) || printExpression.equals(ExpressionType.UNARY)){
-                throw new RuntimeException("´println argumento not valid at line:");
+                throw new RuntimeException("´println argument not valid: " + printExpression.toString());
             }
         }
     }
@@ -100,5 +105,13 @@ public class StaticCodeAnalyser implements NodeVisitor, ExpressionVisitor {
     @Override
     public Object visitExpr(VariableExpression variableExpression) {
         return ExpressionType.VARIABLE;
+    }
+
+    public String getNamingConvention() {
+        return namingConvention;
+    }
+
+    public boolean isPrintlnCondition() {
+        return printlnCondition;
     }
 }

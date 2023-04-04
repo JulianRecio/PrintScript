@@ -1,4 +1,4 @@
 {
-  identifierCase: "snake case",
-  printlnCondition: "true"
+  "identifierCase": "snake case",
+  "printlnCondition": "true"
 }
