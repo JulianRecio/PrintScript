@@ -100,4 +100,45 @@ public class StaticCodeAnalyserTest {
 
         Assertions.assertEquals(2, expected.size());
     }
+
+    @Test
+    public void testAnalyzeWhenIsPrintLnConditionTrueReturnWith1Errors() throws IOException {
+        StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testAnalyzeWhenIsPrintLnConditionTrueReturnWith1Errors", "camel case", true));
+
+        String code = "PrintLn(1 + 2);";
+        List<String> expected = sca.analyze(code);
+
+        Assertions.assertEquals(1, expected.size());
+    }
+
+    @Test
+    public void testAnalyzeWhenIsPrintLnConditionFalseReturnWith0Errors() throws IOException {
+        StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testAnalyzeWhenIsPrintLnConditionFalseReturnWith0Errors", "camel case", false));
+
+        String code = "PrintLn(1 + 2);";
+        List<String> expected = sca.analyze(code);
+
+        Assertions.assertEquals(0, expected.size());
+    }
+
+
+    @Test
+    public void testAnalyzeWhenIsPrintLnConditionFalseReturnWith0ErrorsComplex() throws IOException {
+        StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testAnalyzeWhenIsPrintLnConditionFalseReturnWith0ErrorsComplex", "camel case", false));
+
+        String code = "PrintLn((1 + 2 - 5) / 2);";
+        List<String> expected = sca.analyze(code);
+
+        Assertions.assertEquals(0, expected.size());
+    }
+
+    @Test
+    public void testAnalyzeWhenIsPrintLnConditionTrueReturnWith2Errors() throws IOException {
+        StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testAnalyzeWhenIsPrintLnConditionTrueReturnWith2Errors", "camel case", true));
+
+        String code = "PrintLn(2 + 2); PrintLn(1 + 2);";
+        List<String> expected = sca.analyze(code);
+
+        Assertions.assertEquals(2, expected.size());
+    }
 }
