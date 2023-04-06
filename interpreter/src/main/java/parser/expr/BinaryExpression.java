@@ -1,12 +1,14 @@
 package parser.expr;
 
-public class BinaryExpression implements Expression<Object>{
+import interpreter.MyObject;
+
+public class BinaryExpression implements Expression<MyObject>{
 
     private final String operator;
-    private final Expression<Object> left;
-    private final Expression<Object> right;
+    private final Expression<MyObject> left;
+    private final Expression<MyObject> right;
 
-    public BinaryExpression(String operator, Expression<Object> left, Expression<Object> right){
+    public BinaryExpression(String operator, Expression<MyObject> left, Expression<MyObject> right){
         this.operator = operator;
         this.left = left;
         this.right = right;
@@ -16,16 +18,16 @@ public class BinaryExpression implements Expression<Object>{
         return operator;
     }
 
-    public Expression<Object> getLeft() {
+    public Expression<MyObject> getLeft() {
         return left;
     }
 
-    public Expression<Object> getRight() {
+    public Expression<MyObject> getRight() {
         return right;
     }
 
     @Override
-    public Object accept(ExpressionVisitor<Object> visitor) {
+    public MyObject accept(ExpressionVisitor<MyObject> visitor) {
         return visitor.visitExpr(this);
     }
 }

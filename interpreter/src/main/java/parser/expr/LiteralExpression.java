@@ -1,19 +1,21 @@
 package parser.expr;
 
-public class LiteralExpression implements Expression<Object>{
+import interpreter.MyObject;
 
-    private final Object value;
+public class LiteralExpression implements Expression<MyObject>{
 
-    public LiteralExpression(Object value) {
+    private final MyObject value;
+
+    public LiteralExpression(MyObject value) {
         this.value = value;
     }
 
-    public Object getValue() {
+    public MyObject getValue() {
         return value;
     }
 
     @Override
-    public Object accept(ExpressionVisitor<Object> visitor) {
+    public MyObject accept(ExpressionVisitor<MyObject> visitor) {
         return visitor.visitExpr(this);
     }
 }

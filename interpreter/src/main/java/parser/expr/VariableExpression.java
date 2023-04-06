@@ -1,6 +1,8 @@
 package parser.expr;
 
-public class VariableExpression implements Expression<Object>{
+import interpreter.MyObject;
+
+public class VariableExpression implements Expression<MyObject>{
 
     private final String variableName;
 
@@ -13,7 +15,7 @@ public class VariableExpression implements Expression<Object>{
     }
 
     @Override
-    public Object accept(ExpressionVisitor<Object> visitor) {
+    public MyObject accept(ExpressionVisitor<MyObject> visitor) {
         return visitor.visitExpr(this);
     }
 }

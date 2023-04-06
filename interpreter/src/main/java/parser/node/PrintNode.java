@@ -1,17 +1,18 @@
 package parser.node;
 
 
+import interpreter.MyObject;
 import parser.expr.Expression;
 
 public class PrintNode implements Node{
 
-    private final Expression<?> expression;
+    private final Expression<MyObject> expression;
 
-    public PrintNode(Expression<?> expression) {
+    public PrintNode(Expression<MyObject> expression) {
         this.expression = expression;
     }
 
-    public Expression<?> getExpression() {
+    public Expression<MyObject> getExpression() {
         return expression;
     }
 

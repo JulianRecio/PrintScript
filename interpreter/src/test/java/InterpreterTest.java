@@ -18,7 +18,7 @@ public class InterpreterTest {
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
         interpreter.interpret();
-        Assertions.assertEquals(5.0, interpreter.getMap().get("x"));
+        Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class InterpreterTest {
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
         interpreter.interpret();
-        Assertions.assertEquals(5.0, interpreter.getMap().get("x"));
+        Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class InterpreterTest {
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
         interpreter.interpret();
-        Assertions.assertEquals(10.0, interpreter.getMap().get("x"));
+        Assertions.assertEquals(10.0, interpreter.getMap().get("x").getValue());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class InterpreterTest {
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
         interpreter.interpret();
-        Assertions.assertEquals(13.0, interpreter.getMap().get("x"));
+        Assertions.assertEquals(13.0, interpreter.getMap().get("x").getValue());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class InterpreterTest {
             error = e;
         }
         assert error != null;
-        Assertions.assertEquals("Variable x is already", error.getMessage());
+        Assertions.assertEquals("Variable x is already declared", error.getMessage());
     }
 
     @Test
@@ -83,5 +83,39 @@ public class InterpreterTest {
         }
         assert error != null;
         Assertions.assertEquals("Mismatching types", error.getMessage());
+    }
+
+    @Test
+    public void testExceptionWhenVariableNotInitialized(){
+        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number; let z:number = x + y; PrintLn(x);");
+        Parser parser = new Parser(tokens);
+        AST ast = parser.parse();
+        Interpreter interpreter = new Interpreter(ast);
+        RuntimeException error = null;
+        try {
+            interpreter.interpret();
+        }
+        catch (RuntimeException e){
+            error = e;
+        }
+        assert error != null;
+        Assertions.assertEquals("Variable y was not initialized", error.getMessage());
+    }
+
+    @Test
+    public void testExceptionWhenVariableNotInitializedPrint(){
+        List<Token> tokens = Lexer.tokenize("let x:number; PrintLn(x);");
+        Parser parser = new Parser(tokens);
+        AST ast = parser.parse();
+        Interpreter interpreter = new Interpreter(ast);
+        RuntimeException error = null;
+        try {
+            interpreter.interpret();
+        }
+        catch (RuntimeException e){
+            error = e;
+        }
+        assert error != null;
+        Assertions.assertEquals("Variable x was not initialized", error.getMessage());
     }
 }
