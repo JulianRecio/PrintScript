@@ -115,6 +115,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
             }
             catch (ClassCastException e){
                 throw new RuntimeException("Cannot invert string values");
+
             }
             map.put(value.substring(1), obj);
             return obj;
