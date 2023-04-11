@@ -10,6 +10,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.util.stream.Collectors;
 
 public class Formatter {
 
@@ -20,8 +21,8 @@ public class Formatter {
     }
 
     public static List<Rule> getRulesFromConfig(String path) {
-        Map<String, String> ruleMap = readConfig(path);
-        if (ruleMap == null) throw new RuntimeException();
+        Map<String, String> ruleMap = readConfigFile(path);
+        if (ruleMap == null) throw new RuntimeException("invalid path");
 
         List<Rule> rules = new ArrayList<>();
 
@@ -38,7 +39,7 @@ public class Formatter {
         return rules;
     }
 
-    private static Map<String, String> readConfig(String path) {
+    private static Map<String, String> readConfigFile(String path) {
         ObjectMapper mapper = new ObjectMapper();
 
         File fileObj = new File(path);
@@ -71,17 +72,16 @@ public class Formatter {
         return formattedCode;
     }
     private static String formatLine(List<Token> tokens, List<Rule> rules){
+        //apply all rules
         for (Rule rule: rules){
             rule.applyRule(tokens);
         }
-        return createLineFromTokens(tokens);
+        return createLineFromTokenList(tokens);
     }
-    private static String createLineFromTokens(List<Token> tokens) {
-        StringBuilder line = new StringBuilder();
-        for (Token token:tokens){
-            line.append(token.getValue());
-        }
-        return line.toString();
+    private static String createLineFromTokenList(List<Token> tokens) {
+        return tokens.stream()
+                .map(Token::getValue)
+                .collect(Collectors.joining());
     }
 
     private static void printLines(List<String> lines){
