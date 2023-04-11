@@ -5,13 +5,14 @@ import parser.VariableType;
 import parser.expr.*;
 import parser.node.*;
 
+import javax.xml.transform.TransformerConfigurationException;
 import java.util.HashMap;
 import java.util.List;
 
 public class Interpreter implements NodeVisitor, ExpressionVisitor {
 
     private final AST ast;
-    private final HashMap<String, Object> map = new HashMap<>();
+    private final HashMap<String, MyObject> map = new HashMap<>();
 
     public Interpreter(AST ast){
         this.ast = ast;
@@ -29,26 +30,27 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
         String variable = node.getVariableName();
         VariableType type = node.getType();
         if (map.containsKey(variable)){
-            throw new RuntimeException("Variable " + variable + " is already");
+            throw new RuntimeException("Variable " + variable + " is already declared");
         }
         else {
-            if (node.getInitializer() != null){
-                Object result = node.getInitializer().accept(this);
-                if (result instanceof Double && type == VariableType.NUMBER || result instanceof String && type == VariableType.STRING){
-                    map.put(variable, result);
-                }
-                else {
-                    throw new RuntimeException("Mismatching types");
-                }
+            MyObject classType;
+            if (type == VariableType.NUMBER){
+                classType = new NumberObj();
+                map.put(variable, classType);
             }
             else {
-                if (type == VariableType.NUMBER){
-                    map.put(variable, new NumberObj());
+                classType = new StringObj();
+                map.put(variable, classType);
+            }
+            if (node.getInitializer() != null){
+                MyObject result = node.getInitializer().accept(this);
+                try {
+                    classType.setValue(result.getValue());
                 }
-                else {
-                    map.put(variable, new StringObj());
+                catch (Exception e){
+                    throw new RuntimeException("Mismatching types");
                 }
-
+                map.put(variable, result);
             }
         }
     }
@@ -56,86 +58,83 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
     @Override
     public void visitNode(AssignationNode node) {
         String variable = node.getVariable();
-        Expression<?> right = node.getExpression();
-        Object result = right.accept(this);
+        Expression<MyObject> right = node.getExpression();
+        MyObject result = right.accept(this);
         if (map.containsKey(variable)){
-            Object value = map.get(variable);
-            if ((value instanceof Double || value instanceof NumberObj) && result instanceof Double || (value instanceof String || value instanceof StringObj) && result instanceof String){
-                map.put(variable, result);
+            MyObject value = map.get(variable);
+            try {
+                value.setValue(result.getValue());
             }
-            else {
+            catch (Exception e){
                 throw new RuntimeException("Mismatching types");
             }
+            map.put(variable, result);
         }
         else {
-            throw new RuntimeException("Variable was not initialized");
+            throw new RuntimeException("Variable does not exist");
         }
     }
 
     @Override
     public void visitNode(PrintNode node) {
-        Object toPrint = node.getExpression().accept(this);
-        System.out.println(toPrint.toString());
+        MyObject toPrint = node.getExpression().accept(this);
+        if (toPrint.getValue() == null){
+            throw new RuntimeException("Variable was not initialized");
+        }
+        else {
+            System.out.println(toPrint.getValue().toString());
+        }
     }
 
     @Override
-    public Object visitExpr(BinaryExpression binaryExpression) {
-        Object left = binaryExpression.getLeft().accept(this);
-        Object right = binaryExpression.getRight().accept(this);
-        switch (binaryExpression.getOperator()) {
-            case "+":
-                if (left instanceof Double && right instanceof Double){
-                    return (double) left + (double) right;
-                }
-                else if (left instanceof String && right instanceof String){
-                    return (String) left + (String) right;
-                }
-                else {
-                    throw new RuntimeException("Operands must be of same type");
-                }
-            case "-":
-                checkIfNumberOperands(left, right);
-                return (double) left - (double) right;
-            case "*":
-                checkIfNumberOperands(left, right);
-                return (double) left * (double) right;
-            case "/":
-                checkIfNumberOperands(left, right);
-                return (double) left / (double) right;
-        }
-        return null;
-    }
-
-    private void checkIfNumberOperands(Object left, Object right) {
-        if (left instanceof Double && right instanceof Double){
-            return;
-        }
-        else throw new RuntimeException("Operands must be numbers");
+    public MyObject visitExpr(BinaryExpression binaryExpression) {
+        MyObject left = binaryExpression.getLeft().accept(this);
+        MyObject right = binaryExpression.getRight().accept(this);
+        Resolver resolver = new Resolver();
+        return switch (binaryExpression.getOperator()) {
+            case "+" -> resolver.add(left, right);
+            case "-" -> resolver.subtract(left, right);
+            case "*" -> resolver.multiply(left, right);
+            case "/" -> resolver.divide(left, right);
+            default -> throw new RuntimeException("Operator is not valid");
+        };
     }
 
     @Override
-    public Object visitExpr(LiteralExpression literalExpression) {
+    public MyObject visitExpr(LiteralExpression literalExpression) {
         return literalExpression.getValue();
     }
 
     @Override
-    public Object visitExpr(UnaryExpression unaryExpression) {
+    public MyObject visitExpr(UnaryExpression unaryExpression) {
         String value = unaryExpression.getValue();
         if (map.containsKey(value.substring(1))) {
-            Object obj = map.get(value.substring(1));
-            if (obj instanceof Double) {
-                map.put(value.substring(1), -(double) obj);
+            MyObject obj = map.get(value.substring(1));
+            try {
+                obj.setValue(-(double) obj.getValue());
             }
+            catch (ClassCastException e){
+                throw new RuntimeException("Cannot invert string values");
+
+            }
+            map.put(value.substring(1), obj);
+            return obj;
         }
-        return null;
+        else {
+            throw new RuntimeException("Value " + value + " does not exist");
+        }
     }
 
     @Override
-    public Object visitExpr(VariableExpression variableExpression) {
-        return map.get(variableExpression.getVariableName());
+    public MyObject visitExpr(VariableExpression variableExpression) {
+        MyObject myObject = map.get(variableExpression.getVariableName());
+        if (myObject.getValue() == null){
+            throw new RuntimeException("Variable " + variableExpression.getVariableName() + " was not initialized");
+        }
+        return myObject;
     }
 
-    public HashMap<String, Object> getMap() {
+    public HashMap<String, MyObject> getMap() {
         return map;
     }
 }

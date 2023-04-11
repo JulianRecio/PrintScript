@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class Lexer {
 
     private static final Pattern KEYWORD_PATTERN = Pattern.compile("let");
-    private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z0-9]*");
+    private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("[a-zA-Z]+(_[a-zA-Z0-9]+)*");
     private static final Pattern ALLOCATOR_PATTER = Pattern.compile(":");
     private static final Pattern TYPE_PATTERN = Pattern.compile("number|string");
     private static final Pattern EQUAL_PATTERN = Pattern.compile("=");

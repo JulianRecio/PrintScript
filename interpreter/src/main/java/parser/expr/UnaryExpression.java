@@ -1,8 +1,9 @@
 package parser.expr;
 
+import interpreter.MyObject;
 import lexer.Token;
 
-public class UnaryExpression implements Expression<Object>{
+public class UnaryExpression implements Expression<MyObject>{
 
     private final String value;
 
@@ -15,7 +16,7 @@ public class UnaryExpression implements Expression<Object>{
     }
 
     @Override
-    public Object accept(ExpressionVisitor<Object> visitor) {
+    public MyObject accept(ExpressionVisitor<MyObject> visitor) {
         return visitor.visitExpr(this);
     }
 }
