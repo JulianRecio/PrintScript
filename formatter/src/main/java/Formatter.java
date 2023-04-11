@@ -1,27 +1,49 @@
 import lexer.Lexer;
 import lexer.Token;
 import lexer.TokenType;
+import parser.expr.*;
+import parser.node.AssignationNode;
+import parser.node.DeclarationNode;
+import parser.node.NodeVisitor;
+import parser.node.PrintNode;
 import rule.Rule;
 import rule.rules.*;
 
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
+
 import java.util.stream.Collectors;
 
-public class Formatter {
+public class Formatter implements NodeVisitor, ExpressionVisitor {
 
-    public static void useFormatter(String input) {
-        List<Token> tokens = Lexer.tokenize(input);
-        List<Rule> rules = getRulesFromConfig("src\\main\\resources\\config.json");
-        format(tokens, rules);
+//    public static List<String> useFormatter(String input) {
+//        List<Token> tokens = Lexer.tokenize(input);
+//        List<Rule> rules = getRulesFromConfig(readConfigFile("src\\main\\resources\\config.json"));
+//        return format(tokens, rules);
+//    }
+    public static List<String> useFormatter(InputStream input) {
+        StringBuilder str = new StringBuilder();
+        try (Reader reader = new BufferedReader(new InputStreamReader
+                (input, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            int c = 0;
+            while ((c = reader.read()) != -1) {
+                str.append((char) c);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        List<Token> tokens = Lexer.tokenize(str.toString());
+        List<Rule> rules = getRulesFromConfig(readConfigFile("src\\main\\resources\\config.json"));
+        return format(tokens, rules);
     }
 
-    public static List<Rule> getRulesFromConfig(String path) {
-        Map<String, String> ruleMap = readConfigFile(path);
+    public static List<Rule> getRulesFromConfig(Map<String, String> ruleMap) {
         if (ruleMap == null) throw new RuntimeException("invalid path");
 
         List<Rule> rules = new ArrayList<>();
@@ -88,4 +110,38 @@ public class Formatter {
         lines.forEach(System.out::println);
     }
 
+    @Override
+    public void visitNode(DeclarationNode node) {
+
+    }
+
+    @Override
+    public void visitNode(AssignationNode node) {
+
+    }
+
+    @Override
+    public void visitNode(PrintNode node) {
+
+    }
+
+    @Override
+    public Object visitExpr(BinaryExpression binaryExpression) {
+        return null;
+    }
+
+    @Override
+    public Object visitExpr(LiteralExpression literalExpression) {
+        return null;
+    }
+
+    @Override
+    public Object visitExpr(UnaryExpression unaryExpression) {
+        return null;
+    }
+
+    @Override
+    public Object visitExpr(VariableExpression variableExpression) {
+        return null;
+    }
 }
