@@ -118,4 +118,14 @@ public class InterpreterTest {
         assert error != null;
         Assertions.assertEquals("Variable x was not initialized", error.getMessage());
     }
+
+    @Test
+    public void testExpressionWithParenthesis(){
+        List<Token> tokens = Lexer.tokenize("let x:number = (5+4)*2;");
+        Parser parser = new Parser(tokens);
+        AST ast = parser.parse();
+        Interpreter interpreter = new Interpreter(ast);
+        interpreter.interpret();
+        Assertions.assertEquals(18.0, interpreter.getMap().get("x").getValue());
+    }
 }
