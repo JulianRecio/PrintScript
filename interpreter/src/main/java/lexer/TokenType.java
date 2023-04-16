@@ -14,6 +14,11 @@ public enum TokenType {
     PRINT,              //PrintLn()
     LEFT_PARENTHESIS,
     RIGHT_PARENTHESIS,
-    END                 //;
+    END,                 //;
+    IF,
+    LEFT_BRACKET,
+    RIGHT_BRACKET,
+    ELSE,
+    READ_INPUT          //readInput();
 
 }

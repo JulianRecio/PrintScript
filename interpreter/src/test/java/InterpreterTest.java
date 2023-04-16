@@ -13,7 +13,7 @@ public class InterpreterTest {
 
     @Test
     public void testSimpleLine(){
-        List<Token> tokens = Lexer.tokenize("let x:number = 5; PrintLn(x);");
+        List<Token> tokens = Lexer.tokenize("let x:number = 5; PrintLn(x);", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -23,7 +23,7 @@ public class InterpreterTest {
 
     @Test
     public void testVariableSave(){
-        List<Token> tokens = Lexer.tokenize("let x:number; x=5; PrintLn(x);");
+        List<Token> tokens = Lexer.tokenize("let x:number; x=5; PrintLn(x);", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -33,7 +33,7 @@ public class InterpreterTest {
 
     @Test
     public void testMultipleVariableValueChange(){
-        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number = 8.0; x = 2.0 + y; PrintLn(x);");
+        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number = 8.0; x = 2.0 + y; PrintLn(x);", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -43,7 +43,7 @@ public class InterpreterTest {
 
     @Test
     public void testMultipleVariableValueChangeWithSameVariable(){
-        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number = 8.0; x = x + y; PrintLn(x);");
+        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number = 8.0; x = x + y; PrintLn(x);", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -53,7 +53,7 @@ public class InterpreterTest {
 
     @Test
     public void testExceptionWhenVariableAlreadyInitialized(){
-        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number = 8.0; let x:number = x + y; PrintLn(x);");
+        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number = 8.0; let x:number = x + y; PrintLn(x);", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -70,7 +70,7 @@ public class InterpreterTest {
 
     @Test
     public void testExceptionWhenMismatchingType(){
-        List<Token> tokens = Lexer.tokenize("let x:number; x=\"hello\";");
+        List<Token> tokens = Lexer.tokenize("let x:number; x=\"hello\";", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -87,7 +87,7 @@ public class InterpreterTest {
 
     @Test
     public void testExceptionWhenVariableNotInitialized(){
-        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number; let z:number = x + y; PrintLn(x);");
+        List<Token> tokens = Lexer.tokenize("let x:number; x=5.0; let y:number; let z:number = x + y; PrintLn(x);", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -104,7 +104,7 @@ public class InterpreterTest {
 
     @Test
     public void testExceptionWhenVariableNotInitializedPrint(){
-        List<Token> tokens = Lexer.tokenize("let x:number; PrintLn(x);");
+        List<Token> tokens = Lexer.tokenize("let x:number; PrintLn(x);", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
@@ -121,7 +121,7 @@ public class InterpreterTest {
 
     @Test
     public void testExpressionWithParenthesis(){
-        List<Token> tokens = Lexer.tokenize("let x:number = (5+4)*2;");
+        List<Token> tokens = Lexer.tokenize("let x:number = (5+4)*2;", 1.0);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);

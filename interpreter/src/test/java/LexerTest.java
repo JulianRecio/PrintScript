@@ -18,7 +18,7 @@ public class LexerTest {
         expResult.add(TokenExamples.ALLOCATOR);
         expResult.add(TokenExamples.NUMBER_TYPE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -33,7 +33,7 @@ public class LexerTest {
         expResult.add(TokenExamples.ALLOCATOR);
         expResult.add(TokenExamples.STRING_TYPE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:string;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:string;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -48,7 +48,7 @@ public class LexerTest {
         expResult.add(TokenExamples.ALLOCATOR);
         expResult.add(TokenExamples.NUMBER_TYPE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let         x:number;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let         x:number;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -63,7 +63,7 @@ public class LexerTest {
         expResult.add(TokenExamples.ALLOCATOR);
         expResult.add(TokenExamples.STRING_TYPE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let variable:string;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let variable:string;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -80,7 +80,7 @@ public class LexerTest {
         expResult.add(TokenExamples.EQUAL);
         expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -97,7 +97,7 @@ public class LexerTest {
         expResult.add(TokenExamples.EQUAL);
         expResult.add(TokenExamples.DECIMAL_NUMBER_VALUE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3.6;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3.6;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -114,7 +114,7 @@ public class LexerTest {
         expResult.add(TokenExamples.EQUAL);
         expResult.add(TokenExamples.SIMPLE_STRING_VALUE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:string = \"a\";");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:string = \"a\";", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -131,7 +131,7 @@ public class LexerTest {
         expResult.add(TokenExamples.EQUAL);
         expResult.add(TokenExamples.COMPLEX_STRING_VALUE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:string = \"Hola como\";");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:string = \"Hola como\";", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -152,7 +152,7 @@ public class LexerTest {
         expResult.add(TokenExamples.MULTIPLICATION);
         expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3.6 + 3 * 3;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3.6 + 3 * 3;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -177,7 +177,7 @@ public class LexerTest {
         expResult.add(TokenExamples.COMPLEX_STRING_VALUE);
         expResult.add(TokenExamples.END);
         ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3.6;" +
-                                                                       "let x:string = \"Hola como\";");
+                                                                       "let x:string = \"Hola como\";", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -194,7 +194,7 @@ public class LexerTest {
         expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
         expResult.add(TokenExamples.RIGHT_PAR);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("PrintLn(\"Hola como\" + 3);");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("PrintLn(\"Hola como\" + 3);", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -218,7 +218,7 @@ public class LexerTest {
         expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
         expResult.add(TokenExamples.RIGHT_PAR);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x: number = 3; PrintLn(\"Hola como\" + x);");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x: number = 3; PrintLn(\"Hola como\" + x);", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -234,7 +234,7 @@ public class LexerTest {
         expResult.add(TokenExamples.PLUS);
         expResult.add(TokenExamples.UNARY_VALUE);
         expResult.add(TokenExamples.END);
-        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("x = 3 + -variableA;");
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("x = 3 + -variableA;", 1.0);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
