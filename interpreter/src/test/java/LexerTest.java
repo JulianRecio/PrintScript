@@ -1,6 +1,5 @@
 import lexer.Lexer;
 import lexer.Token;
-import lexer.TokenType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
