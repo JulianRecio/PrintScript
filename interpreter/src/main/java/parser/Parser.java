@@ -2,6 +2,7 @@ package parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import interpreter.MyObject;
 import interpreter.NumberObj;
@@ -172,6 +173,17 @@ public class Parser {
             Expression<MyObject> unaryExpr = new UnaryExpression(tokens.get(pos).getValue());
             pos++;
             return unaryExpr;
+        }
+        else if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS){
+            pos++;
+            Expression<MyObject> expression = expression();
+            if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS){
+                pos++;
+                return expression;
+            }
+            else {
+                throw new RuntimeException("Right parenthesis expected but not found");
+            }
         }
         else {
             throw new RuntimeException("Expected number, string value or a variable in expression");
