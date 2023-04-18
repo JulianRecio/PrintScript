@@ -108,7 +108,7 @@ public class Lexer {
     }
 
     private static void setVersionPatterns(Double version) {
-        IDENTIFIER_PATTERN = Pattern.compile("(?!PrintLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
+        IDENTIFIER_PATTERN = Pattern.compile("(?!PrintLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
         ALLOCATOR_PATTER = Pattern.compile(":");
         EQUAL_PATTERN = Pattern.compile("=");
         NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");

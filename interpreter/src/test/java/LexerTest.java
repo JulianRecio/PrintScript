@@ -240,5 +240,22 @@ public class LexerTest {
         }
     }
 
+    @Test
+    public void testBooleanValue(){
+        List<Token> expResult = new ArrayList<>();
+        expResult.add(TokenExamples.KEYWORD);
+        expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+        expResult.add(TokenExamples.ALLOCATOR);
+        expResult.add(TokenExamples.BOOLEAN_TYPE);
+        expResult.add(TokenExamples.EQUAL);
+        expResult.add(TokenExamples.BOOLEAN_VALUE);
+        expResult.add(TokenExamples.END);
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:boolean = true", 1.1);
+        for (int i = 0; i < list.size(); i++) {
+            Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
+            Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+        }
+    }
+
 
 }

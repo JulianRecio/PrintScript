@@ -128,4 +128,14 @@ public class InterpreterTest {
         interpreter.interpret();
         Assertions.assertEquals(18.0, interpreter.getMap().get("x").getValue());
     }
+
+    @Test
+    public void testBooleanValue(){
+        List<Token> tokens = Lexer.tokenize("let x:boolean = true", 1.0);
+        Parser parser = new Parser(tokens);
+        AST ast = parser.parse();
+        Interpreter interpreter = new Interpreter(ast);
+        interpreter.interpret();
+        Assertions.assertEquals(true, interpreter.getMap().get("x").getValue());
+    }
 }

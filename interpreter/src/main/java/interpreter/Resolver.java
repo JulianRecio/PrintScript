@@ -16,7 +16,7 @@ public class Resolver{
             object = new NumberObj((double) obj1.getValue() - (double) obj2.getValue());
         }
         catch (Exception e){
-            throw new RuntimeException("Cannot subtract String");
+            throw new RuntimeException("Can only subtract Double");
         }
         return object;
     }
@@ -27,7 +27,7 @@ public class Resolver{
             object = new NumberObj((double) obj1.getValue() * (double) obj2.getValue());
         }
         catch (Exception e){
-            throw new RuntimeException("Cannot multiply String");
+            throw new RuntimeException("Can only multiply Double");
         }
         return object;
     }
@@ -38,7 +38,7 @@ public class Resolver{
             object = new NumberObj((double) obj1.getValue() / (double) obj2.getValue());
         }
         catch (Exception e){
-            throw new RuntimeException("Cannot divide String");
+            throw new RuntimeException("Can only divide Double");
         }
         return object;
     }

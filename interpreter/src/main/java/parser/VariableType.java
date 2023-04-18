@@ -2,5 +2,5 @@ package parser;
 
 public enum VariableType {
 
-    NUMBER, STRING
+    NUMBER, STRING, BOOLEAN
 }

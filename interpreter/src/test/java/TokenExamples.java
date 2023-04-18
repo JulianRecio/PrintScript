@@ -10,11 +10,13 @@ public class TokenExamples {
     public static final Token ALLOCATOR = new Token(TokenType.ALLOCATOR, ":");
     public static final Token NUMBER_TYPE = new Token(TokenType.TYPE, "number");
     public static final Token STRING_TYPE = new Token(TokenType.TYPE, "string");
+    public static final Token BOOLEAN_TYPE = new Token(TokenType.TYPE, "boolean");
     public static final Token EQUAL = new Token(TokenType.EQUAL, "=");
     public static final Token SIMPLE_NUMBER_VALUE = new Token(TokenType.NUMBER_VALUE, "3");
     public static final Token DECIMAL_NUMBER_VALUE = new Token(TokenType.NUMBER_VALUE, "3.6");
     public static final Token SIMPLE_STRING_VALUE = new Token(TokenType.STRING_VALUE, "\"a\"");
     public static final Token COMPLEX_STRING_VALUE = new Token(TokenType.STRING_VALUE, "\"Hola como\"");
+    public static final Token BOOLEAN_VALUE = new Token(TokenType.BOOLEAN_VALUE, "true");
     public static final Token PLUS = new Token(TokenType.OPERATOR, "+");
     public static final Token MULTIPLICATION = new Token(TokenType.OPERATOR, "*");
     public static final Token PRINT = new Token(TokenType.PRINT, "PrintLn");

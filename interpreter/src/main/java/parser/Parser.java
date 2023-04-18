@@ -3,6 +3,7 @@ package parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import interpreter.BooleanObj;
 import interpreter.MyObject;
 import interpreter.NumberObj;
 import interpreter.StringObj;
@@ -23,7 +24,7 @@ public class Parser {
 
     public AST parse() {
         List<Node> ast = new ArrayList<>();
-        while (pos < tokens.size()) {
+        while (pos < tokens.size() && tokens.get(pos).getType() == TokenType.RIGHT_BRACKET) {
             if (tokens.get(pos).getType() == TokenType.KEYWORD){
                 createDeclarationNode(ast);
             }
@@ -110,24 +111,29 @@ public class Parser {
         pos++;
         if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
             pos++;
-            String str = tokens.get(pos).getValue();
+            Expression<MyObject> expr = factor();
             pos++;
             if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
                 pos++;
                 if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
                     pos++;
+                    AST ifAST = this.parse();
                     if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
                         pos++;
+                        if (tokens.get(pos).getType() == TokenType.ELSE){
+                            pos++;
+                            if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
+                                pos++;
+                                AST elseAST = this.parse();
+                                if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
+                                    pos++;
+                                    ast.add(new IfNode(expr, ifAST, elseAST));
+                                }
+                            }
+                        }
+                        else ast.add(new IfNode(expr, ifAST, null));
                     }
                     else throw new RuntimeException("adsnaiodnai");
-                }
-
-                if (tokens.get(pos).getType() == TokenType.ELSE){
-                    if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
-                    }
-                    if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
-
-                    }
                 }
             }
             else {
@@ -204,6 +210,11 @@ public class Parser {
             pos++;
             return stringExpr;
         }
+        else if (tokens.get(pos).getType() == TokenType.BOOLEAN_VALUE){
+            Expression<MyObject> booleanExpr = new LiteralExpression(new BooleanObj(Boolean.parseBoolean(tokens.get(pos).getValue())));
+            pos++;
+            return booleanExpr;
+        }
         else if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
             Expression<MyObject> identifierExpr = new VariableExpression(tokens.get(pos).getValue());
             pos++;
@@ -226,7 +237,7 @@ public class Parser {
             }
         }
         else {
-            throw new RuntimeException("Expected number, string value or a variable in expression");
+            throw new RuntimeException("Expected number, string, boolean or a variable in expression");
         }
     }
 }

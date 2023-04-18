@@ -37,6 +37,10 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
                 classType = new NumberObj();
                 map.put(variable, classType);
             }
+            else if (type == VariableType.BOOLEAN){
+                classType = new BooleanObj();
+                map.put(variable, classType);
+            }
             else {
                 classType = new StringObj();
                 map.put(variable, classType);
@@ -83,6 +87,20 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
         else {
             System.out.println(toPrint.getValue().toString());
         }
+    }
+
+    @Override
+    public void visitNode(IfNode node) {
+        MyObject obj = node.getValue().accept(this);
+        MyObject tmp = node.getValue().accept(this);
+        try {
+            tmp.setValue(true);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Expression inside if needs to be of type Boolean");
+        }
+
+
     }
 
     @Override
