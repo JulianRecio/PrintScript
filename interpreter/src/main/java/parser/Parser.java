@@ -24,7 +24,7 @@ public class Parser {
 
     public AST parse() {
         List<Node> ast = new ArrayList<>();
-        while (pos < tokens.size() && tokens.get(pos).getType() == TokenType.RIGHT_BRACKET) {
+        while (pos < tokens.size() && tokens.get(pos).getType() != TokenType.RIGHT_BRACKET) {
             if (tokens.get(pos).getType() == TokenType.KEYWORD){
                 createDeclarationNode(ast);
             }
@@ -155,8 +155,11 @@ public class Parser {
                 if (tokens.get(pos).getType() == TokenType.TYPE) {
                     String type = tokens.get(pos).getValue();
                     pos++;
-                    if (type.equalsIgnoreCase("number")){
+                    if (type.equals("number")){
                         return new Pair<>(identifier, VariableType.NUMBER);
+                    }
+                    else if (type.equals("boolean")){
+                        return new Pair<>(identifier, VariableType.BOOLEAN);
                     }
                     else return new Pair<>(identifier, VariableType.STRING);
                 }

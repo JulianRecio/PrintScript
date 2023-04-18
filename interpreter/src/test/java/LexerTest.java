@@ -8,6 +8,7 @@ import java.util.List;
 
 public class LexerTest {
 
+    //Version 1.0 tests
 
     @Test
     public void testSimpleLineNumberDeclaration(){
@@ -239,6 +240,8 @@ public class LexerTest {
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
         }
     }
+
+    //Version 1.1 tests
 
     @Test
     public void testBooleanValue(){

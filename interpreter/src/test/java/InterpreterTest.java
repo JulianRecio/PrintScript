@@ -10,6 +10,7 @@ import java.util.List;
 
 public class InterpreterTest {
 
+    //Version 1.0 tests
 
     @Test
     public void testSimpleLine(){
@@ -129,13 +130,26 @@ public class InterpreterTest {
         Assertions.assertEquals(18.0, interpreter.getMap().get("x").getValue());
     }
 
+    //Version 1.1 tests
+
     @Test
-    public void testBooleanValue(){
-        List<Token> tokens = Lexer.tokenize("let x:boolean = true", 1.0);
+    public void testSimpleLineVersion1(){
+        List<Token> tokens = Lexer.tokenize("let x:number = 5; PrintLn(x);", 1.1);
         Parser parser = new Parser(tokens);
         AST ast = parser.parse();
         Interpreter interpreter = new Interpreter(ast);
         interpreter.interpret();
-        Assertions.assertEquals(true, interpreter.getMap().get("x").getValue());
+        Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
+    }
+
+
+    @Test
+    public void testBooleanValue(){
+        List<Token> tokens = Lexer.tokenize("let x:boolean = false; PrintLn(x);", 1.1);
+        Parser parser = new Parser(tokens);
+        AST ast = parser.parse();
+        Interpreter interpreter = new Interpreter(ast);
+        interpreter.interpret();
+        Assertions.assertEquals(false, interpreter.getMap().get("x").getValue());
     }
 }
