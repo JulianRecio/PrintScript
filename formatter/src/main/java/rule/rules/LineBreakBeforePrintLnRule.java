@@ -3,6 +3,7 @@ package rule.rules;
 import lexer.Token;
 import lexer.TokenType;
 import rule.Rule;
+import rule.RuleType;
 
 import java.util.List;
 
@@ -12,6 +13,12 @@ public class LineBreakBeforePrintLnRule implements Rule {
     public LineBreakBeforePrintLnRule(int amount) {
         this.amount = amount;
     }
+
+    @Override
+    public RuleType getRuleType() {
+        return RuleType.PRINT;
+    }
+
     @Override
     public void applyRule(List<Token> tokens) {
         if (amount < 0 || amount > 2) throw new RuntimeException();
