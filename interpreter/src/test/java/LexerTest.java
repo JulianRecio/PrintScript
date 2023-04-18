@@ -244,6 +244,23 @@ public class LexerTest {
     //Version 1.1 tests
 
     @Test
+    public void testSimpleLineNumberAssignmentVersion1(){
+        List<Token> expResult = new ArrayList<>();
+        expResult.add(TokenExamples.KEYWORD);
+        expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+        expResult.add(TokenExamples.ALLOCATOR);
+        expResult.add(TokenExamples.NUMBER_TYPE);
+        expResult.add(TokenExamples.EQUAL);
+        expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
+        expResult.add(TokenExamples.END);
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3;", 1.1);
+        for (int i = 0; i < list.size(); i++) {
+            Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
+            Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+        }
+    }
+
+    @Test
     public void testBooleanValue(){
         List<Token> expResult = new ArrayList<>();
         expResult.add(TokenExamples.KEYWORD);
@@ -254,6 +271,29 @@ public class LexerTest {
         expResult.add(TokenExamples.BOOLEAN_VALUE);
         expResult.add(TokenExamples.END);
         ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:boolean = true", 1.1);
+        for (int i = 0; i < list.size(); i++) {
+            Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
+            Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+        }
+    }
+
+    @Test
+    public void testSimpleIf(){
+        List<Token> expResult = new ArrayList<>();
+        expResult.add(TokenExamples.IF);
+        expResult.add(TokenExamples.LEFT_PAR);
+        expResult.add(TokenExamples.BOOLEAN_VALUE);
+        expResult.add(TokenExamples.RIGHT_PAR);
+        expResult.add(TokenExamples.LEFT_BRACKET);
+        expResult.add(TokenExamples.KEYWORD);
+        expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+        expResult.add(TokenExamples.ALLOCATOR);
+        expResult.add(TokenExamples.NUMBER_TYPE);
+        expResult.add(TokenExamples.EQUAL);
+        expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
+        expResult.add(TokenExamples.END);
+        expResult.add(TokenExamples.RIGHT_BRACKET);
+        ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("if (true) {let x:number = 3;}", 1.1);
         for (int i = 0; i < list.size(); i++) {
             Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
             Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());

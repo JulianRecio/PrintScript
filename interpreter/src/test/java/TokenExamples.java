@@ -22,5 +22,8 @@ public class TokenExamples {
     public static final Token PRINT = new Token(TokenType.PRINT, "PrintLn");
     public static final Token LEFT_PAR = new Token(TokenType.LEFT_PARENTHESIS, "(");
     public static final Token RIGHT_PAR = new Token(TokenType.RIGHT_PARENTHESIS, ")");
+    public static final Token LEFT_BRACKET = new Token(TokenType.LEFT_BRACKET, "{");
+    public static final Token RIGHT_BRACKET = new Token(TokenType.RIGHT_BRACKET, "}");
+    public static final Token IF = new Token(TokenType.IF, "if");
     public static final Token END = new Token(TokenType.END, ";");
 }

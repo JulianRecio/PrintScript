@@ -152,4 +152,14 @@ public class InterpreterTest {
         interpreter.interpret();
         Assertions.assertEquals(false, interpreter.getMap().get("x").getValue());
     }
+
+    @Test
+    public void testSimpleIf(){
+        List<Token> tokens = Lexer.tokenize("if (false) {  } else {let x:number = 3;}", 1.1);
+        Parser parser = new Parser(tokens);
+        AST ast = parser.parse();
+        Interpreter interpreter = new Interpreter(ast);
+        interpreter.interpret();
+        Assertions.assertEquals(3.0, interpreter.getMap().get("x").getValue());
+    }
 }

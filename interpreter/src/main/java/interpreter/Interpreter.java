@@ -92,15 +92,24 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
     @Override
     public void visitNode(IfNode node) {
         MyObject obj = node.getValue().accept(this);
-        MyObject tmp = node.getValue().accept(this);
+        MyObject tmpObj = node.getValue().accept(this);
         try {
-            tmp.setValue(true);
+            tmpObj.setValue(true);
         }
         catch (Exception e){
             throw new RuntimeException("Expression inside if needs to be of type Boolean");
         }
-
-
+        if ((boolean) obj.getValue()){
+            List<Node> tmpAST = node.getIfAST().getAst();
+            for (int i = 0; i < tmpAST.size(); i++) {
+                tmpAST.get(i).accept(this);
+            }
+        } else if (node.getElseAST() != null) {
+            List<Node> tmpAST = node.getElseAST().getAst();
+            for (int i = 0; i < tmpAST.size(); i++) {
+                tmpAST.get(i).accept(this);
+            }
+        }
     }
 
     @Override

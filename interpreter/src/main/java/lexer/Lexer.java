@@ -86,8 +86,8 @@ public class Lexer {
         HashMap<Matcher, TokenType> map = new HashMap<>();
         map.put(IF.matcher(remainder), TokenType.IF);
         map.put(BOOLEAN_PATTERN.matcher(remainder), TokenType.BOOLEAN_VALUE);
-        map.put(LEFT_BRACKET.matcher(remainder), TokenType.LEFT_PARENTHESIS);
-        map.put(RIGHT_BRACKET.matcher(remainder), TokenType.RIGHT_PARENTHESIS);
+        map.put(LEFT_BRACKET.matcher(remainder), TokenType.LEFT_BRACKET);
+        map.put(RIGHT_BRACKET.matcher(remainder), TokenType.RIGHT_BRACKET);
         map.put(ELSE.matcher(remainder), TokenType.ELSE);
         map.put(READ_INPUT.matcher(remainder), TokenType.READ_INPUT);
         boolean tmp = false;
@@ -108,7 +108,7 @@ public class Lexer {
     }
 
     private static void setVersionPatterns(Double version) {
-        IDENTIFIER_PATTERN = Pattern.compile("(?!PrintLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
+        IDENTIFIER_PATTERN = Pattern.compile("(?!PrintLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)(?!if\\b)(?!else\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
         ALLOCATOR_PATTER = Pattern.compile(":");
         EQUAL_PATTERN = Pattern.compile("=");
         NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");

@@ -112,7 +112,6 @@ public class Parser {
         if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
             pos++;
             Expression<MyObject> expr = factor();
-            pos++;
             if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
                 pos++;
                 if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
@@ -120,7 +119,7 @@ public class Parser {
                     AST ifAST = this.parse();
                     if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
                         pos++;
-                        if (tokens.get(pos).getType() == TokenType.ELSE){
+                        if (pos < tokens.size() && tokens.get(pos).getType() == TokenType.ELSE){
                             pos++;
                             if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
                                 pos++;
