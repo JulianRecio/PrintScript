@@ -2,7 +2,6 @@ package parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import interpreter.MyObject;
 import interpreter.NumberObj;
@@ -26,70 +25,119 @@ public class Parser {
         List<Node> ast = new ArrayList<>();
         while (pos < tokens.size()) {
             if (tokens.get(pos).getType() == TokenType.KEYWORD){
-                pos++;
-                Pair<String, VariableType> declaration = setType();
-                if (tokens.get(pos).getType() == TokenType.END){
-                    pos ++;
-                    Node declarationNode = new DeclarationNode(declaration.getValue0(), declaration.getValue1(), null);
-                    ast.add(declarationNode);
-                }
-                else if (tokens.get(pos).getType() == TokenType.EQUAL) {
-                    pos++;
-                    Node declarationNode = new DeclarationNode(declaration.getValue0(), declaration.getValue1(), expression());
-                    if (tokens.get(pos).getType() == TokenType.END){
-                        pos++;
-                        ast.add(declarationNode);
-                    }
-                    else {
-                        throw new RuntimeException("; was expected but not found");
-                    }
-                }
-                else {
-                    throw new RuntimeException("= or ; tokens were expected but not found");
-                }
+                createDeclarationNode(ast);
             }
             else if (tokens.get(pos).getType() == TokenType.IDENTIFIER){
-                String variable = tokens.get(pos).getValue();
-                pos ++;
-                if (tokens.get(pos).getType() == TokenType.EQUAL) {
-                    pos++;
-                    Expression<MyObject> right = expression();
-                    Node assignationNode = new AssignationNode(variable, right);
-                    if (tokens.get(pos).getType() == TokenType.END){
-                        pos++;
-                        ast.add(assignationNode);
-                    }
-                    else throw new RuntimeException("; was expected but not found");
-                }
-                else throw new RuntimeException("= was expected but not found");
+                createAssignationNode(ast);
             }
             else if (tokens.get(pos).getType() == TokenType.PRINT) {
-                pos++;
-                if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
-                    pos++;
-                    Expression<MyObject> expression = expression();
-                    if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
-                        pos++;
-                        Node print = new PrintNode(expression);
-                        if (tokens.get(pos).getType() == TokenType.END){
-                            pos++;
-                            ast.add(print);
-                        }
-                        else throw new RuntimeException("; was expected but not found");
-                    }
-                    else {
-                        throw new RuntimeException("')' expected but not found");
-                    }
-                }
-                else {
-                    throw new RuntimeException("'(' expected but not found");
-                }
+                createPrintNode(ast);
+            }
+            else if (tokens.get(pos).getType() == TokenType.IF){
+                createIfNode(ast);
             }
             else {
                 throw new RuntimeException("Line starts with incorrect token");
             }
         }
        return new AST(ast);
+    }
+
+    private void createDeclarationNode(List<Node> ast) {
+        pos++;
+        Pair<String, VariableType> declaration = setType();
+        if (tokens.get(pos).getType() == TokenType.END){
+            pos ++;
+            Node declarationNode = new DeclarationNode(declaration.getValue0(), declaration.getValue1(), null);
+            ast.add(declarationNode);
+        }
+        else if (tokens.get(pos).getType() == TokenType.EQUAL) {
+            pos++;
+            Node declarationNode = new DeclarationNode(declaration.getValue0(), declaration.getValue1(), expression());
+            if (tokens.get(pos).getType() == TokenType.END){
+                pos++;
+                ast.add(declarationNode);
+            }
+            else {
+                throw new RuntimeException("; was expected but not found");
+            }
+        }
+        else {
+            throw new RuntimeException("= or ; tokens were expected but not found");
+        }
+    }
+
+    private void createAssignationNode(List<Node> ast) {
+        String variable = tokens.get(pos).getValue();
+        pos ++;
+        if (tokens.get(pos).getType() == TokenType.EQUAL) {
+            pos++;
+            Expression<MyObject> right = expression();
+            Node assignationNode = new AssignationNode(variable, right);
+            if (tokens.get(pos).getType() == TokenType.END){
+                pos++;
+                ast.add(assignationNode);
+            }
+            else throw new RuntimeException("; was expected but not found");
+        }
+        else throw new RuntimeException("= was expected but not found");
+    }
+
+    private void createPrintNode(List<Node> ast) {
+        pos++;
+        if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
+            pos++;
+            Expression<MyObject> expression = expression();
+            if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
+                pos++;
+                Node print = new PrintNode(expression);
+                if (tokens.get(pos).getType() == TokenType.END){
+                    pos++;
+                    ast.add(print);
+                }
+                else throw new RuntimeException("; was expected but not found");
+            }
+            else {
+                throw new RuntimeException("')' expected but not found");
+            }
+        }
+        else {
+            throw new RuntimeException("'(' expected but not found");
+        }
+    }
+
+    private void createIfNode(List<Node> ast) {
+        pos++;
+        if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
+            pos++;
+            String str = tokens.get(pos).getValue();
+            pos++;
+            if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
+                pos++;
+                if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
+                    pos++;
+                    if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
+                        pos++;
+                    }
+                    else throw new RuntimeException("adsnaiodnai");
+                }
+
+                if (tokens.get(pos).getType() == TokenType.ELSE){
+                    if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
+                    }
+                    if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
+
+                    }
+                }
+            }
+            else {
+                throw new RuntimeException("')' expected but not found");
+            }
+        }
+        else {
+            throw new RuntimeException("'(' expected but not found");
+        }
+
     }
 
     private Pair<String, VariableType> setType() {
@@ -104,21 +152,13 @@ public class Parser {
                     if (type.equalsIgnoreCase("number")){
                         return new Pair<>(identifier, VariableType.NUMBER);
                     }
-                    else {
-                        return new Pair<>(identifier, VariableType.STRING);
-                    }
+                    else return new Pair<>(identifier, VariableType.STRING);
                 }
-                else {
-                    throw new RuntimeException("There is no type after allocation");
-                }
+                else throw new RuntimeException("There is no type after allocation");
             }
-            else {
-                throw new RuntimeException("There is no : after variable");
-            }
+            else throw new RuntimeException("There is no : after variable");
         }
-        else {
-            throw new RuntimeException("There is no variable name after keyword");
-        }
+        else throw new RuntimeException("There is no variable name after keyword");
     }
 
     private Expression<MyObject> expression(){

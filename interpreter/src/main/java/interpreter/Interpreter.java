@@ -5,7 +5,6 @@ import parser.VariableType;
 import parser.expr.*;
 import parser.node.*;
 
-import javax.xml.transform.TransformerConfigurationException;
 import java.util.HashMap;
 import java.util.List;
 

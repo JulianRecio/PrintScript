@@ -34,20 +34,7 @@ public class Lexer {
         setVersionPatterns(version);
         while (pos < input.length()) {
             String remainder = input.substring(pos);
-            HashMap<Matcher, TokenType> map = new HashMap<>();
-            map.put(KEYWORD_PATTERN.matcher(remainder), TokenType.KEYWORD);
-            map.put(TYPE_PATTERN.matcher(remainder), TokenType.TYPE);
-            map.put(IDENTIFIER_PATTERN.matcher(remainder), TokenType.IDENTIFIER);
-            map.put(ALLOCATOR_PATTER.matcher(remainder), TokenType.ALLOCATOR);
-            map.put(EQUAL_PATTERN.matcher(remainder), TokenType.EQUAL);
-            map.put(NUMBER_PATTERN.matcher(remainder), TokenType.NUMBER_VALUE);
-            map.put(UNARY_PATTERN.matcher(remainder), TokenType.UNARY_VALUE);
-            map.put(STRING_PATTERN.matcher(remainder), TokenType.STRING_VALUE);
-            map.put(OPERATOR_PATTERN.matcher(remainder), TokenType.OPERATOR);
-            map.put(PRINT_PATTERN.matcher(remainder), TokenType.PRINT);
-            map.put(LEFT_PARENTHESIS_PATTERN.matcher(remainder), TokenType.LEFT_PARENTHESIS);
-            map.put(RIGHT_PARENTHESIS_PATTERN.matcher(remainder), TokenType.RIGHT_PARENTHESIS);
-            map.put(END.matcher(remainder), TokenType.END);
+            HashMap<Matcher, TokenType> map = createMap(remainder);
             Matcher spaceMatcher = SPACE_PATTERN.matcher(remainder);
             boolean tmp = false;
             for (Matcher matcher : map.keySet()){
@@ -77,44 +64,43 @@ public class Lexer {
         return tokens;
     }
 
+    private static HashMap<Matcher, TokenType> createMap(String remainder){
+        HashMap<Matcher, TokenType> map = new HashMap<>();
+        map.put(KEYWORD_PATTERN.matcher(remainder), TokenType.KEYWORD);
+        map.put(TYPE_PATTERN.matcher(remainder), TokenType.TYPE);
+        map.put(IDENTIFIER_PATTERN.matcher(remainder), TokenType.IDENTIFIER);
+        map.put(ALLOCATOR_PATTER.matcher(remainder), TokenType.ALLOCATOR);
+        map.put(EQUAL_PATTERN.matcher(remainder), TokenType.EQUAL);
+        map.put(NUMBER_PATTERN.matcher(remainder), TokenType.NUMBER_VALUE);
+        map.put(UNARY_PATTERN.matcher(remainder), TokenType.UNARY_VALUE);
+        map.put(STRING_PATTERN.matcher(remainder), TokenType.STRING_VALUE);
+        map.put(OPERATOR_PATTERN.matcher(remainder), TokenType.OPERATOR);
+        map.put(PRINT_PATTERN.matcher(remainder), TokenType.PRINT);
+        map.put(LEFT_PARENTHESIS_PATTERN.matcher(remainder), TokenType.LEFT_PARENTHESIS);
+        map.put(RIGHT_PARENTHESIS_PATTERN.matcher(remainder), TokenType.RIGHT_PARENTHESIS);
+        map.put(END.matcher(remainder), TokenType.END);
+        return map;
+    }
+
     private static int addExtendedTokens(List<Token> tokens, int pos, String remainder) {
-        Matcher ifMatcher = IF.matcher(remainder);
-        Matcher booleanMatcher = BOOLEAN_PATTERN.matcher(remainder);
-        Matcher leftBracketMatcher = LEFT_BRACKET.matcher(remainder);
-        Matcher rightBracketMatcher = RIGHT_BRACKET.matcher(remainder);
-        Matcher elseMatcher = ELSE.matcher(remainder);
-        Matcher readInputMatcher = READ_INPUT.matcher(remainder);
-        if (ifMatcher.lookingAt()){
-            String ifState = ifMatcher.group();
-            tokens.add(new Token(TokenType.IF, ifState));
-            pos += ifState.length();
+        HashMap<Matcher, TokenType> map = new HashMap<>();
+        map.put(IF.matcher(remainder), TokenType.IF);
+        map.put(BOOLEAN_PATTERN.matcher(remainder), TokenType.BOOLEAN_VALUE);
+        map.put(LEFT_BRACKET.matcher(remainder), TokenType.LEFT_PARENTHESIS);
+        map.put(RIGHT_BRACKET.matcher(remainder), TokenType.RIGHT_PARENTHESIS);
+        map.put(ELSE.matcher(remainder), TokenType.ELSE);
+        map.put(READ_INPUT.matcher(remainder), TokenType.READ_INPUT);
+        boolean tmp = false;
+        for (Matcher matcher : map.keySet()){
+            if (matcher.lookingAt()){
+                String str = matcher.group();
+                tokens.add(new Token(map.get(matcher), str));
+                pos += str.length();
+                tmp = true;
+                break;
+            }
         }
-        else if (booleanMatcher.lookingAt()){
-            String booleanVar = booleanMatcher.group();
-            tokens.add(new Token(TokenType.BOOLEAN_VALUE, booleanVar));
-            pos += booleanVar.length();
-        }
-        else if (leftBracketMatcher.lookingAt()){
-            String leftBracket = leftBracketMatcher.group();
-            tokens.add(new Token(TokenType.LEFT_BRACKET, leftBracket));
-            pos += leftBracket.length();
-        }
-        else if (rightBracketMatcher.lookingAt()){
-            String rightBracket = rightBracketMatcher.group();
-            tokens.add(new Token(TokenType.RIGHT_BRACKET, rightBracket));
-            pos += rightBracket.length();
-        }
-        else if (elseMatcher.lookingAt()){
-            String elseState = elseMatcher.group();
-            tokens.add(new Token(TokenType.ELSE, elseState));
-            pos += elseState.length();
-        }
-        else if (readInputMatcher.lookingAt()){
-            String readInput = readInputMatcher.group();
-            tokens.add(new Token(TokenType.READ_INPUT, readInput));
-            pos += readInput.length();
-        }
-        else {
+        if (!tmp){
             // If none of the patterns match, raise an error
             throw new RuntimeException("Invalid input at position " + pos);
         }

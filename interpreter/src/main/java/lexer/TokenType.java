@@ -10,6 +10,7 @@ public enum TokenType {
     NUMBER_VALUE,
     UNARY_VALUE,
     STRING_VALUE,
+    BOOLEAN_VALUE,
     STRING_SYMBOL,
     PRINT,              //PrintLn()
     LEFT_PARENTHESIS,
