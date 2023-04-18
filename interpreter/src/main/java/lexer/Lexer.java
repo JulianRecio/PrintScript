@@ -108,7 +108,6 @@ public class Lexer {
     }
 
     private static void setVersionPatterns(Double version) {
-        IDENTIFIER_PATTERN = Pattern.compile("(?!PrintLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)(?!if\\b)(?!else\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
         ALLOCATOR_PATTER = Pattern.compile(":");
         EQUAL_PATTERN = Pattern.compile("=");
         NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");
@@ -122,10 +121,12 @@ public class Lexer {
         SPACE_PATTERN = Pattern.compile("\\s+");
         if (version == 1.0){
             KEYWORD_PATTERN = Pattern.compile("let");
+            IDENTIFIER_PATTERN = Pattern.compile("(?!PrintLn\\b)(?!number\\b)(?!string\\b)(?!let\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
             TYPE_PATTERN = Pattern.compile("number|string");
         }
         else if (version == 1.1){
             KEYWORD_PATTERN = Pattern.compile("let|const");
+            IDENTIFIER_PATTERN = Pattern.compile("(?!PrintLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)(?!if\\b)(?!else\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
             TYPE_PATTERN = Pattern.compile("number|string|boolean");
             IF = Pattern.compile("if");
             BOOLEAN_PATTERN = Pattern.compile("true|false");

@@ -22,7 +22,7 @@ public class Parser {
         this.pos = 0;
     }
 
-    public AST parse() {
+    public AST parse(Double version) {
         List<Node> ast = new ArrayList<>();
         while (pos < tokens.size() && tokens.get(pos).getType() != TokenType.RIGHT_BRACKET) {
             if (tokens.get(pos).getType() == TokenType.KEYWORD){
@@ -34,7 +34,7 @@ public class Parser {
             else if (tokens.get(pos).getType() == TokenType.PRINT) {
                 createPrintNode(ast);
             }
-            else if (tokens.get(pos).getType() == TokenType.IF){
+            else if (version == 1.1 && tokens.get(pos).getType() == TokenType.IF){
                 createIfNode(ast);
             }
             else {
@@ -116,14 +116,14 @@ public class Parser {
                 pos++;
                 if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
                     pos++;
-                    AST ifAST = this.parse();
+                    AST ifAST = this.parse(1.1);
                     if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
                         pos++;
                         if (pos < tokens.size() && tokens.get(pos).getType() == TokenType.ELSE){
                             pos++;
                             if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET){
                                 pos++;
-                                AST elseAST = this.parse();
+                                AST elseAST = this.parse(1.1);
                                 if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET){
                                     pos++;
                                     ast.add(new IfNode(expr, ifAST, elseAST));
