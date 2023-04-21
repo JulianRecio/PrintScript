@@ -29,7 +29,7 @@ public class StaticCodeAnalyserTest {
     public void testJsonConfigConditionsWhenIsSnakeCaseAndPrintIsTrue() throws IOException {
         StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testJsonConfigConditionsWhenIsCamelCaseAndPrintIsTrue", "snake case", true));
 
-        Assertions.assertEquals("snake case", sca.getNamingConvention());
+        Assertions.assertEquals("snake case", sca.getCaseConvention());
         Assertions.assertEquals(true, sca.isPrintlnCondition());
     }
 
@@ -37,7 +37,7 @@ public class StaticCodeAnalyserTest {
     public void testJsonConfigConditionsWhenIsCamelCaseAndPrintIsFalse() throws IOException {
         StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testJsonConfigConditionsWhenIsCamelCaseAndPrintIsTrue", "camel case", false));
 
-        Assertions.assertEquals("camel case", sca.getNamingConvention());
+        Assertions.assertEquals("camel case", sca.getCaseConvention());
         Assertions.assertEquals(false, sca.isPrintlnCondition());
     }
 

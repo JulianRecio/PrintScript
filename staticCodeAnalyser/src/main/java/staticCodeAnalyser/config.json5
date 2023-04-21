@@ -1,4 +1,4 @@
 {
-  "identifierCase": "snake case",
+  "caseConvention": "camel case",
   "printlnCondition": "true"
 }
