@@ -9,7 +9,8 @@ import javax.xml.transform.TransformerConfigurationException;
 import java.util.HashMap;
 import java.util.List;
 
-public class Interpreter implements NodeVisitor, ExpressionVisitor {
+public class Interpreter implements NodeVisitor, ExpressionVisitor
+{
 
     private final AST ast;
     private final HashMap<String, MyObject> map = new HashMap<>();
