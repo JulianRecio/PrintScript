@@ -5,11 +5,11 @@ import parser.node.DeclarationNode;
 import parser.node.NodeVisitor;
 import parser.node.PrintNode;
 
-public class caseConventionRule implements NodeVisitor {
+public class CaseConventionRule implements NodeVisitor {
 
     private final String caseConvention;
 
-    public caseConventionRule(String caseConvention) {
+    public CaseConventionRule(String caseConvention) {
         this.caseConvention = caseConvention;
     }
 

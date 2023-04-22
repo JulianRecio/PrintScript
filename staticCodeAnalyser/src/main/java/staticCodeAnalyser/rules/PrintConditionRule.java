@@ -5,15 +5,12 @@ import parser.node.AssignationNode;
 import parser.node.DeclarationNode;
 import parser.node.NodeVisitor;
 import parser.node.PrintNode;
-import staticCodeAnalyser.Rule;
 
-public class printConditionRule implements NodeVisitor, ExpressionVisitor {
+public class PrintConditionRule implements NodeVisitor, ExpressionVisitor {
 
     private final boolean printlnCondition;
 
-
-
-    public printConditionRule(boolean printlnCondition) {
+    public PrintConditionRule(boolean printlnCondition) {
         this.printlnCondition = printlnCondition;
     }
 
@@ -33,7 +30,7 @@ public class printConditionRule implements NodeVisitor, ExpressionVisitor {
         Object printExpression = node.getExpression().accept(this);
 
         if (printExpression.equals(ExpressionType.BINARY) || printExpression.equals(ExpressionType.UNARY)){
-            throw new RuntimeException("println argument not valid: " + printExpression.toString());
+            throw new RuntimeException("println argument not valid: " + printExpression);
         }
     }
     }

@@ -7,8 +7,8 @@ import parser.AST;
 import parser.Parser;
 import parser.node.Node;
 import parser.node.NodeVisitor;
-import staticCodeAnalyser.rules.caseConventionRule;
-import staticCodeAnalyser.rules.printConditionRule;
+import staticCodeAnalyser.rules.CaseConventionRule;
+import staticCodeAnalyser.rules.PrintConditionRule;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,21 +23,25 @@ public class StaticCodeAnalyser {
     public StaticCodeAnalyser(String configFile) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File fileObj = new File(configFile);
-        ruleSet = selectRuleSet("1.0");//placeholder
+
         Map<String, String> map;
         map =  mapper.readValue(
                     fileObj, new TypeReference<>() {
                 });
+
+
         this.caseConvention = map.get("caseConvention");
         this.printlnCondition = Boolean.parseBoolean(map.get("printlnCondition"));
+
+        ruleSet = selectRuleSet("1.0");//placeholder
     }
 
     private Set<NodeVisitor> selectRuleSet(String version) {
         switch (version){
             case "1.0" -> {
                 Set<NodeVisitor> rules = new HashSet<>();
-                rules.add(new caseConventionRule(caseConvention));//placeholders
-                rules.add(new printConditionRule(printlnCondition));//placeholders
+                rules.add(new CaseConventionRule(caseConvention));
+                rules.add(new PrintConditionRule(printlnCondition));
                 return rules;
             }
             case "1.1" -> {

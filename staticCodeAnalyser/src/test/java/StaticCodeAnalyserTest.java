@@ -11,7 +11,7 @@ public class StaticCodeAnalyserTest {
     private String createTestConfigFileAndReturnPath(String testName, String identifierCase, boolean printlnCondition) {
         JSONObject jsonObject = new JSONObject();
         //Inserting key-value pairs into the json object
-        jsonObject.put("identifierCase", "" + identifierCase);
+        jsonObject.put("caseConvention", "" + identifierCase);
         jsonObject.put("printlnCondition", "" + printlnCondition);
 
         String path = "src\\test\\resources\\" + testName + "Config.json5";
