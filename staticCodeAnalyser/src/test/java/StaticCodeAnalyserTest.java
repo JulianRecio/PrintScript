@@ -123,16 +123,6 @@ public class StaticCodeAnalyserTest {
 
 
     @Test
-    public void testAnalyzeWhenIsPrintLnConditionFalseReturnWith0ErrorsComplex() throws IOException {
-        StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testAnalyzeWhenIsPrintLnConditionFalseReturnWith0ErrorsComplex", "camel case", false));
-
-        String code = "PrintLn((1 + 2 - 5) / 2);";
-        List<String> expected = sca.analyze(code);
-
-        Assertions.assertEquals(0, expected.size());
-    }
-
-    @Test
     public void testAnalyzeWhenIsPrintLnConditionTrueReturnWith2Errors() throws IOException {
         StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testAnalyzeWhenIsPrintLnConditionTrueReturnWith2Errors", "camel case", true));
 

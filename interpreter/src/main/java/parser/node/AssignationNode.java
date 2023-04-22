@@ -1,14 +1,15 @@
 package parser.node;
 
 
+import interpreter.MyObject;
 import parser.expr.Expression;
 
 public class AssignationNode implements Node{
 
     private final String variable;
-    private final Expression<?> expression;
+    private final Expression<MyObject> expression;
 
-    public AssignationNode(String variable, Expression<?> expression) {
+    public AssignationNode(String variable, Expression<MyObject> expression) {
         this.variable = variable;
         this.expression = expression;
     }
@@ -17,7 +18,7 @@ public class AssignationNode implements Node{
         return variable;
     }
 
-    public Expression<?> getExpression() {
+    public Expression<MyObject> getExpression() {
         return expression;
     }
 

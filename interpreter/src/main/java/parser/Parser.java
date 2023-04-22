@@ -2,7 +2,11 @@ package parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
+import interpreter.MyObject;
+import interpreter.NumberObj;
+import interpreter.StringObj;
 import lexer.*;
 import org.javatuples.Pair;
 import parser.expr.*;
@@ -49,7 +53,7 @@ public class Parser {
                 pos ++;
                 if (tokens.get(pos).getType() == TokenType.EQUAL) {
                     pos++;
-                    Expression<Object> right = expression();
+                    Expression<MyObject> right = expression();
                     Node assignationNode = new AssignationNode(variable, right);
                     if (tokens.get(pos).getType() == TokenType.END){
                         pos++;
@@ -63,7 +67,7 @@ public class Parser {
                 pos++;
                 if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
                     pos++;
-                    Expression<Object> expression = expression();
+                    Expression<MyObject> expression = expression();
                     if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
                         pos++;
                         Node print = new PrintNode(expression);
@@ -117,13 +121,13 @@ public class Parser {
         }
     }
 
-    private Expression<Object> expression(){
-        Expression<Object> left = term();
+    private Expression<MyObject> expression(){
+        Expression<MyObject> left = term();
         while (tokens.get(pos).getType() != TokenType.END){
             Token token = tokens.get(pos);
             if (token.getType() == TokenType.OPERATOR && "+-".contains(token.getValue())) {
                 pos++;
-                Expression<Object> right = term();
+                Expression<MyObject> right = term();
                 left = new BinaryExpression(token.getValue(), left, right);
             }
             else {
@@ -133,13 +137,13 @@ public class Parser {
         return left;
     }
 
-    private Expression<Object> term(){
-        Expression<Object> left = factor();
+    private Expression<MyObject> term(){
+        Expression<MyObject> left = factor();
         while (tokens.get(pos).getType() != TokenType.END){
             Token token = tokens.get(pos);
             if (token.getType() == TokenType.OPERATOR && "/*".contains(token.getValue())) {
                 pos++;
-                Expression<Object> right = factor();
+                Expression<MyObject> right = factor();
                 left = new BinaryExpression(token.getValue(), left, right);
             }
             else {
@@ -149,26 +153,37 @@ public class Parser {
         return left;
     }
 
-    private Expression<Object> factor(){
+    private Expression<MyObject> factor(){
         if (tokens.get(pos).getType() == TokenType.NUMBER_VALUE) {
-            Expression<Object> numberExpr = new LiteralExpression(Double.parseDouble(tokens.get(pos).getValue()));
+            Expression<MyObject> numberExpr = new LiteralExpression(new NumberObj(Double.parseDouble(tokens.get(pos).getValue())));
             pos ++;
             return numberExpr;
         }
         else if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
-            Expression<Object> stringExpr = new LiteralExpression(tokens.get(pos).getValue());
+            Expression<MyObject> stringExpr = new LiteralExpression(new StringObj(tokens.get(pos).getValue()));
             pos++;
             return stringExpr;
         }
         else if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
-            Expression<Object> identifierExpr = new VariableExpression(tokens.get(pos).getValue());
+            Expression<MyObject> identifierExpr = new VariableExpression(tokens.get(pos).getValue());
             pos++;
             return identifierExpr;
         }
         else if (tokens.get(pos).getType() == TokenType.UNARY_VALUE) {
-            Expression<Object> unaryExpr = new UnaryExpression(tokens.get(pos).getValue());
+            Expression<MyObject> unaryExpr = new UnaryExpression(tokens.get(pos).getValue());
             pos++;
             return unaryExpr;
+        }
+        else if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS){
+            pos++;
+            Expression<MyObject> expression = expression();
+            if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS){
+                pos++;
+                return expression;
+            }
+            else {
+                throw new RuntimeException("Right parenthesis expected but not found");
+            }
         }
         else {
             throw new RuntimeException("Expected number, string value or a variable in expression");
