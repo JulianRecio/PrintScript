@@ -112,7 +112,7 @@ public class Lexer {
     UNARY_PATTERN = Pattern.compile("-(?!\\s*[+\\-*/])\\w+");
     STRING_PATTERN = Pattern.compile("\"[a-zA-Z][a-zA-Z0-9 ]*\"");
     OPERATOR_PATTERN = Pattern.compile("[+\\-*/]");
-    PRINT_PATTERN = Pattern.compile("PrintLn");
+    PRINT_PATTERN = Pattern.compile("printLn");
     LEFT_PARENTHESIS_PATTERN = Pattern.compile("\\(");
     RIGHT_PARENTHESIS_PATTERN = Pattern.compile("\\)");
     END = Pattern.compile(";");
@@ -121,13 +121,13 @@ public class Lexer {
       KEYWORD_PATTERN = Pattern.compile("let");
       IDENTIFIER_PATTERN =
           Pattern.compile(
-              "(?!PrintLn\\b)(?!number\\b)(?!string\\b)(?!let\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
+              "(?!printLn\\b)(?!number\\b)(?!string\\b)(?!let\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
       TYPE_PATTERN = Pattern.compile("number|string");
     } else if (version == 1.1) {
       KEYWORD_PATTERN = Pattern.compile("let|const");
       IDENTIFIER_PATTERN =
           Pattern.compile(
-              "(?!PrintLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)(?!if\\b)(?!else\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
+              "(?!printLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)(?!if\\b)(?!else\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
       TYPE_PATTERN = Pattern.compile("number|string|boolean");
       IF = Pattern.compile("if");
       BOOLEAN_PATTERN = Pattern.compile("true|false");
