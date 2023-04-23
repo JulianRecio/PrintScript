@@ -32,8 +32,8 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
     String variable = node.getVariableName();
     VariableType type = node.getType();
     if (map.containsKey(variable)) {
-        String errorMsg = "Variable " + variable + " is already declared";
-        errors.add(errorMsg);
+      String errorMsg = "Variable " + variable + " is already declared";
+      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     } else {
       MyObject classType;
@@ -52,8 +52,8 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
         try {
           classType.setValue(result.getValue());
         } catch (Exception e) {
-            String errorMsg = "Mismatching types";
-            errors.add(errorMsg);
+          String errorMsg = "Mismatching types";
+          errors.add(errorMsg);
           throw new RuntimeException(errorMsg);
         }
         map.put(variable, result);
@@ -71,14 +71,14 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
       try {
         value.setValue(result.getValue());
       } catch (Exception e) {
-          String errorMsg = "Mismatching types";
-          errors.add(errorMsg);
+        String errorMsg = "Mismatching types";
+        errors.add(errorMsg);
         throw new RuntimeException(errorMsg);
       }
       map.put(variable, result);
     } else {
-        String errorMsg = "Variable does not exist";
-        errors.add(errorMsg);
+      String errorMsg = "Variable does not exist";
+      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     }
   }
@@ -87,36 +87,34 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
   public void visitNode(PrintNode node) {
     MyObject toPrint = node.getExpression().accept(this);
     if (toPrint.getValue() == null) {
-        String errorMsg = "Variable was not initialized";
-        errors.add(errorMsg);
+      String errorMsg = "Variable was not initialized";
+      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     } else {
-        printed.add(toPrint.getValue().toString());
-        System.out.println(toPrint.getValue().toString());
+      printed.add(toPrint.getValue().toString());
+      System.out.println(toPrint.getValue().toString());
     }
   }
 
   @Override
   public void visitNode(IfNode node) {
     MyObject obj = node.getValue().accept(this);
-    MyObject tmpObj = node.getValue().accept(this);
-    try {
-      tmpObj.setValue(true);
-    } catch (Exception e) {
-        String errorMsg = "Expression inside if needs to be of type Boolean";
-        errors.add(errorMsg);
+    if (node.getValue().accept(this) instanceof BooleanObj) {
+      if ((boolean) obj.getValue()) {
+        List<Node> tmpAST = node.getIfAST().getAst();
+        for (int i = 0; i < tmpAST.size(); i++) {
+          tmpAST.get(i).accept(this);
+        }
+      } else if (node.getElseAST() != null) {
+        List<Node> tmpAST = node.getElseAST().getAst();
+        for (int i = 0; i < tmpAST.size(); i++) {
+          tmpAST.get(i).accept(this);
+        }
+      }
+    } else {
+      String errorMsg = "Expression inside if needs to be of type Boolean";
+      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
-    }
-    if ((boolean) obj.getValue()) {
-      List<Node> tmpAST = node.getIfAST().getAst();
-      for (int i = 0; i < tmpAST.size(); i++) {
-        tmpAST.get(i).accept(this);
-      }
-    } else if (node.getElseAST() != null) {
-      List<Node> tmpAST = node.getElseAST().getAst();
-      for (int i = 0; i < tmpAST.size(); i++) {
-        tmpAST.get(i).accept(this);
-      }
     }
   }
 
@@ -131,9 +129,9 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
       case "*" -> resolver.multiply(left, right);
       case "/" -> resolver.divide(left, right);
       default -> {
-          String errorMsg = "Operator is not valid";
-          errors.add(errorMsg);
-          throw new RuntimeException(errorMsg);
+        String errorMsg = "Operator is not valid";
+        errors.add(errorMsg);
+        throw new RuntimeException(errorMsg);
       }
     };
   }
@@ -151,15 +149,15 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
       try {
         obj.setValue(-(double) obj.getValue());
       } catch (ClassCastException e) {
-          String errorMsg = "Cannot invert string values";
-          errors.add(errorMsg);
+        String errorMsg = "Cannot invert string values";
+        errors.add(errorMsg);
         throw new RuntimeException(errorMsg);
       }
       map.put(value.substring(1), obj);
       return obj;
     } else {
-        String errorMsg = "Value " + value + " does not exist";
-        errors.add(errorMsg);
+      String errorMsg = "Value " + value + " does not exist";
+      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     }
   }
@@ -168,8 +166,8 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
   public MyObject visitExpr(VariableExpression variableExpression) {
     MyObject myObject = map.get(variableExpression.getVariableName());
     if (myObject.getValue() == null) {
-        String errorMsg = "Variable " + variableExpression.getVariableName() + " was not initialized";
-        errors.add(errorMsg);
+      String errorMsg = "Variable " + variableExpression.getVariableName() + " was not initialized";
+      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     }
     return myObject;
@@ -196,11 +194,11 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
     return map;
   }
 
-    public List<String> getErrors() {
-        return errors;
-    }
+  public List<String> getErrors() {
+    return errors;
+  }
 
-    public List<String> getPrinted() {
-        return printed;
-    }
+  public List<String> getPrinted() {
+    return printed;
+  }
 }
