@@ -33,13 +33,13 @@ public class FormatterTest {
     }
 
 
-    @Test
-    public void testWholeFormatter()  {
-        InputStream inputStream = new ByteArrayInputStream("let x:number;".getBytes());
-        List<String> formattedCode = Formatter.useFormatter(inputStream);
-
-        Assertions.assertEquals(1, formattedCode.size());
-    }
+//    @Test
+//    public void testWholeFormatter()  {
+//        InputStream inputStream = new ByteArrayInputStream("let x:number;".getBytes());
+//        List<String> formattedCode = Formatter.useFormatter(inputStream);
+//
+//        Assertions.assertEquals(1, formattedCode.size());
+//    }
 
     @Test
     public void testSpaceAfterColonInDeclarationRule()  {

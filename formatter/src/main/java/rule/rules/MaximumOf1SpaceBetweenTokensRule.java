@@ -2,15 +2,11 @@ package rule.rules;
 
 import lexer.Token;
 import rule.Rule;
-import rule.RuleType;
 
 import java.util.List;
 
 public class MaximumOf1SpaceBetweenTokensRule implements Rule {
-    @Override
-    public RuleType getRuleType() {
-        return RuleType.GENERAL;
-    }
+
 
     @Override
     public void applyRule(List<Token> tokens) {

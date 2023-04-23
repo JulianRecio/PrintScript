@@ -3,7 +3,6 @@ package rule.rules;
 import lexer.Token;
 import lexer.TokenType;
 import rule.Rule;
-import rule.RuleType;
 
 import java.util.List;
 
@@ -14,10 +13,6 @@ public class LineBreakBeforePrintLnRule implements Rule {
         this.amount = amount;
     }
 
-    @Override
-    public RuleType getRuleType() {
-        return RuleType.PRINT;
-    }
 
     @Override
     public void applyRule(List<Token> tokens) {
