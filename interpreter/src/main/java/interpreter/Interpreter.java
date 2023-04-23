@@ -2,6 +2,7 @@ package interpreter;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import parser.AST;
 import parser.VariableType;
 import parser.expr.*;
@@ -147,6 +148,23 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
           "Variable " + variableExpression.getVariableName() + " was not initialized");
     }
     return myObject;
+  }
+
+  @Override
+  public MyObject visitExpr(ReadInputExpression readInputExpression) {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("InsertType: ");
+    String type = scanner.nextLine();
+    System.out.println(readInputExpression.getMessage());
+    String value = scanner.nextLine();
+    scanner.close();
+    if (type.equals("number")) {
+      return new NumberObj(Double.parseDouble(value));
+    } else if (type.equals("string")) {
+      return new StringObj(value);
+    } else if (type.equals("boolean")) {
+      return new BooleanObj(Boolean.parseBoolean(value));
+    } else throw new RuntimeException("Unsupported type");
   }
 
   public HashMap<String, MyObject> getMap() {

@@ -171,4 +171,13 @@ public class InterpreterTest {
     interpreter.interpret();
     Assertions.assertEquals(3.0, interpreter.getMap().get("x").getValue());
   }
+
+  @Test
+  public void testReadInput() {
+    List<Token> tokens = Lexer.tokenize("let x:number = readInput(\"Insert variable\");", 1.1);
+    Parser parser = new Parser(tokens);
+    AST ast = parser.parse(1.1);
+    Interpreter interpreter = new Interpreter(ast);
+    interpreter.interpret();
+  }
 }

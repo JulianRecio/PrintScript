@@ -119,7 +119,7 @@ public class Parser {
                 }
               }
             } else ast.add(new IfNode(expr, ifAST, null));
-          } else throw new RuntimeException("adsnaiodnai");
+          } else throw new RuntimeException("{ expected");
         }
       } else {
         throw new RuntimeException("')' expected but not found");
@@ -202,6 +202,19 @@ public class Parser {
       Expression<MyObject> unaryExpr = new UnaryExpression(tokens.get(pos).getValue());
       pos++;
       return unaryExpr;
+    } else if (tokens.get(pos).getType() == TokenType.READ_INPUT) {
+      pos++;
+      if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
+        pos++;
+        if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
+          String message = tokens.get(pos).getValue();
+          pos++;
+          if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
+            pos++;
+            return new ReadInputExpression(message);
+          } else throw new RuntimeException(") expected");
+        } else throw new RuntimeException("message expected");
+      } else throw new RuntimeException("( expected");
     } else if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
       pos++;
       Expression<MyObject> expression = expression();

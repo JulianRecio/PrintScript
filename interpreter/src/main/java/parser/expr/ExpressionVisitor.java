@@ -9,4 +9,6 @@ public interface ExpressionVisitor<T> {
   T visitExpr(UnaryExpression unaryExpression);
 
   T visitExpr(VariableExpression variableExpression);
+
+  T visitExpr(ReadInputExpression readInputExpression);
 }

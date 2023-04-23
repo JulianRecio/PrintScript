@@ -18,7 +18,9 @@ public class BooleanObj implements MyObject {
   }
 
   @Override
-  public void setValue(Object value) {}
+  public void setValue(Object value) {
+    this.value = (boolean) value;
+  }
 
   @Override
   public MyObject add(MyObject obj2) {
