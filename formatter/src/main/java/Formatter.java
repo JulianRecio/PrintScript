@@ -16,26 +16,33 @@ import java.util.stream.Collectors;
 public class Formatter {
 
 
-    public static List<String> useFormatter(String input) {
-        List<Token> tokens = Lexer.tokenize(input);
-        List<Rule> rules = getRulesFromConfig(readConfigFile("src\\main\\resources\\config.json"));
+    public static String useFormatter(String input, Double version) {
+        List<Token> tokens = Lexer.tokenize(input, version);
+        List<Rule> rules = getRulesFromConfig(readConfigFile("src\\main\\resources\\config.json"), version);
         return format(tokens, rules);
     }
 
-    public static List<Rule> getRulesFromConfig(Map<String, String> ruleMap) {
+    public static List<Rule> getRulesFromConfig(Map<String, String> ruleMap, Double version) {
         if (ruleMap == null) throw new RuntimeException("invalid path");
 
         List<Rule> rules = new ArrayList<>();
+
 
         if (ruleMap.containsKey("spaceBeforeColonInDeclaration") && ruleMap.get("spaceBeforeColonInDeclaration").equals("true")) rules.add(new SpaceBeforeColonRule());
         if (ruleMap.containsKey("spaceAfterColonInDeclaration") && ruleMap.get("spaceAfterColonInDeclaration").equals("true")) rules.add(new SpaceAfterColonRule());
         if (ruleMap.containsKey("spaceBeforeAndAfterEqualSignInAssignment") && ruleMap.get("spaceBeforeAndAfterEqualSignInAssignment").equals("true")) rules.add(new SpaceBeforeAndAfterEqualSignRule());
         if (ruleMap.containsKey("AmountOfLineBreaksBeforePrintLn")) rules.add(new LineBreakBeforePrintLnRule(Integer.parseInt(ruleMap.get("AmountOfLineBreaksBeforePrintLn"))));
 
-//        rules.add(new LineBreakAfterSemiColonRule());
+        rules.add(new LineBreakAfterSemiColonRule());
         rules.add(new SpaceBeforeAndAfterOperatorRule());
         rules.add(new SpaceAfterKeywordRule());
         rules.add(new MaximumOf1SpaceBetweenTokensRule());
+
+        if (version == 1.1){
+            //add 1.1 version rules
+            if (ruleMap.containsKey("AmountOfIndentedInIfBlock")) rules.add(new IndentedIfBlockRule(Integer.parseInt(ruleMap.get("AmountOfIndentedInIfBlock"))));
+            if (ruleMap.containsKey("IfKeyInSameLine") && ruleMap.get("IfKeyInSameLine").equals("true")) rules.add(new IfKeyOnSameLine());
+        }
 
         return rules;
     }
@@ -55,22 +62,22 @@ public class Formatter {
         return null;
     }
 
-    public static List<String> format(List<Token> tokens, List<Rule> rules){
-        List<String> formattedCode = new ArrayList<>();
+    public static String format(List<Token> tokens, List<Rule> rules){
+        StringBuilder formattedCode = new StringBuilder();
         List<Token> currentList = new ArrayList<>();
         for (Token currentToken : tokens){
-            if (currentToken.getType().equals(TokenType.END)){
+            if (currentToken.getType().equals(TokenType.END) || currentToken.getType().equals(TokenType.RIGHT_BRACKET)){
                 currentList.add(currentToken);
                 //adds formatted line
-                formattedCode.add(formatLine(currentList, rules));
+                formattedCode.append(formatLine(currentList, rules));
                 currentList = new ArrayList<>();
             }
             else{
                 currentList.add(currentToken);
             }
         }
-        printLines(formattedCode);
-        return formattedCode;
+        System.out.println(formattedCode.toString());
+        return formattedCode.toString();
     }
     private static String formatLine(List<Token> tokens, List<Rule> rules){
         //apply all rules
@@ -85,7 +92,4 @@ public class Formatter {
                 .collect(Collectors.joining());
     }
 
-    private static void printLines(List<String> lines){
-        lines.forEach(System.out::println);
-    }
 }
