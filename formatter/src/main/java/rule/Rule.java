@@ -1,6 +1,7 @@
 package rule;
 
 import lexer.Token;
+import parser.node.Node;
 
 import java.util.List;
 

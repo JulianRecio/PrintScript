@@ -5,191 +5,220 @@ import org.junit.jupiter.api.Test;
 import org.json.simple.JSONObject;
 import rule.Rule;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class FormatterTest {
 
-    private List<Rule> createTestConfigFileAndReturnRules(String testName, boolean spaceBeforeColonInDeclaration, boolean spaceAfterColonInDeclaration, boolean spaceBeforeAndAfterEqualSignInAssignment, int amountOfLineBreaksBeforePrintLn) {
-        JSONObject jsonObject = new JSONObject();
-        //Inserting key-value pairs into the json object
-        jsonObject.put("spaceBeforeColonInDeclaration", "" + spaceBeforeColonInDeclaration);
-        jsonObject.put("spaceAfterColonInDeclaration", "" + spaceAfterColonInDeclaration);
-        jsonObject.put("spaceBeforeAndAfterEqualSignInAssignment", "" + spaceBeforeAndAfterEqualSignInAssignment);
-        jsonObject.put("AmountOfLineBreaksBeforePrintLn", "" + amountOfLineBreaksBeforePrintLn);
+    private List<Rule> createRules(Double version, boolean spaceBeforeColonInDeclaration, boolean spaceAfterColonInDeclaration, boolean spaceBeforeAndAfterEqualSignInAssignment, int amountOfLineBreaksBeforePrintLn, int amountOfIndentedInIfBlock, boolean IfKeyInSameLine) {
+        Map<String, String> ruleMap = new HashMap<>();
+        //Inserting key-value pairs into map
 
-        String path = "src\\test\\resources\\" + testName + "Config.json";
-        try {
-            FileWriter fw = new FileWriter(path);
-            fw.write(jsonObject.toJSONString());
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(version == 1.1){
+            ruleMap.put("AmountOfIndentedInIfBlock", "" + amountOfIndentedInIfBlock);
+            ruleMap.put("IfKeyInSameLine", "" + IfKeyInSameLine);
         }
-        return Formatter.getRulesFromConfig(path);
+
+        ruleMap.put("spaceBeforeColonInDeclaration", "" + spaceBeforeColonInDeclaration);
+        ruleMap.put("spaceAfterColonInDeclaration", "" + spaceAfterColonInDeclaration);
+        ruleMap.put("spaceBeforeAndAfterEqualSignInAssignment", "" + spaceBeforeAndAfterEqualSignInAssignment);
+        ruleMap.put("AmountOfLineBreaksBeforePrintLn", "" + amountOfLineBreaksBeforePrintLn);
+
+        return Formatter.getRulesFromConfig(ruleMap, version);
     }
-    private List<Token> createTokensFromString(String input) {
-        return Lexer.tokenize(input);
+
+    private List<Token> createTokensFromString(String input, Double version) {
+        return Lexer.tokenize(input, version);
+    }
+
+
+    @Test
+    public void testWholeFormatter()  {
+//        InputStream inputStream = new ByteArrayInputStream("let x:number;".getBytes());
+        String formattedCode = Formatter.useFormatter("let x:number;", 1.0);
+
+        Assertions.assertNotEquals("", formattedCode);
     }
 
     @Test
     public void testSpaceAfterColonInDeclarationRule()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testSpaceAfterColonInDeclarationRule", false, true, false, 0);
-        List<Token> tokens = createTokensFromString("let x:number;");
+        List<Rule> rules = createRules(1.0,false, true, false, 0,0,false);
+        List<Token> tokens = createTokensFromString("let x:number;", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("let x: number;");
+        String expected = "let x: number;\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
 
     @Test
     public void testSpaceBeforeColonInDeclarationRule()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testSpaceBeforeColonInDeclarationRule", true, false, false, 0);
-        List<Token> tokens = createTokensFromString("let x:number;");
+        List<Rule> rules = createRules(1.0,true, false, false, 0,0,false);
+        List<Token> tokens = createTokensFromString("let x:number;", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("let x :number;");
+        String expected = "let x :number;\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
 
     @Test
     public void testSpaceBeforeAndAfterEqualSignInAssignmentRule()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testSpaceBeforeAndAfterEqualSignInAssignmentRule", false, false, true, 0);
-        List<Token> tokens = createTokensFromString("let x:number=3;");
+        List<Rule> rules = createRules(1.0,false, false, true, 0,0,false);
+        List<Token> tokens = createTokensFromString("let x:number=3;", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("let x:number = 3;");
+        String expected = "let x:number = 3;\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
 
     @Test
     public void testAmountOfLineBreaksBeforePrintLnRuleWhereAmountIs0()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testAmountOfLineBreaksBeforePrintLnRuleWhereAmountIs0", false, false, false, 0);
-        List<Token> tokens = createTokensFromString("PrintLn(\"Hola como\");");
+        List<Rule> rules = createRules(1.0,false, false, false, 0,0,false);
+        List<Token> tokens = createTokensFromString("PrintLn(\"Hola como\");", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("PrintLn(\"Hola como\");");
+        String expected = "PrintLn(\"Hola como\");\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
     @Test
     public void testAmountOfLineBreaksBeforePrintLnRuleWhereAmountIs1()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testAmountOfLineBreaksBeforePrintLnRuleWhereAmountIs1", false, false, false, 1);
-        List<Token> tokens = createTokensFromString("PrintLn(\"Hola como\");");
+        List<Rule> rules = createRules(1.0,false, false, false, 1,0,false);
+        List<Token> tokens = createTokensFromString("printLn(\"Hola como\");", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("\nPrintLn(\"Hola como\");");
+        String expected = "\nprintLn(\"Hola como\");\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
     @Test
     public void testAmountOfLineBreaksBeforePrintLnRuleWhereAmountIs2()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testAmountOfLineBreaksBeforePrintLnRuleWhereAmountIs2", false, false, false, 2);
-        List<Token> tokens = createTokensFromString("PrintLn(\"Hola como\");");
+        List<Rule> rules = createRules(1.0,false, false, false, 2,0,false);
+        List<Token> tokens = createTokensFromString("printLn(\"Hola como\");", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("\n\nPrintLn(\"Hola como\");");
+        String expected = "\n\nprintLn(\"Hola como\");\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
 
     @Test
     public void testLineBreakAfterSemiColonRule()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testLineBreakAfterSemiColonRule", false, false, false, 0);
-        List<Token> tokens = createTokensFromString("let x:number=3;");
+        List<Rule> rules = createRules(1.0,false, false, false, 0,0,false);
+        List<Token> tokens = createTokensFromString("let x:number=3;", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("let x:number=3;");
+        String expected = "let x:number=3;\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
 
     @Test
     public void testSpaceBeforeAndAfterOperatorRule()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testSpaceBeforeAndAfterOperatorRule", false, false, false, 0);
-        List<Token> tokens = createTokensFromString("let x:number=3.6+3*3;");
+        List<Rule> rules = createRules(1.0,false, false, false, 0,0,false);
+        List<Token> tokens = createTokensFromString("let x:number=3.6+3*3;", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("let x:number=3.6 + 3 * 3;");
+        String expected = "let x:number=3.6 + 3 * 3;\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
-    }
-
-    @Test
-    public void testSpaceAfterKeywordRule()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testSpaceAfterKeywordRule", false, false, false, 0);
-        List<Token> tokens = createTokensFromString("letx:number=3;");
-
-        List<String> expected = new ArrayList<>();
-        expected.add("let x:number=3;");
-
-        List<String> formattedCode = Formatter.format(tokens, rules);
-
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
 
     @Test
     public void testMaximumOf1SpaceBetweenTokensRule()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testMaximumOf1SpaceBetweenTokensRule", false, false, false, 0);
-        List<Token> tokens = createTokensFromString("let    x    :    number    =     3   ;");
+        List<Rule> rules = createRules(1.0,false, false, false, 0,0,false);
+        List<Token> tokens = createTokensFromString("let    x    :    number    =     3   ;", 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("let x:number=3;");
+        String expected = "let x:number=3;\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        Assertions.assertEquals(expected.get(0), formattedCode.get(0));
+        Assertions.assertEquals(expected, formattedCode);
     }
 
     @Test
     public void testMultipleLines()  {
-        List<Rule> rules = createTestConfigFileAndReturnRules("testMultipleLines", true, true, true, 1);
+        List<Rule> rules = createRules(1.0,true, true, true, 1,0,false);
         List<Token> tokens = createTokensFromString("let x:number=3.6;" +
                                                           "let x:string=\"Hola como\";" +
-                                                          "PrintLn(\"Hola como\");" );
+                                                          "printLn(\"Hola como\");" , 1.0);
 
-        List<String> expected = new ArrayList<>();
-        expected.add("let x : number = 3.6;");
-        expected.add("let x : string = \"Hola como\";");
-        expected.add("\nPrintLn(\"Hola como\");");
+        String expected = "let x : number = 3.6;\nlet x : string = \"Hola como\";\n\nprintLn(\"Hola como\");\n";
 
-        List<String> formattedCode = Formatter.format(tokens, rules);
+        String formattedCode = Formatter.format(tokens, rules);
 
-        Assertions.assertEquals(expected.size(), formattedCode.size());
-        for (int i = 0; i < expected.size(); i++) {
-            Assertions.assertEquals(expected.get(i), formattedCode.get(i));
-        }
+        Assertions.assertEquals(expected, formattedCode);
+    }
+
+
+    //version 1.1
+
+    @Test
+    public void testAmountOfIndentedInIfBlockRuleWhereAmountIs0()  {
+        List<Rule> rules = createRules(1.1,false, false, false, 0,0,false);
+        List<Token> tokens = createTokensFromString("if (false) { let y:number = 7 } else {let x:number = 3;}", 1.1);
+
+        String expected = "if(false){let y:number=7}else{let x:number=3;\n}";
+
+        String formattedCode = Formatter.format(tokens, rules);
+
+        Assertions.assertEquals(expected, formattedCode);
+    }
+    @Test
+    public void testAmountOfIndentedInIfBlockRuleWhereAmountIs4()  {
+        List<Rule> rules = createRules(1.1,false, false, false, 0,4,false);
+        List<Token> tokens = createTokensFromString("if (false) { let y:number = 7; } else {let x:number = 3;}", 1.1);
+
+        String expected = "if(false){    let y:number=7;\n}else{    let x:number=3;\n}";
+
+        String formattedCode = Formatter.format(tokens, rules);
+
+        Assertions.assertEquals(expected, formattedCode);
+    }
+    @Test
+    public void testIfKeyOnSameLineRule()  {
+        List<Rule> rules = createRules(1.1,false, false, false, 0,0,true);
+        List<Token> tokens = createTokensFromString("if (false)\n { let y:number = 7; } else\n {let x:number = 3;}", 1.1);
+
+        String expected = "if(false){\nlet y:number=7;\n}else{\nlet x:number=3;\n}";
+
+        String formattedCode = Formatter.format(tokens, rules);
+
+        Assertions.assertEquals(expected, formattedCode);
+    }
+    @Test
+    public void testFullyVersion()  {
+        List<Rule> rules = createRules(1.1,true, true, true, 2,3,true);
+        List<Token> tokens = createTokensFromString("let x:number=3.6;" +
+                "let x:     string=\"Hola como\";" +
+                "printLn(x);" +
+                "if(false)\n {let y:number=7;}else\n {let x:number=3;}"
+                , 1.1);
+
+        String expected = "let x : number = 3.6;\n" +
+                "let x : string = \"Hola como\";\n" +
+                "\n\nprintLn(x);\n" +
+                "if(false){\n   let y : number = 7;\n}else{\n   let x : number = 3;\n}";
+
+        String formattedCode = Formatter.format(tokens, rules);
+
+        Assertions.assertEquals(expected, formattedCode);
     }
 }

@@ -7,6 +7,8 @@ import rule.Rule;
 import java.util.List;
 
 public class SpaceAfterKeywordRule implements Rule {
+
+
     @Override
     public void applyRule(List<Token> tokens) {
         for (Token token:tokens){
