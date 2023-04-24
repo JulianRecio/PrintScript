@@ -1,4 +1,5 @@
 {
   "caseConvention": "camel case",
-  "printlnCondition": "true"
+  "printLnCondition": "true",
+  "readInputCondition": "true"
 }

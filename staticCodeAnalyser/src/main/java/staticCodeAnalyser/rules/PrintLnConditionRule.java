@@ -1,17 +1,14 @@
 package staticCodeAnalyser.rules;
 
 import parser.expr.*;
-import parser.node.AssignationNode;
-import parser.node.DeclarationNode;
-import parser.node.NodeVisitor;
-import parser.node.PrintNode;
+import parser.node.*;
 
-public class PrintConditionRule implements NodeVisitor, ExpressionVisitor {
+public class PrintLnConditionRule implements NodeVisitor, ExpressionVisitor {
 
-    private final boolean printlnCondition;
+    private final boolean printLnCondition;
 
-    public PrintConditionRule(boolean printlnCondition) {
-        this.printlnCondition = printlnCondition;
+    public PrintLnConditionRule(boolean printLnCondition) {
+        this.printLnCondition = printLnCondition;
     }
 
     @Override
@@ -26,13 +23,18 @@ public class PrintConditionRule implements NodeVisitor, ExpressionVisitor {
 
     @Override
     public void visitNode(PrintNode node) {
-    if (printlnCondition){
+    if (printLnCondition){
         Object printExpression = node.getExpression().accept(this);
 
         if (printExpression.equals(ExpressionType.BINARY) || printExpression.equals(ExpressionType.UNARY)){
-            throw new RuntimeException("println argument not valid: " + printExpression);
+            throw new RuntimeException("printLn argument not valid: " + printExpression);
         }
     }
+    }
+
+    @Override
+    public void visitNode(IfNode node) {
+
     }
 
     @Override
@@ -55,5 +57,9 @@ public class PrintConditionRule implements NodeVisitor, ExpressionVisitor {
         return ExpressionType.VARIABLE;
     }
 
+    @Override
+    public Object visitExpr(ReadInputExpression readInputExpression) {
+        return ExpressionType.READ_INPUT;
+    }
 
 }

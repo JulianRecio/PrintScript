@@ -1,9 +1,6 @@
 package staticCodeAnalyser.rules;
 
-import parser.node.AssignationNode;
-import parser.node.DeclarationNode;
-import parser.node.NodeVisitor;
-import parser.node.PrintNode;
+import parser.node.*;
 
 public class CaseConventionRule implements NodeVisitor {
 
@@ -39,6 +36,11 @@ public class CaseConventionRule implements NodeVisitor {
 
     @Override
     public void visitNode(PrintNode node) {
+
+    }
+
+    @Override
+    public void visitNode(IfNode node) {
 
     }
 }
