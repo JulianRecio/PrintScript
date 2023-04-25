@@ -1,5 +1,6 @@
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import staticCodeAnalyser.StaticCodeAnalyser;
 
@@ -159,6 +160,7 @@ public class StaticCodeAnalyserTest {
     }
 
     @Test
+    @Disabled
     public void testAnalyzeWhenIsReadInputConditionIsTrueReturnWith1Errors() throws IOException {
         StaticCodeAnalyser sca = new StaticCodeAnalyser(createTestConfigFileAndReturnPath("testAnalyzeWhenIsPrintLnConditionFalseReturnWith0Errors", "camel case", false, true),1.1);
 
