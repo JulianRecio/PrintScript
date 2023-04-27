@@ -1,12 +1,12 @@
 import interpreter.Interpreter;
 import java.util.List;
 import lexer.Lexer;
-import lexer.Token;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import parser.AST;
 import parser.Parser;
+import token.Token;
 
 public class InterpreterTest {
 

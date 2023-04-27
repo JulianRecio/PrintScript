@@ -6,10 +6,11 @@ import interpreter.NumberObj;
 import interpreter.StringObj;
 import java.util.ArrayList;
 import java.util.List;
-import lexer.*;
 import org.javatuples.Pair;
 import parser.expr.*;
 import parser.node.*;
+import token.Token;
+import token.TokenType;
 
 public class Parser {
 

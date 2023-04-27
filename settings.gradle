@@ -13,4 +13,5 @@ include 'interpreter'
 include 'formatter'
 include 'staticCodeAnalyser'
 include 'formatter'
+include 'token'
 
