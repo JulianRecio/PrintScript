@@ -4,39 +4,67 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import lexer.Lexer;
 import parser.AST;
 import parser.Parser;
-import parser.expr.*;
-import parser.node.*;
+import parser.node.Node;
+import parser.node.NodeVisitor;
+import staticCodeAnalyser.rules.CaseConventionRule;
+import staticCodeAnalyser.rules.PrintLnConditionRule;
+import staticCodeAnalyser.rules.ReadInputConditionRule;
 
-public class StaticCodeAnalyser implements NodeVisitor, ExpressionVisitor {
+public class StaticCodeAnalyser {
 
-  private final String namingConvention;
-  private final boolean printlnCondition;
+  private final double version;
+  private final Set<NodeVisitor> ruleSet;
+  private final String caseConvention;
+  private final boolean printLnCondition;
+  private final boolean readInputCondition;
 
-  public StaticCodeAnalyser(String configFile) throws IOException {
+  public StaticCodeAnalyser(String configFile, double version) throws IOException {
+    this.version = version;
     ObjectMapper mapper = new ObjectMapper();
     File fileObj = new File(configFile);
+
     Map<String, String> map;
     map = mapper.readValue(fileObj, new TypeReference<>() {});
-    this.namingConvention = map.get("identifierCase");
-    this.printlnCondition = Boolean.parseBoolean(map.get("printlnCondition"));
+
+    this.caseConvention = map.get("caseConvention");
+    this.printLnCondition = Boolean.parseBoolean(map.get("printLnCondition"));
+    this.readInputCondition = Boolean.parseBoolean(map.get("readInputCondition"));
+
+    ruleSet = selectRuleSet(version);
+  }
+
+  private Set<NodeVisitor> selectRuleSet(Double version) {
+    if (version == 1.0) {
+      Set<NodeVisitor> rules = new HashSet<>();
+      rules.add(new CaseConventionRule(caseConvention));
+      rules.add(new PrintLnConditionRule(printLnCondition));
+      return rules;
+    } else if (version == 1.1) {
+      Set<NodeVisitor> rules = new HashSet<>();
+      rules.add(new CaseConventionRule(caseConvention));
+      rules.add(new PrintLnConditionRule(printLnCondition));
+      rules.add(new ReadInputConditionRule(readInputCondition));
+      return rules;
+    }
+    return null;
   }
 
   public List<String> analyze(String source) {
-    Parser parser = new Parser(Lexer.tokenize(source));
-    AST ast = parser.parse();
+    Parser parser = new Parser(Lexer.tokenize(source, version));
+    AST ast = parser.parse(version);
 
     List<Node> nodes = ast.getAst();
     List<String> messages = new ArrayList<>();
 
     for (Node node : nodes) {
       try {
-        node.accept(this);
+        for (NodeVisitor nodeVisitor : ruleSet) {
+          node.accept(nodeVisitor);
+        }
       } catch (Exception e) {
         String message = e.getMessage();
         messages.add(message);
@@ -49,61 +77,15 @@ public class StaticCodeAnalyser implements NodeVisitor, ExpressionVisitor {
     return messages;
   }
 
-  @Override
-  public void visitNode(DeclarationNode node) {
-    String variable = node.getVariableName();
-
-    if (namingConvention.equals("snake case")) {
-      if (!variable.matches("[a-z]+(_[a-z]+)*")) {
-        throw new RuntimeException("Variable not written in snake case: " + node.getVariableName());
-      }
-    } else {
-      if (!variable.matches("[a-z]+([A-Z][a-z]+)*")) {
-        throw new RuntimeException("Variable not written in camel case: " + node.getVariableName());
-      }
-    }
+  public String getCaseConvention() {
+    return caseConvention;
   }
 
-  @Override
-  public void visitNode(AssignationNode node) {}
-
-  @Override
-  public void visitNode(PrintNode node) {
-    if (printlnCondition) {
-      Object printExpression = node.getExpression().accept(this);
-
-      if (printExpression.equals(ExpressionType.BINARY)
-          || printExpression.equals(ExpressionType.UNARY)) {
-        throw new RuntimeException("´println argument not valid: " + printExpression.toString());
-      }
-    }
+  public boolean isPrintLnCondition() {
+    return printLnCondition;
   }
 
-  @Override
-  public Object visitExpr(BinaryExpression binaryExpression) {
-    return ExpressionType.BINARY;
-  }
-
-  @Override
-  public Object visitExpr(LiteralExpression literalExpression) {
-    return ExpressionType.LITERAL;
-  }
-
-  @Override
-  public Object visitExpr(UnaryExpression unaryExpression) {
-    return ExpressionType.UNARY;
-  }
-
-  @Override
-  public Object visitExpr(VariableExpression variableExpression) {
-    return ExpressionType.VARIABLE;
-  }
-
-  public String getNamingConvention() {
-    return namingConvention;
-  }
-
-  public boolean isPrintlnCondition() {
-    return printlnCondition;
+  public boolean isReadInputCondition() {
+    return readInputCondition;
   }
 }
