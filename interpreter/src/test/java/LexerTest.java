@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 import lexer.Lexer;
-import lexer.Token;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import token.Token;
+import token.TokenExamples;
 
 public class LexerTest {
 
@@ -14,7 +15,7 @@ public class LexerTest {
   public void testSimpleLineNumberDeclaration() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.END);
@@ -29,7 +30,7 @@ public class LexerTest {
   public void testSimpleLineStringDeclaration() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.STRING_TYPE);
     expResult.add(TokenExamples.END);
@@ -44,7 +45,7 @@ public class LexerTest {
   public void testMultipleSpaces() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.END);
@@ -74,7 +75,7 @@ public class LexerTest {
   public void testSimpleLineNumberAssignment() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -91,11 +92,11 @@ public class LexerTest {
   public void testSimpleLineDecimalNumberAssignment() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
-    expResult.add(TokenExamples.DECIMAL_NUMBER_VALUE);
+    expResult.add(TokenExamples.COMPLEX_NUMBER_VALUE);
     expResult.add(TokenExamples.END);
     ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:number = 3.6;", 1.0);
     for (int i = 0; i < list.size(); i++) {
@@ -108,7 +109,7 @@ public class LexerTest {
   public void testSimpleLineStringAssignment() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.STRING_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -125,13 +126,14 @@ public class LexerTest {
   public void testSimpleLineComplexStringAssignments() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.STRING_TYPE);
     expResult.add(TokenExamples.EQUAL);
     expResult.add(TokenExamples.COMPLEX_STRING_VALUE);
     expResult.add(TokenExamples.END);
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("let x:string = \"Hola como\";", 1.0);
+    ArrayList<Token> list =
+        (ArrayList<Token>) Lexer.tokenize("let x:string = \"Hello World\";", 1.0);
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -142,11 +144,11 @@ public class LexerTest {
   public void testOperators() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
-    expResult.add(TokenExamples.DECIMAL_NUMBER_VALUE);
+    expResult.add(TokenExamples.COMPLEX_NUMBER_VALUE);
     expResult.add(TokenExamples.PLUS);
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.MULTIPLICATION);
@@ -163,14 +165,14 @@ public class LexerTest {
   public void testComplexLineStringAndNumberAssignments() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
-    expResult.add(TokenExamples.DECIMAL_NUMBER_VALUE);
+    expResult.add(TokenExamples.COMPLEX_NUMBER_VALUE);
     expResult.add(TokenExamples.END);
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.STRING_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -178,7 +180,7 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     ArrayList<Token> list =
         (ArrayList<Token>)
-            Lexer.tokenize("let x:number = 3.6;" + "let x:string = \"Hola como\";", 1.0);
+            Lexer.tokenize("let x:number = 3.6;" + "let x:string = \"Hello World\";", 1.0);
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -195,7 +197,7 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("printLn(\"Hola como\" + 3);", 1.0);
+    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("printLn(\"Hello World\" + 3);", 1.0);
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -206,7 +208,7 @@ public class LexerTest {
   public void testPrintMethodExpression() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -216,11 +218,11 @@ public class LexerTest {
     expResult.add(TokenExamples.LEFT_PAR);
     expResult.add(TokenExamples.COMPLEX_STRING_VALUE);
     expResult.add(TokenExamples.PLUS);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
     ArrayList<Token> list =
-        (ArrayList<Token>) Lexer.tokenize("let x: number = 3; printLn(\"Hola como\" + x);", 1.0);
+        (ArrayList<Token>) Lexer.tokenize("let x: number = 3; printLn(\"Hello World\" + x);", 1.0);
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -231,7 +233,7 @@ public class LexerTest {
   @Disabled
   public void testUnaryToken() {
     List<Token> expResult = new ArrayList<>();
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.EQUAL);
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.PLUS);
@@ -250,7 +252,7 @@ public class LexerTest {
   public void testSimpleLineNumberAssignmentVersion1() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -267,7 +269,7 @@ public class LexerTest {
   public void testSimpleLineNumberAssignmentWithConst() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.CONST_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -284,7 +286,7 @@ public class LexerTest {
   public void testBooleanValue() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.BOOLEAN_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -306,7 +308,7 @@ public class LexerTest {
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.LEFT_BRACKET);
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -324,7 +326,7 @@ public class LexerTest {
   public void testReadInput() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER);
+    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.ALLOCATOR);
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.EQUAL);
@@ -334,7 +336,7 @@ public class LexerTest {
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
     ArrayList<Token> list =
-        (ArrayList<Token>) Lexer.tokenize("let x:number = readInput(\"Hola como\");", 1.1);
+        (ArrayList<Token>) Lexer.tokenize("let x:number = readInput(\"Hello World\");", 1.1);
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());

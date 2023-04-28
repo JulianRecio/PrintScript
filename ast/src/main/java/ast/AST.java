@@ -1,7 +1,7 @@
-package parser;
+package ast;
 
+import ast.node.Node;
 import java.util.List;
-import parser.node.Node;
 
 public class AST {
 

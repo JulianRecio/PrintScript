@@ -1,4 +1,4 @@
-package lexer;
+package token;
 
 public enum TokenType {
   KEYWORD, // let

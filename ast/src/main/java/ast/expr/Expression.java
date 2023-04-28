@@ -1,4 +1,4 @@
-package parser.expr;
+package ast.expr;
 
 public interface Expression<T> {
 

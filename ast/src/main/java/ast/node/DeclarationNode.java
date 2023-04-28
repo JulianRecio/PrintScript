@@ -1,16 +1,17 @@
-package parser.node;
+package ast.node;
 
-import interpreter.MyObject;
-import parser.VariableType;
-import parser.expr.Expression;
+import ast.VariableType;
+import ast.expr.Expression;
+import ast.obj.CheckTypeObject;
 
 public class DeclarationNode implements Node { // When I only declare the variable with no value
 
   private final String variableName;
   private final VariableType type;
-  private final Expression<MyObject> initializer;
+  private final Expression<CheckTypeObject> initializer;
 
-  public DeclarationNode(String variableName, VariableType type, Expression<MyObject> initializer) {
+  public DeclarationNode(
+      String variableName, VariableType type, Expression<CheckTypeObject> initializer) {
     this.variableName = variableName;
     this.type = type;
     this.initializer = initializer;
@@ -24,7 +25,7 @@ public class DeclarationNode implements Node { // When I only declare the variab
     return type;
   }
 
-  public Expression<MyObject> getInitializer() {
+  public Expression<CheckTypeObject> getInitializer() {
     return initializer;
   }
 

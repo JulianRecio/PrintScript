@@ -1,6 +1,6 @@
-package interpreter;
+package ast.obj;
 
-public class StringObj implements MyObject {
+public class StringObj implements CheckTypeObject {
 
   private String value;
 
@@ -17,12 +17,17 @@ public class StringObj implements MyObject {
   }
 
   @Override
-  public void setValue(Object value) {
-    this.value = (String) value;
+  public boolean typeIsCorrect(Object value) {
+    try {
+      this.value = (String) value;
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
   }
 
   @Override
-  public MyObject add(MyObject obj2) {
+  public CheckTypeObject add(CheckTypeObject obj2) {
     return new StringObj(this.value + (String) obj2.getValue());
   }
 }

@@ -1,8 +1,8 @@
-package parser.expr;
+package ast.expr;
 
-import interpreter.MyObject;
+import ast.obj.CheckTypeObject;
 
-public class ReadInputExpression implements Expression<MyObject> {
+public class ReadInputExpression implements Expression<CheckTypeObject> {
 
   private String message;
 
@@ -15,7 +15,7 @@ public class ReadInputExpression implements Expression<MyObject> {
   }
 
   @Override
-  public MyObject accept(ExpressionVisitor<MyObject> visitor) {
+  public CheckTypeObject accept(ExpressionVisitor<CheckTypeObject> visitor) {
     return visitor.visitExpr(this);
   }
 }
