@@ -1,10 +1,10 @@
+import ast.AST;
 import interpreter.Interpreter;
 import java.util.List;
 import lexer.Lexer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import parser.AST;
 import parser.Parser;
 import token.Token;
 

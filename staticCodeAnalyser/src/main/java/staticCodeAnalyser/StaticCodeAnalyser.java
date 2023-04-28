@@ -1,15 +1,13 @@
 package staticCodeAnalyser;
 
+import ast.AST;
+import ast.node.Node;
+import ast.node.NodeVisitor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import lexer.Lexer;
-import parser.AST;
-import parser.Parser;
-import parser.node.Node;
-import parser.node.NodeVisitor;
 import staticCodeAnalyser.rules.CaseConventionRule;
 import staticCodeAnalyser.rules.PrintLnConditionRule;
 import staticCodeAnalyser.rules.ReadInputConditionRule;
@@ -53,10 +51,7 @@ public class StaticCodeAnalyser {
     return null;
   }
 
-  public List<String> analyze(String source) {
-    Parser parser = new Parser(Lexer.tokenize(source, version));
-    AST ast = parser.parse(version);
-
+  public List<String> analyze(AST ast) {
     List<Node> nodes = ast.getAst();
     List<String> messages = new ArrayList<>();
 

@@ -62,8 +62,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsSnakeCaseShouldReturnWithoutError", "snake case", true, true),
             1.0);
 
-    String code = "let snake_case_variable:number = 3;";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("snake_case_variable"));
 
     Assertions.assertEquals(0, expected.size());
   }
@@ -76,8 +75,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsCamelCaseShouldReturnWithoutError", "camel case", true, true),
             1.0);
 
-    String code = "let camelCaseVariable:number = 3;";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("camelCaseVariable"));
 
     Assertions.assertEquals(0, expected.size());
   }
@@ -90,8 +88,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsSnakeCaseShouldReturnWith1Error", "snake case", true, true),
             1.0);
 
-    String code = "let snakeCaseVariable:number = 3;";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("snakeCaseVariable"));
 
     Assertions.assertEquals(1, expected.size());
   }
@@ -104,8 +101,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsCamelCaseShouldReturnWith1Error", "camel case", true, true),
             1.0);
 
-    String code = "let camel_case_variable:number = 3;";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("camel_case_variable"));
 
     Assertions.assertEquals(1, expected.size());
   }
@@ -118,8 +114,9 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsSnakeCaseShouldReturnWith2Errors", "snake case", true, true),
             1.0);
 
-    String code = "let snakeCaseVariable:number = 3; let snake_CaseVariable2:number = 3;";
-    List<String> expected = sca.analyze(code);
+    List<String> expected =
+        sca.analyze(
+            ASTCases.createMultipleDeclarationAST("snakeCaseVariable", "snake_CaseVariable2"));
 
     Assertions.assertEquals(2, expected.size());
   }
@@ -132,8 +129,9 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsCamelCaseShouldReturnWith2Errors", "camel case", true, true),
             1.0);
 
-    String code = "let camel_case_variable:number = 3; let camel_case_variable2:number = 3;";
-    List<String> expected = sca.analyze(code);
+    List<String> expected =
+        sca.analyze(
+            ASTCases.createMultipleDeclarationAST("camel_case_variable", "camel_case_variable2"));
 
     Assertions.assertEquals(2, expected.size());
   }
@@ -146,8 +144,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsPrintLnConditionTrueReturnWith1Errors", "camel case", true, true),
             1.0);
 
-    String code = "printLn(1 + 2);";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createPrintAST());
 
     Assertions.assertEquals(1, expected.size());
   }
@@ -163,8 +160,7 @@ public class StaticCodeAnalyserTest {
                 true),
             1.0);
 
-    String code = "printLn(1 + 2);";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createPrintAST());
 
     Assertions.assertEquals(0, expected.size());
   }
@@ -177,8 +173,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsPrintLnConditionTrueReturnWith2Errors", "camel case", true, true),
             1.0);
 
-    String code = "printLn(2 + 2); printLn(1 + 2);";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createMultiplePrintAST());
 
     Assertions.assertEquals(2, expected.size());
   }
@@ -217,7 +212,7 @@ public class StaticCodeAnalyserTest {
             1.1);
 
     String code = "let x:string = readInput(\"Hola como\");";
-    List<String> expected = sca.analyze(code);
+    List<String> expected = sca.analyze(ASTCases.createReadInputAST());
 
     Assertions.assertEquals(0, expected.size());
   }
@@ -234,8 +229,8 @@ public class StaticCodeAnalyserTest {
                 true),
             1.1);
 
-    String code = "let x: number = 3; let y:string = readInput(\"Hola como\" + x);";
-    List<String> expected = sca.analyze(code);
+    String code = "let x: number = 3; let y:string = readInput(\"Hola como\" + \"x\");";
+    List<String> expected = sca.analyze(ASTCases.createReadInputAST());
 
     Assertions.assertEquals(1, expected.size());
   }

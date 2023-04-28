@@ -1,7 +1,7 @@
 package staticCodeAnalyser.rules;
 
-import parser.expr.*;
-import parser.node.*;
+import ast.expr.*;
+import ast.node.*;
 
 public class PrintLnConditionRule implements NodeVisitor, ExpressionVisitor {
 

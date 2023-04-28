@@ -1,18 +1,19 @@
 package interpreter;
 
+import ast.AST;
+import ast.VariableType;
+import ast.expr.*;
+import ast.node.*;
+import ast.obj.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import parser.AST;
-import parser.VariableType;
-import parser.expr.*;
-import parser.node.*;
 
 public class Interpreter implements NodeVisitor, ExpressionVisitor {
 
   private final AST ast;
-  private final HashMap<String, MyObject> map = new HashMap<>();
+  private final HashMap<String, CheckTypeObject> map = new HashMap<>();
   private final List<String> errors = new ArrayList<>();
   private final List<String> printed = new ArrayList<>();
 
@@ -36,7 +37,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
       errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     } else {
-      MyObject classType;
+      CheckTypeObject classType;
       if (type == VariableType.NUMBER) {
         classType = new NumberObj();
         map.put(variable, classType);
@@ -48,15 +49,14 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
         map.put(variable, classType);
       }
       if (node.getInitializer() != null) {
-        MyObject result = node.getInitializer().accept(this);
-        try {
-          classType.setValue(result.getValue());
-        } catch (Exception e) {
+        CheckTypeObject result = node.getInitializer().accept(this);
+        if (classType.typeIsCorrect(result.getValue())) {
+          map.put(variable, result);
+        } else {
           String errorMsg = "Mismatching types";
           errors.add(errorMsg);
           throw new RuntimeException(errorMsg);
         }
-        map.put(variable, result);
       }
     }
   }
@@ -64,18 +64,17 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
   @Override
   public void visitNode(AssignationNode node) {
     String variable = node.getVariable();
-    Expression<MyObject> right = node.getExpression();
-    MyObject result = right.accept(this);
+    Expression<CheckTypeObject> right = node.getExpression();
+    CheckTypeObject result = right.accept(this);
     if (map.containsKey(variable)) {
-      MyObject value = map.get(variable);
-      try {
-        value.setValue(result.getValue());
-      } catch (Exception e) {
+      CheckTypeObject value = map.get(variable);
+      if (value.typeIsCorrect(result.getValue())) {
+        map.put(variable, result);
+      } else {
         String errorMsg = "Mismatching types";
         errors.add(errorMsg);
         throw new RuntimeException(errorMsg);
       }
-      map.put(variable, result);
     } else {
       String errorMsg = "Variable does not exist";
       errors.add(errorMsg);
@@ -85,7 +84,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
 
   @Override
   public void visitNode(PrintNode node) {
-    MyObject toPrint = node.getExpression().accept(this);
+    CheckTypeObject toPrint = node.getExpression().accept(this);
     if (toPrint.getValue() == null) {
       String errorMsg = "Variable was not initialized";
       errors.add(errorMsg);
@@ -98,7 +97,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
 
   @Override
   public void visitNode(IfNode node) {
-    MyObject obj = node.getValue().accept(this);
+    CheckTypeObject obj = node.getValue().accept(this);
     if (node.getValue().accept(this) instanceof BooleanObj) {
       if ((boolean) obj.getValue()) {
         List<Node> tmpAST = node.getIfAST().getAst();
@@ -119,9 +118,9 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
   }
 
   @Override
-  public MyObject visitExpr(BinaryExpression binaryExpression) {
-    MyObject left = binaryExpression.getLeft().accept(this);
-    MyObject right = binaryExpression.getRight().accept(this);
+  public CheckTypeObject visitExpr(BinaryExpression binaryExpression) {
+    CheckTypeObject left = binaryExpression.getLeft().accept(this);
+    CheckTypeObject right = binaryExpression.getRight().accept(this);
     Resolver resolver = new Resolver();
     return switch (binaryExpression.getOperator()) {
       case "+" -> resolver.add(left, right);
@@ -137,24 +136,23 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
   }
 
   @Override
-  public MyObject visitExpr(LiteralExpression literalExpression) {
+  public CheckTypeObject visitExpr(LiteralExpression literalExpression) {
     return literalExpression.getValue();
   }
 
   @Override
-  public MyObject visitExpr(UnaryExpression unaryExpression) {
+  public CheckTypeObject visitExpr(UnaryExpression unaryExpression) {
     String value = unaryExpression.getValue();
     if (map.containsKey(value.substring(1))) {
-      MyObject obj = map.get(value.substring(1));
-      try {
-        obj.setValue(-(double) obj.getValue());
-      } catch (ClassCastException e) {
+      CheckTypeObject obj = map.get(value.substring(1));
+      if (obj.typeIsCorrect(-(double) obj.getValue())) {
+        map.put(value.substring(1), obj);
+        return obj;
+      } else {
         String errorMsg = "Cannot invert string values";
         errors.add(errorMsg);
         throw new RuntimeException(errorMsg);
       }
-      map.put(value.substring(1), obj);
-      return obj;
     } else {
       String errorMsg = "Value " + value + " does not exist";
       errors.add(errorMsg);
@@ -163,8 +161,8 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
   }
 
   @Override
-  public MyObject visitExpr(VariableExpression variableExpression) {
-    MyObject myObject = map.get(variableExpression.getVariableName());
+  public CheckTypeObject visitExpr(VariableExpression variableExpression) {
+    CheckTypeObject myObject = map.get(variableExpression.getVariableName());
     if (myObject.getValue() == null) {
       String errorMsg = "Variable " + variableExpression.getVariableName() + " was not initialized";
       errors.add(errorMsg);
@@ -174,7 +172,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
   }
 
   @Override
-  public MyObject visitExpr(ReadInputExpression readInputExpression) {
+  public CheckTypeObject visitExpr(ReadInputExpression readInputExpression) {
     Scanner scanner = new Scanner(System.in);
     System.out.println("InsertType: ");
     String type = scanner.nextLine();
@@ -190,7 +188,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor {
     } else throw new RuntimeException("Unsupported type");
   }
 
-  public HashMap<String, MyObject> getMap() {
+  public HashMap<String, CheckTypeObject> getMap() {
     return map;
   }
 

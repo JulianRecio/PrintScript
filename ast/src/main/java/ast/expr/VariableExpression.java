@@ -1,8 +1,8 @@
-package parser.expr;
+package ast.expr;
 
-import interpreter.MyObject;
+import ast.obj.CheckTypeObject;
 
-public class VariableExpression implements Expression<MyObject> {
+public class VariableExpression implements Expression<CheckTypeObject> {
 
   private final String variableName;
 
@@ -15,7 +15,7 @@ public class VariableExpression implements Expression<MyObject> {
   }
 
   @Override
-  public MyObject accept(ExpressionVisitor<MyObject> visitor) {
+  public CheckTypeObject accept(ExpressionVisitor<CheckTypeObject> visitor) {
     return visitor.visitExpr(this);
   }
 }

@@ -1,4 +1,4 @@
-package parser;
+package ast;
 
 public enum VariableType {
   NUMBER,

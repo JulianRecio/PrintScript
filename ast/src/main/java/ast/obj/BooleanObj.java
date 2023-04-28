@@ -1,6 +1,6 @@
-package interpreter;
+package ast.obj;
 
-public class BooleanObj implements MyObject {
+public class BooleanObj implements CheckTypeObject {
 
   private Boolean value;
 
@@ -18,12 +18,17 @@ public class BooleanObj implements MyObject {
   }
 
   @Override
-  public void setValue(Object value) {
-    this.value = (boolean) value;
+  public boolean typeIsCorrect(Object value) {
+    try {
+      this.value = (boolean) value;
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
   }
 
   @Override
-  public MyObject add(MyObject obj2) {
+  public CheckTypeObject add(CheckTypeObject obj2) {
     throw new RuntimeException("Cannot add boolean");
   }
 }

@@ -1,22 +1,22 @@
-package parser.node;
+package ast.node;
 
-import interpreter.MyObject;
-import parser.AST;
-import parser.expr.Expression;
+import ast.AST;
+import ast.expr.Expression;
+import ast.obj.CheckTypeObject;
 
 public class IfNode implements Node {
 
-  private Expression<MyObject> value;
+  private Expression<CheckTypeObject> value;
   private AST ifAST;
   private AST elseAST;
 
-  public IfNode(Expression<MyObject> value, AST ifAST, AST elseAST) {
+  public IfNode(Expression<CheckTypeObject> value, AST ifAST, AST elseAST) {
     this.value = value;
     this.ifAST = ifAST;
     this.elseAST = elseAST;
   }
 
-  public Expression<MyObject> getValue() {
+  public Expression<CheckTypeObject> getValue() {
     return value;
   }
 

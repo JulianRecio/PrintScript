@@ -1,4 +1,4 @@
-package parser.node;
+package ast.node;
 
 public interface Node {
 

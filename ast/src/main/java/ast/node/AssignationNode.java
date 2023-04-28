@@ -1,14 +1,14 @@
-package parser.node;
+package ast.node;
 
-import interpreter.MyObject;
-import parser.expr.Expression;
+import ast.expr.Expression;
+import ast.obj.CheckTypeObject;
 
 public class AssignationNode implements Node {
 
   private final String variable;
-  private final Expression<MyObject> expression;
+  private final Expression<CheckTypeObject> expression;
 
-  public AssignationNode(String variable, Expression<MyObject> expression) {
+  public AssignationNode(String variable, Expression<CheckTypeObject> expression) {
     this.variable = variable;
     this.expression = expression;
   }
@@ -17,7 +17,7 @@ public class AssignationNode implements Node {
     return variable;
   }
 
-  public Expression<MyObject> getExpression() {
+  public Expression<CheckTypeObject> getExpression() {
     return expression;
   }
 

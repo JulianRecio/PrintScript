@@ -14,4 +14,5 @@ include 'formatter'
 include 'staticCodeAnalyser'
 include 'formatter'
 include 'token'
+include 'ast'
 

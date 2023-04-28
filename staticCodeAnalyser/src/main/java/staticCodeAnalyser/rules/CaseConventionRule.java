@@ -1,6 +1,6 @@
 package staticCodeAnalyser.rules;
 
-import parser.node.*;
+import ast.node.*;
 
 public class CaseConventionRule implements NodeVisitor {
 
