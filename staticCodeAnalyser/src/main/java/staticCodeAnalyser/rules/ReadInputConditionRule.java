@@ -43,11 +43,6 @@ public class ReadInputConditionRule implements NodeVisitor, ExpressionVisitor {
   }
 
   @Override
-  public Object visitExpr(UnaryExpression unaryExpression) {
-    return ExpressionType.UNARY;
-  }
-
-  @Override
   public Object visitExpr(VariableExpression variableExpression) {
     return ExpressionType.VARIABLE;
   }

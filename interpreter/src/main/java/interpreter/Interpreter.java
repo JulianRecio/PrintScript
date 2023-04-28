@@ -144,26 +144,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
   }
 
   @Override
-  public AttributeObject visitExpr(UnaryExpression unaryExpression) {
-    String value = unaryExpression.getValue();
-    if (map.containsKey(value.substring(1))) {
-      AttributeObject obj = map.get(value.substring(1));
-      if (obj.typeIsCorrect(-(double) obj.getValue())) {
-        map.put(value.substring(1), obj);
-        return obj;
-      } else {
-        String errorMsg = "Cannot invert string values";
-        errors.add(errorMsg);
-        throw new RuntimeException(errorMsg);
-      }
-    } else {
-      String errorMsg = "Value " + value + " does not exist";
-      errors.add(errorMsg);
-      throw new RuntimeException(errorMsg);
-    }
-  }
-
-  @Override
   public AttributeObject visitExpr(VariableExpression variableExpression) {
     AttributeObject myObject = map.get(variableExpression.getVariableName());
     if (myObject.getValue() == null) {

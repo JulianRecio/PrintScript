@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lexer.Lexer;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import token.Token;
 import token.TokenExamples;
@@ -223,23 +222,6 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     ArrayList<Token> list =
         (ArrayList<Token>) Lexer.tokenize("let x: number = 3; printLn(\"Hello World\" + x);", 1.0);
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
-    }
-  }
-
-  @Test
-  @Disabled
-  public void testUnaryToken() {
-    List<Token> expResult = new ArrayList<>();
-    expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
-    expResult.add(TokenExamples.EQUAL);
-    expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
-    expResult.add(TokenExamples.PLUS);
-    expResult.add(TokenExamples.UNARY_VALUE);
-    expResult.add(TokenExamples.END);
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize("x = 3 + -variableA;", 1.0);
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());

@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.List;
 import lexer.Lexer;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import parser.Parser;
 import token.Token;
@@ -131,17 +130,6 @@ public class InterpreterTest {
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(18.0, interpreter.getMap().get("x").getValue());
-  }
-
-  @Test
-  @Disabled
-  public void testUnaryValue() {
-    List<Token> tokens = Lexer.tokenize("let x:number = 4; let y:number = -x;", 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
-    Interpreter interpreter = new Interpreter(ast);
-    interpreter.interpret();
-    Assertions.assertEquals(-4.0, interpreter.getMap().get("y").getValue());
   }
 
   // Version 1.1 tests

@@ -211,10 +211,6 @@ public class Parser {
           new VariableExpression(tokens.get(pos).getValue());
       pos++;
       return identifierExpr;
-    } else if (tokens.get(pos).getType() == TokenType.UNARY_VALUE) {
-      Expression<AttributeObject> unaryExpr = new UnaryExpression(tokens.get(pos).getValue());
-      pos++;
-      return unaryExpr;
     } else if (tokens.get(pos).getType() == TokenType.READ_INPUT) {
       pos++;
       if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {

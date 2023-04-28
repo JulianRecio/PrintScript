@@ -16,7 +16,6 @@ public class Lexer {
   private static Pattern TYPE_PATTERN;
   private static Pattern EQUAL_PATTERN;
   private static Pattern NUMBER_PATTERN;
-  private static Pattern UNARY_PATTERN;
   private static Pattern STRING_PATTERN;
   private static Pattern BOOLEAN_PATTERN;
   private static Pattern OPERATOR_PATTERN;
@@ -72,7 +71,6 @@ public class Lexer {
     map.put(ALLOCATOR_PATTER.matcher(remainder), TokenType.ALLOCATOR);
     map.put(EQUAL_PATTERN.matcher(remainder), TokenType.EQUAL);
     map.put(NUMBER_PATTERN.matcher(remainder), TokenType.NUMBER_VALUE);
-    map.put(UNARY_PATTERN.matcher(remainder), TokenType.UNARY_VALUE);
     map.put(STRING_PATTERN.matcher(remainder), TokenType.STRING_VALUE);
     map.put(OPERATOR_PATTERN.matcher(remainder), TokenType.OPERATOR);
     map.put(PRINT_PATTERN.matcher(remainder), TokenType.PRINT);
@@ -111,7 +109,6 @@ public class Lexer {
     ALLOCATOR_PATTER = Pattern.compile(":");
     EQUAL_PATTERN = Pattern.compile("=");
     NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");
-    UNARY_PATTERN = Pattern.compile("-(?!\\s*[+\\-*/])\\w+");
     STRING_PATTERN = Pattern.compile("\"[a-zA-Z][a-zA-Z0-9 ]*\"");
     OPERATOR_PATTERN = Pattern.compile("[+\\-*/]");
     PRINT_PATTERN = Pattern.compile("printLn");
