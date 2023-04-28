@@ -1,14 +1,16 @@
 package ast.obj;
 
-public class BooleanObj implements CheckTypeObject {
+public class BooleanObj extends AttributeObject {
 
   private Boolean value;
 
-  public BooleanObj(Boolean value) {
+  public BooleanObj(Boolean value, boolean modifiable) {
+    super(modifiable);
     this.value = value;
   }
 
-  public BooleanObj() {
+  public BooleanObj(boolean modifiable) {
+    super(modifiable);
     this.value = null;
   }
 
@@ -28,7 +30,7 @@ public class BooleanObj implements CheckTypeObject {
   }
 
   @Override
-  public CheckTypeObject add(CheckTypeObject obj2) {
+  public AttributeObject add(AttributeObject obj2) {
     throw new RuntimeException("Cannot add boolean");
   }
 }

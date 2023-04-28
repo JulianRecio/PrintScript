@@ -1,21 +1,21 @@
 package ast.expr;
 
-import ast.obj.CheckTypeObject;
+import ast.obj.AttributeObject;
 
-public class LiteralExpression implements Expression<CheckTypeObject> {
+public class LiteralExpression implements Expression<AttributeObject> {
 
-  private final CheckTypeObject value;
+  private final AttributeObject value;
 
-  public LiteralExpression(CheckTypeObject value) {
+  public LiteralExpression(AttributeObject value) {
     this.value = value;
   }
 
-  public CheckTypeObject getValue() {
+  public AttributeObject getValue() {
     return value;
   }
 
   @Override
-  public CheckTypeObject accept(ExpressionVisitor<CheckTypeObject> visitor) {
+  public AttributeObject accept(ExpressionVisitor<AttributeObject> visitor) {
     return visitor.visitExpr(this);
   }
 }

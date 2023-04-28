@@ -1,14 +1,16 @@
 package ast.obj;
 
-public class NumberObj implements CheckTypeObject {
+public class NumberObj extends AttributeObject {
 
   private Double value;
 
-  public NumberObj(Double value) {
+  public NumberObj(Double value, boolean modifiable) {
+    super(modifiable);
     this.value = value;
   }
 
-  public NumberObj() {
+  public NumberObj(boolean modifiable) {
+    super(modifiable);
     this.value = null;
   }
 
@@ -27,7 +29,7 @@ public class NumberObj implements CheckTypeObject {
   }
 
   @Override
-  public CheckTypeObject add(CheckTypeObject obj2) {
-    return new NumberObj(this.getValue() + (double) obj2.getValue());
+  public AttributeObject add(AttributeObject obj2) {
+    return new NumberObj(this.getValue() + (double) obj2.getValue(), false);
   }
 }

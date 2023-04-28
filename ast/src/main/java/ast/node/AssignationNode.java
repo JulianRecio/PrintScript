@@ -1,14 +1,14 @@
 package ast.node;
 
 import ast.expr.Expression;
-import ast.obj.CheckTypeObject;
+import ast.obj.AttributeObject;
 
 public class AssignationNode implements Node {
 
   private final String variable;
-  private final Expression<CheckTypeObject> expression;
+  private final Expression<AttributeObject> expression;
 
-  public AssignationNode(String variable, Expression<CheckTypeObject> expression) {
+  public AssignationNode(String variable, Expression<AttributeObject> expression) {
     this.variable = variable;
     this.expression = expression;
   }
@@ -17,7 +17,7 @@ public class AssignationNode implements Node {
     return variable;
   }
 
-  public Expression<CheckTypeObject> getExpression() {
+  public Expression<AttributeObject> getExpression() {
     return expression;
   }
 

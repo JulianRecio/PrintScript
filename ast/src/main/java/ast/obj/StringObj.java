@@ -1,14 +1,16 @@
 package ast.obj;
 
-public class StringObj implements CheckTypeObject {
+public class StringObj extends AttributeObject {
 
   private String value;
 
-  public StringObj(String value) {
+  public StringObj(String value, boolean modifiable) {
+    super(modifiable);
     this.value = value;
   }
 
-  public StringObj() {
+  public StringObj(boolean modifiable) {
+    super(modifiable);
     this.value = null;
   }
 
@@ -27,7 +29,7 @@ public class StringObj implements CheckTypeObject {
   }
 
   @Override
-  public CheckTypeObject add(CheckTypeObject obj2) {
-    return new StringObj(this.value + (String) obj2.getValue());
+  public AttributeObject add(AttributeObject obj2) {
+    return new StringObj(this.value + (String) obj2.getValue(), false);
   }
 }
