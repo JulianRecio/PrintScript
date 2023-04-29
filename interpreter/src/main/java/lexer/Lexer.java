@@ -33,6 +33,7 @@ public class Lexer {
   private static Pattern READ_INPUT;
 
   public static List<Token> tokenize(InputStream input, Double version) throws IOException {
+    input.mark(0);
     List<Token> tokens = new ArrayList<>();
     StringBuilder chunk = new StringBuilder();
     setVersionPatterns(version);
@@ -51,6 +52,9 @@ public class Lexer {
     // If there is any remaining chunk, tokenize it
     if (chunk.length() > 0) {
       tokens.addAll(tokenizeChunk(chunk.toString(), version));
+    }
+    if (input.markSupported()) {
+      input.reset();
     }
     return tokens;
   }

@@ -1,2 +1,2 @@
-let x:number = 4; 
-PrintLn(x); 
+let x:number = 4;
+printLn(x);

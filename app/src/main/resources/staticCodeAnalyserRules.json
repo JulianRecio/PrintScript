@@ -1,0 +1,5 @@
+{
+  "caseConvention":"camel case",
+  "printLnCondition":"false",
+  "readInputCondition":"false"
+}

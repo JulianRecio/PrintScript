@@ -56,7 +56,7 @@ public class Formatter {
     return rules;
   }
 
-  private static Map<String, String> readConfigFile(String path) {
+  public static Map<String, String> readConfigFile(String path) {
     ObjectMapper mapper = new ObjectMapper();
 
     File fileObj = new File(path);
