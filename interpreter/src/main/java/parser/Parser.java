@@ -15,13 +15,15 @@ public class Parser {
 
   private final List<Token> tokens;
   private int pos;
+  private final Double version;
 
-  public Parser(List<Token> tokens) {
+  public Parser(List<Token> tokens, Double version) {
     this.tokens = tokens;
     this.pos = 0;
+    this.version = version;
   }
 
-  public AST parse(Double version) {
+  public AST parse() {
     List<Node> ast = new ArrayList<>();
     while (pos < tokens.size() && tokens.get(pos).getType() != TokenType.RIGHT_BRACKET) {
       if (tokens.get(pos).getType() == TokenType.KEYWORD) {
@@ -115,14 +117,14 @@ public class Parser {
         pos++;
         if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET) {
           pos++;
-          AST ifAST = this.parse(1.1);
+          AST ifAST = this.parse();
           if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET) {
             pos++;
             if (pos < tokens.size() && tokens.get(pos).getType() == TokenType.ELSE) {
               pos++;
               if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET) {
                 pos++;
-                AST elseAST = this.parse(1.1);
+                AST elseAST = this.parse();
                 if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET) {
                   pos++;
                   ast.add(new IfNode(expr, ifAST, elseAST));
@@ -211,7 +213,7 @@ public class Parser {
           new VariableExpression(tokens.get(pos).getValue());
       pos++;
       return identifierExpr;
-    } else if (tokens.get(pos).getType() == TokenType.READ_INPUT) {
+    } else if (tokens.get(pos).getType() == TokenType.READ_INPUT && version == 1.1) {
       pos++;
       if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
         pos++;
@@ -234,7 +236,7 @@ public class Parser {
         throw new RuntimeException("Right parenthesis expected but not found");
       }
     } else {
-      throw new RuntimeException("Expected number, string, boolean or a variable in expression");
+      throw new RuntimeException("Expression not found");
     }
   }
 }

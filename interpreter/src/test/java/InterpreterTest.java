@@ -19,8 +19,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number = 5; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
@@ -31,8 +31,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number; x=5; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
@@ -43,8 +43,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = 2.0 + y; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(10.0, interpreter.getMap().get("x").getValue());
@@ -55,8 +55,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = x + y; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(13.0, interpreter.getMap().get("x").getValue());
@@ -68,8 +68,8 @@ public class InterpreterTest {
         "let x:number; x=5.0; let y:number = 8.0; let x:number = x + y; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     RuntimeException error = null;
     try {
@@ -86,8 +86,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number; x=\"hello\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     RuntimeException error = null;
     try {
@@ -104,8 +104,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number; x=5.0; let y:number; let z:number = x + y; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     RuntimeException error = null;
     try {
@@ -122,8 +122,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     RuntimeException error = null;
     try {
@@ -140,8 +140,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number = (5+4)*2;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.0);
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(18.0, interpreter.getMap().get("x").getValue());
@@ -154,8 +154,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number = 5; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.1);
+    Parser parser = new Parser(tokens, 1.1);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
@@ -166,8 +166,8 @@ public class InterpreterTest {
     String toTokenize = "const x:number = 5; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.1);
+    Parser parser = new Parser(tokens, 1.1);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
@@ -178,8 +178,8 @@ public class InterpreterTest {
     String toTokenize = "const x:number = 5; x = 6;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.1);
+    Parser parser = new Parser(tokens, 1.1);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     RuntimeException error = null;
     try {
@@ -196,8 +196,8 @@ public class InterpreterTest {
     String toTokenize = "let x:boolean = false; printLn(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.1);
+    Parser parser = new Parser(tokens, 1.1);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(false, interpreter.getMap().get("x").getValue());
@@ -208,8 +208,8 @@ public class InterpreterTest {
     String toTokenize = "if (false) {  } else {let x:number = 3;}";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.1);
+    Parser parser = new Parser(tokens, 1.1);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
     Assertions.assertEquals(3.0, interpreter.getMap().get("x").getValue());
@@ -220,8 +220,8 @@ public class InterpreterTest {
     String toTokenize = "let x:number = readInput(\"Insert variable\");";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
-    Parser parser = new Parser(tokens);
-    AST ast = parser.parse(1.1);
+    Parser parser = new Parser(tokens, 1.1);
+    AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     String type = "number\n3.0";
     InputStream in = new ByteArrayInputStream(type.getBytes());
