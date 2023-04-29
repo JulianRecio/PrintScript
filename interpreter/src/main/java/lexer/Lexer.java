@@ -1,5 +1,7 @@
 package lexer;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,10 +32,32 @@ public class Lexer {
   private static Pattern ELSE;
   private static Pattern READ_INPUT;
 
-  public static List<Token> tokenize(String input, Double version) {
+  public static List<Token> tokenize(InputStream input, Double version) throws IOException {
+    List<Token> tokens = new ArrayList<>();
+    StringBuilder chunk = new StringBuilder();
+    setVersionPatterns(version);
+    int data = input.read();
+    while (data != -1) {
+      char ch = (char) data;
+      if (ch == ';') {
+        chunk.append(ch);
+        tokens.addAll(tokenizeChunk(chunk.toString(), version));
+        chunk = new StringBuilder();
+      } else {
+        chunk.append(ch);
+      }
+      data = input.read();
+    }
+    // If there is any remaining chunk, tokenize it
+    if (chunk.length() > 0) {
+      tokens.addAll(tokenizeChunk(chunk.toString(), version));
+    }
+    return tokens;
+  }
+
+  private static List<Token> tokenizeChunk(String input, Double version) {
     List<Token> tokens = new ArrayList<>();
     int pos = 0;
-    setVersionPatterns(version);
     while (pos < input.length()) {
       String remainder = input.substring(pos);
       HashMap<Matcher, TokenType> map = createMap(remainder);
