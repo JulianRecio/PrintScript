@@ -1,15 +1,15 @@
 package ast.expr;
 
-import ast.obj.CheckTypeObject;
+import ast.obj.AttributeObject;
 
-public class BinaryExpression implements Expression<CheckTypeObject> {
+public class BinaryExpression implements Expression<AttributeObject> {
 
   private final String operator;
-  private final Expression<CheckTypeObject> left;
-  private final Expression<CheckTypeObject> right;
+  private final Expression<AttributeObject> left;
+  private final Expression<AttributeObject> right;
 
   public BinaryExpression(
-      String operator, Expression<CheckTypeObject> left, Expression<CheckTypeObject> right) {
+      String operator, Expression<AttributeObject> left, Expression<AttributeObject> right) {
     this.operator = operator;
     this.left = left;
     this.right = right;
@@ -19,16 +19,16 @@ public class BinaryExpression implements Expression<CheckTypeObject> {
     return operator;
   }
 
-  public Expression<CheckTypeObject> getLeft() {
+  public Expression<AttributeObject> getLeft() {
     return left;
   }
 
-  public Expression<CheckTypeObject> getRight() {
+  public Expression<AttributeObject> getRight() {
     return right;
   }
 
   @Override
-  public CheckTypeObject accept(ExpressionVisitor<CheckTypeObject> visitor) {
+  public AttributeObject accept(ExpressionVisitor<AttributeObject> visitor) {
     return visitor.visitExpr(this);
   }
 }

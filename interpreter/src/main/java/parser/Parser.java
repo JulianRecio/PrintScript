@@ -25,7 +25,7 @@ public class Parser {
     List<Node> ast = new ArrayList<>();
     while (pos < tokens.size() && tokens.get(pos).getType() != TokenType.RIGHT_BRACKET) {
       if (tokens.get(pos).getType() == TokenType.KEYWORD) {
-        createDeclarationNode(ast);
+        createDeclarationNode(tokens.get(pos).getValue(), ast);
       } else if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
         createAssignationNode(ast);
       } else if (tokens.get(pos).getType() == TokenType.PRINT) {
@@ -39,18 +39,20 @@ public class Parser {
     return new AST(ast);
   }
 
-  private void createDeclarationNode(List<Node> ast) {
+  private void createDeclarationNode(String keyWordValue, List<Node> ast) {
     pos++;
+    boolean modifiable = getModifiable(keyWordValue);
     Pair<String, VariableType> declaration = setType();
     if (tokens.get(pos).getType() == TokenType.END) {
       pos++;
       Node declarationNode =
-          new DeclarationNode(declaration.getValue0(), declaration.getValue1(), null);
+          new DeclarationNode(declaration.getValue0(), modifiable, declaration.getValue1(), null);
       ast.add(declarationNode);
     } else if (tokens.get(pos).getType() == TokenType.EQUAL) {
       pos++;
       Node declarationNode =
-          new DeclarationNode(declaration.getValue0(), declaration.getValue1(), expression());
+          new DeclarationNode(
+              declaration.getValue0(), modifiable, declaration.getValue1(), expression());
       if (tokens.get(pos).getType() == TokenType.END) {
         pos++;
         ast.add(declarationNode);
@@ -62,12 +64,20 @@ public class Parser {
     }
   }
 
+  private boolean getModifiable(String keyWordValue) {
+    if (keyWordValue.equals("let")) {
+      return true;
+    } else if (keyWordValue.equals("const")) {
+      return false;
+    } else throw new RuntimeException("keyword not supported");
+  }
+
   private void createAssignationNode(List<Node> ast) {
     String variable = tokens.get(pos).getValue();
     pos++;
     if (tokens.get(pos).getType() == TokenType.EQUAL) {
       pos++;
-      Expression<CheckTypeObject> right = expression();
+      Expression<AttributeObject> right = expression();
       Node assignationNode = new AssignationNode(variable, right);
       if (tokens.get(pos).getType() == TokenType.END) {
         pos++;
@@ -80,7 +90,7 @@ public class Parser {
     pos++;
     if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
       pos++;
-      Expression<CheckTypeObject> expression = expression();
+      Expression<AttributeObject> expression = expression();
       if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
         pos++;
         Node print = new PrintNode(expression);
@@ -100,7 +110,7 @@ public class Parser {
     pos++;
     if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
       pos++;
-      Expression<CheckTypeObject> expr = factor();
+      Expression<AttributeObject> expr = factor();
       if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
         pos++;
         if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET) {
@@ -148,13 +158,13 @@ public class Parser {
     } else throw new RuntimeException("There is no variable name after keyword");
   }
 
-  private Expression<CheckTypeObject> expression() {
-    Expression<CheckTypeObject> left = term();
+  private Expression<AttributeObject> expression() {
+    Expression<AttributeObject> left = term();
     while (tokens.get(pos).getType() != TokenType.END) {
       Token token = tokens.get(pos);
       if (token.getType() == TokenType.OPERATOR && "+-".contains(token.getValue())) {
         pos++;
-        Expression<CheckTypeObject> right = term();
+        Expression<AttributeObject> right = term();
         left = new BinaryExpression(token.getValue(), left, right);
       } else {
         break;
@@ -163,13 +173,13 @@ public class Parser {
     return left;
   }
 
-  private Expression<CheckTypeObject> term() {
-    Expression<CheckTypeObject> left = factor();
+  private Expression<AttributeObject> term() {
+    Expression<AttributeObject> left = factor();
     while (tokens.get(pos).getType() != TokenType.END) {
       Token token = tokens.get(pos);
       if (token.getType() == TokenType.OPERATOR && "/*".contains(token.getValue())) {
         pos++;
-        Expression<CheckTypeObject> right = factor();
+        Expression<AttributeObject> right = factor();
         left = new BinaryExpression(token.getValue(), left, right);
       } else {
         break;
@@ -178,31 +188,29 @@ public class Parser {
     return left;
   }
 
-  private Expression<CheckTypeObject> factor() {
+  private Expression<AttributeObject> factor() {
     if (tokens.get(pos).getType() == TokenType.NUMBER_VALUE) {
-      Expression<CheckTypeObject> numberExpr =
-          new LiteralExpression(new NumberObj(Double.parseDouble(tokens.get(pos).getValue())));
+      Expression<AttributeObject> numberExpr =
+          new LiteralExpression(
+              new NumberObj(Double.parseDouble(tokens.get(pos).getValue()), false));
       pos++;
       return numberExpr;
     } else if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
-      Expression<CheckTypeObject> stringExpr =
-          new LiteralExpression(new StringObj(tokens.get(pos).getValue()));
+      Expression<AttributeObject> stringExpr =
+          new LiteralExpression(new StringObj(tokens.get(pos).getValue(), false));
       pos++;
       return stringExpr;
     } else if (tokens.get(pos).getType() == TokenType.BOOLEAN_VALUE) {
-      Expression<CheckTypeObject> booleanExpr =
-          new LiteralExpression(new BooleanObj(Boolean.parseBoolean(tokens.get(pos).getValue())));
+      Expression<AttributeObject> booleanExpr =
+          new LiteralExpression(
+              new BooleanObj(Boolean.parseBoolean(tokens.get(pos).getValue()), false));
       pos++;
       return booleanExpr;
     } else if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
-      Expression<CheckTypeObject> identifierExpr =
+      Expression<AttributeObject> identifierExpr =
           new VariableExpression(tokens.get(pos).getValue());
       pos++;
       return identifierExpr;
-    } else if (tokens.get(pos).getType() == TokenType.UNARY_VALUE) {
-      Expression<CheckTypeObject> unaryExpr = new UnaryExpression(tokens.get(pos).getValue());
-      pos++;
-      return unaryExpr;
     } else if (tokens.get(pos).getType() == TokenType.READ_INPUT) {
       pos++;
       if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
@@ -218,7 +226,7 @@ public class Parser {
       } else throw new RuntimeException("( expected");
     } else if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
       pos++;
-      Expression<CheckTypeObject> expression = expression();
+      Expression<AttributeObject> expression = expression();
       if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
         pos++;
         return expression;

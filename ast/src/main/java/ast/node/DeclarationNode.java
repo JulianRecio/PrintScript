@@ -2,17 +2,22 @@ package ast.node;
 
 import ast.VariableType;
 import ast.expr.Expression;
-import ast.obj.CheckTypeObject;
+import ast.obj.AttributeObject;
 
 public class DeclarationNode implements Node { // When I only declare the variable with no value
 
   private final String variableName;
+  private final boolean modifiable;
   private final VariableType type;
-  private final Expression<CheckTypeObject> initializer;
+  private final Expression<AttributeObject> initializer;
 
   public DeclarationNode(
-      String variableName, VariableType type, Expression<CheckTypeObject> initializer) {
+      String variableName,
+      boolean modifiable,
+      VariableType type,
+      Expression<AttributeObject> initializer) {
     this.variableName = variableName;
+    this.modifiable = modifiable;
     this.type = type;
     this.initializer = initializer;
   }
@@ -21,11 +26,15 @@ public class DeclarationNode implements Node { // When I only declare the variab
     return variableName;
   }
 
+  public boolean isModifiable() {
+    return modifiable;
+  }
+
   public VariableType getType() {
     return type;
   }
 
-  public Expression<CheckTypeObject> getInitializer() {
+  public Expression<AttributeObject> getInitializer() {
     return initializer;
   }
 

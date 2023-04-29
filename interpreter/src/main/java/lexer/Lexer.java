@@ -1,5 +1,7 @@
 package lexer;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +18,6 @@ public class Lexer {
   private static Pattern TYPE_PATTERN;
   private static Pattern EQUAL_PATTERN;
   private static Pattern NUMBER_PATTERN;
-  private static Pattern UNARY_PATTERN;
   private static Pattern STRING_PATTERN;
   private static Pattern BOOLEAN_PATTERN;
   private static Pattern OPERATOR_PATTERN;
@@ -31,10 +32,32 @@ public class Lexer {
   private static Pattern ELSE;
   private static Pattern READ_INPUT;
 
-  public static List<Token> tokenize(String input, Double version) {
+  public static List<Token> tokenize(InputStream input, Double version) throws IOException {
+    List<Token> tokens = new ArrayList<>();
+    StringBuilder chunk = new StringBuilder();
+    setVersionPatterns(version);
+    int data = input.read();
+    while (data != -1) {
+      char ch = (char) data;
+      if (ch == ';') {
+        chunk.append(ch);
+        tokens.addAll(tokenizeChunk(chunk.toString(), version));
+        chunk = new StringBuilder();
+      } else {
+        chunk.append(ch);
+      }
+      data = input.read();
+    }
+    // If there is any remaining chunk, tokenize it
+    if (chunk.length() > 0) {
+      tokens.addAll(tokenizeChunk(chunk.toString(), version));
+    }
+    return tokens;
+  }
+
+  private static List<Token> tokenizeChunk(String input, Double version) {
     List<Token> tokens = new ArrayList<>();
     int pos = 0;
-    setVersionPatterns(version);
     while (pos < input.length()) {
       String remainder = input.substring(pos);
       HashMap<Matcher, TokenType> map = createMap(remainder);
@@ -72,7 +95,6 @@ public class Lexer {
     map.put(ALLOCATOR_PATTER.matcher(remainder), TokenType.ALLOCATOR);
     map.put(EQUAL_PATTERN.matcher(remainder), TokenType.EQUAL);
     map.put(NUMBER_PATTERN.matcher(remainder), TokenType.NUMBER_VALUE);
-    map.put(UNARY_PATTERN.matcher(remainder), TokenType.UNARY_VALUE);
     map.put(STRING_PATTERN.matcher(remainder), TokenType.STRING_VALUE);
     map.put(OPERATOR_PATTERN.matcher(remainder), TokenType.OPERATOR);
     map.put(PRINT_PATTERN.matcher(remainder), TokenType.PRINT);
@@ -111,7 +133,6 @@ public class Lexer {
     ALLOCATOR_PATTER = Pattern.compile(":");
     EQUAL_PATTERN = Pattern.compile("=");
     NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");
-    UNARY_PATTERN = Pattern.compile("-(?!\\s*[+\\-*/])\\w+");
     STRING_PATTERN = Pattern.compile("\"[a-zA-Z][a-zA-Z0-9 ]*\"");
     OPERATOR_PATTERN = Pattern.compile("[+\\-*/]");
     PRINT_PATTERN = Pattern.compile("printLn");

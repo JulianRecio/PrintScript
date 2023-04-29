@@ -6,34 +6,34 @@ public class Resolver {
 
   public Resolver() {}
 
-  public CheckTypeObject add(CheckTypeObject obj1, CheckTypeObject obj2) {
+  public AttributeObject add(AttributeObject obj1, AttributeObject obj2) {
     return obj1.add(obj2);
   }
 
-  public CheckTypeObject subtract(CheckTypeObject obj1, CheckTypeObject obj2) {
-    CheckTypeObject object;
+  public AttributeObject subtract(AttributeObject obj1, AttributeObject obj2) {
+    AttributeObject object;
     try {
-      object = new NumberObj((double) obj1.getValue() - (double) obj2.getValue());
+      object = new NumberObj((double) obj1.getValue() - (double) obj2.getValue(), false);
     } catch (Exception e) {
       throw new RuntimeException("Can only subtract Double");
     }
     return object;
   }
 
-  public CheckTypeObject multiply(CheckTypeObject obj1, CheckTypeObject obj2) {
-    CheckTypeObject object;
+  public AttributeObject multiply(AttributeObject obj1, AttributeObject obj2) {
+    AttributeObject object;
     try {
-      object = new NumberObj((double) obj1.getValue() * (double) obj2.getValue());
+      object = new NumberObj((double) obj1.getValue() * (double) obj2.getValue(), false);
     } catch (Exception e) {
       throw new RuntimeException("Can only multiply Double");
     }
     return object;
   }
 
-  public CheckTypeObject divide(CheckTypeObject obj1, CheckTypeObject obj2) {
-    CheckTypeObject object;
+  public AttributeObject divide(AttributeObject obj1, AttributeObject obj2) {
+    AttributeObject object;
     try {
-      object = new NumberObj((double) obj1.getValue() / (double) obj2.getValue());
+      object = new NumberObj((double) obj1.getValue() / (double) obj2.getValue(), false);
     } catch (Exception e) {
       throw new RuntimeException("Can only divide Double");
     }

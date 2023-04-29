@@ -14,16 +14,25 @@ public class ASTCases {
     return new AST(
         List.of(
             new DeclarationNode(
-                variableName, VariableType.NUMBER, new LiteralExpression(new NumberObj(3.0)))));
+                variableName,
+                true,
+                VariableType.NUMBER,
+                new LiteralExpression(new NumberObj(3.0, false)))));
   }
 
   public static AST createMultipleDeclarationAST(String variableName1, String variableName2) {
     return new AST(
         List.of(
             new DeclarationNode(
-                variableName1, VariableType.NUMBER, new LiteralExpression(new NumberObj(3.0))),
+                variableName1,
+                true,
+                VariableType.NUMBER,
+                new LiteralExpression(new NumberObj(3.0, false))),
             new DeclarationNode(
-                variableName2, VariableType.NUMBER, new LiteralExpression(new NumberObj(3.0)))));
+                variableName2,
+                true,
+                VariableType.NUMBER,
+                new LiteralExpression(new NumberObj(3.0, false)))));
   }
 
   public static AST createPrintAST() {
@@ -32,8 +41,8 @@ public class ASTCases {
             new PrintNode(
                 new BinaryExpression(
                     "+",
-                    new LiteralExpression(new NumberObj(1.0)),
-                    new LiteralExpression(new NumberObj(2.0))))));
+                    new LiteralExpression(new NumberObj(1.0, false)),
+                    new LiteralExpression(new NumberObj(2.0, false))))));
   }
 
   public static AST createMultiplePrintAST() {
@@ -42,18 +51,19 @@ public class ASTCases {
             new PrintNode(
                 new BinaryExpression(
                     "+",
-                    new LiteralExpression(new NumberObj(1.0)),
-                    new LiteralExpression(new NumberObj(2.0)))),
+                    new LiteralExpression(new NumberObj(1.0, false)),
+                    new LiteralExpression(new NumberObj(2.0, false)))),
             new PrintNode(
                 new BinaryExpression(
                     "+",
-                    new LiteralExpression(new NumberObj(2.0)),
-                    new LiteralExpression(new NumberObj(2.0))))));
+                    new LiteralExpression(new NumberObj(2.0, false)),
+                    new LiteralExpression(new NumberObj(2.0, false))))));
   }
 
   public static AST createReadInputAST() {
     return new AST(
         List.of(
-            new DeclarationNode("x", VariableType.STRING, new ReadInputExpression("Hello World"))));
+            new DeclarationNode(
+                "x", true, VariableType.STRING, new ReadInputExpression("Hello World"))));
   }
 }

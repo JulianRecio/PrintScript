@@ -1,8 +1,8 @@
 package ast.expr;
 
-import ast.obj.CheckTypeObject;
+import ast.obj.AttributeObject;
 
-public class ReadInputExpression implements Expression<CheckTypeObject> {
+public class ReadInputExpression implements Expression<AttributeObject> {
 
   private String message;
 
@@ -15,7 +15,7 @@ public class ReadInputExpression implements Expression<CheckTypeObject> {
   }
 
   @Override
-  public CheckTypeObject accept(ExpressionVisitor<CheckTypeObject> visitor) {
+  public AttributeObject accept(ExpressionVisitor<AttributeObject> visitor) {
     return visitor.visitExpr(this);
   }
 }
