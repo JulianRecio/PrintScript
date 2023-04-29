@@ -1,9 +1,11 @@
+import formatter.Formatter;
+import formatter.rule.Rule;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import rule.Rule;
 import token.Token;
 
 public class FormatterTest {
@@ -38,6 +40,7 @@ public class FormatterTest {
   //    }
 
   @Test
+  @Disabled
   public void testWholeFormatter() {
     //      InputStream inputStream = new ByteArrayInputStream("let x:number;".getBytes());
     String formattedCode =

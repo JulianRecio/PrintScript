@@ -1,12 +1,14 @@
+package formatter;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import formatter.rule.Rule;
+import formatter.rule.rules.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import rule.Rule;
-import rule.rules.*;
 import token.Token;
 import token.TokenType;
 
@@ -54,7 +56,7 @@ public class Formatter {
     return rules;
   }
 
-  private static Map<String, String> readConfigFile(String path) {
+  public static Map<String, String> readConfigFile(String path) {
     ObjectMapper mapper = new ObjectMapper();
 
     File fileObj = new File(path);
