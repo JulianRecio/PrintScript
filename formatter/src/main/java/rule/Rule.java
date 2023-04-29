@@ -1,9 +1,8 @@
 package rule;
 
-import lexer.Token;
-
 import java.util.List;
+import token.Token;
 
 public interface Rule {
-    public void applyRule(List<Token> tokens);
+  public void applyRule(List<Token> tokens);
 }

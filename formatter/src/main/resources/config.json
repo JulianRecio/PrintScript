@@ -2,5 +2,7 @@
   "spaceBeforeColonInDeclaration": "true",
   "spaceAfterColonInDeclaration": "true",
   "spaceBeforeAndAfterEqualSignInAssignment": "true",
-  "AmountOfLineBreaksBeforePrintLn": "0"
+  "AmountOfLineBreaksBeforePrintLn": "0",
+  "AmountOfIndentedInIfBlock":"1",
+  "IfKeyInSameLine":"true"
 }

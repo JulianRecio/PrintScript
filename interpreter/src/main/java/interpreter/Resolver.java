@@ -1,46 +1,42 @@
 package interpreter;
 
-public class Resolver{
+import ast.obj.*;
 
-    public Resolver(){
+public class Resolver {
 
+  public Resolver() {}
+
+  public AttributeObject add(AttributeObject obj1, AttributeObject obj2) {
+    return obj1.add(obj2);
+  }
+
+  public AttributeObject subtract(AttributeObject obj1, AttributeObject obj2) {
+    AttributeObject object;
+    try {
+      object = new NumberObj((double) obj1.getValue() - (double) obj2.getValue(), false);
+    } catch (Exception e) {
+      throw new RuntimeException("Can only subtract Double");
     }
+    return object;
+  }
 
-    public MyObject add(MyObject obj1, MyObject obj2){
-        return obj1.add(obj2);
+  public AttributeObject multiply(AttributeObject obj1, AttributeObject obj2) {
+    AttributeObject object;
+    try {
+      object = new NumberObj((double) obj1.getValue() * (double) obj2.getValue(), false);
+    } catch (Exception e) {
+      throw new RuntimeException("Can only multiply Double");
     }
+    return object;
+  }
 
-    public MyObject subtract(MyObject obj1, MyObject obj2){
-        MyObject object;
-        try {
-            object = new NumberObj((double) obj1.getValue() - (double) obj2.getValue());
-        }
-        catch (Exception e){
-            throw new RuntimeException("Cannot subtract String");
-        }
-        return object;
+  public AttributeObject divide(AttributeObject obj1, AttributeObject obj2) {
+    AttributeObject object;
+    try {
+      object = new NumberObj((double) obj1.getValue() / (double) obj2.getValue(), false);
+    } catch (Exception e) {
+      throw new RuntimeException("Can only divide Double");
     }
-
-    public MyObject multiply(MyObject obj1, MyObject obj2){
-        MyObject object;
-        try {
-            object = new NumberObj((double) obj1.getValue() * (double) obj2.getValue());
-        }
-        catch (Exception e){
-            throw new RuntimeException("Cannot multiply String");
-        }
-        return object;
-    }
-
-    public MyObject divide(MyObject obj1, MyObject obj2){
-        MyObject object;
-        try {
-            object = new NumberObj((double) obj1.getValue() / (double) obj2.getValue());
-        }
-        catch (Exception e){
-            throw new RuntimeException("Cannot divide String");
-        }
-        return object;
-    }
+    return object;
+  }
 }
-
