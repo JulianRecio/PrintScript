@@ -1,7 +1,7 @@
-package rule.rules;
+package formatter.rule.rules;
 
+import formatter.rule.Rule;
 import java.util.List;
-import rule.Rule;
 import token.Token;
 
 public class MaximumOf1SpaceBetweenTokensRule implements Rule {

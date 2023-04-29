@@ -1,4 +1,4 @@
-package rule;
+package formatter.rule;
 
 import java.util.List;
 import token.Token;
