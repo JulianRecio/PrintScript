@@ -125,17 +125,20 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     AttributeObject left = binaryExpression.getLeft().accept(this);
     AttributeObject right = binaryExpression.getRight().accept(this);
     Resolver resolver = new Resolver();
-    return switch (binaryExpression.getOperator()) {
-      case "+" -> resolver.add(left, right);
-      case "-" -> resolver.subtract(left, right);
-      case "*" -> resolver.multiply(left, right);
-      case "/" -> resolver.divide(left, right);
-      default -> {
+    switch (binaryExpression.getOperator()) {
+      case "+":
+        return resolver.add(left, right);
+      case "-":
+        return resolver.subtract(left, right);
+      case "*":
+        return resolver.multiply(left, right);
+      case "/":
+        return resolver.divide(left, right);
+      default:
         String errorMsg = "Operator is not valid";
         errors.add(errorMsg);
         throw new RuntimeException(errorMsg);
-      }
-    };
+    }
   }
 
   @Override
@@ -162,12 +165,16 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     System.out.println(readInputExpression.getMessage());
     String value = scanner.nextLine();
     scanner.close();
-    return switch (type) {
-      case "number" -> new NumberObj(Double.parseDouble(value), false);
-      case "string" -> new StringObj(value, false);
-      case "boolean" -> new BooleanObj(Boolean.parseBoolean(value), false);
-      default -> throw new RuntimeException("Unsupported type");
-    };
+    switch (type) {
+      case "number":
+        return new NumberObj(Double.parseDouble(value), false);
+      case "string":
+        return new StringObj(value, false);
+      case "boolean":
+        return new BooleanObj(Boolean.parseBoolean(value), false);
+      default:
+        throw new RuntimeException("Unsupported type");
+    }
   }
 
   public HashMap<String, AttributeObject> getMap() {

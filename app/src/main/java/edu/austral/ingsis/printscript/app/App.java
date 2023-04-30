@@ -22,15 +22,20 @@ public class App {
     Double version = null;
     while (choice != 3) {
       switch (choice) {
-        case 1 -> {
-          version = 1.0;
-          runProgram(code, version);
-        }
-        case 2 -> {
-          version = 1.1;
-          runProgram(code, version);
-        }
-        default -> System.out.println("Invalid input");
+        case 1:
+          {
+            version = 1.0;
+            runProgram(code, version);
+            break;
+          }
+        case 2:
+          {
+            version = 1.1;
+            runProgram(code, version);
+            break;
+          }
+        default:
+          System.out.println("Invalid input");
       }
       printInitialMenu();
       choice = scan.nextInt();
@@ -43,42 +48,49 @@ public class App {
     int choice = scan.nextInt();
     while (choice != 4) {
       switch (choice) {
-        case 1 -> {
-          List<Token> tokenList = Lexer.tokenize(code, version);
-          Parser parser = new Parser(tokenList, version);
-          Interpreter interpreter = new Interpreter(parser.parse());
-          interpreter.interpret();
-        }
-        case 2 -> {
-          List<Token> tokenList = Lexer.tokenize(code, version);
-          String formatted =
-              Formatter.format(
-                  tokenList,
-                  Formatter.getRulesFromConfig(
-                      Formatter.readConfigFile("app\\src\\main\\resources\\formatterRules.json"),
-                      version));
-          BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
-          writer.write(formatted);
-          writer.close();
-        }
-        case 3 -> {
-          List<Token> tokenList = Lexer.tokenize(code, version);
-          StaticCodeAnalyser sca =
-              new StaticCodeAnalyser(
-                  "app\\src\\main\\resources\\staticCodeAnalyserRules.json", version);
-          Parser parser = new Parser(tokenList, version);
-          List<String> messages = sca.analyze(parser.parse());
-          BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
-          if (messages.size() == 0) {
-            writer.write("There are no errors");
-          } else {
-            for (String message : messages) {
-              writer.write(message);
-            }
+        case 1:
+          {
+            List<Token> tokenList = Lexer.tokenize(code, version);
+            Parser parser = new Parser(tokenList, version);
+            Interpreter interpreter = new Interpreter(parser.parse());
+            interpreter.interpret();
+            break;
           }
-          writer.close();
-        }
-        default -> System.out.println("Invalid input");
+        case 2:
+          {
+            List<Token> tokenList = Lexer.tokenize(code, version);
+            String formatted =
+                Formatter.format(
+                    tokenList,
+                    Formatter.getRulesFromConfig(
+                        Formatter.readConfigFile("app\\src\\main\\resources\\formatterRules.json"),
+                        version));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
+            writer.write(formatted);
+            writer.close();
+            break;
+          }
+        case 3:
+          {
+            List<Token> tokenList = Lexer.tokenize(code, version);
+            StaticCodeAnalyser sca =
+                new StaticCodeAnalyser(
+                    "app\\src\\main\\resources\\staticCodeAnalyserRules.json", version);
+            Parser parser = new Parser(tokenList, version);
+            List<String> messages = sca.analyze(parser.parse());
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
+            if (messages.size() == 0) {
+              writer.write("There are no errors");
+            } else {
+              for (String message : messages) {
+                writer.write(message);
+              }
+            }
+            writer.close();
+            break;
+          }
+        default:
+          System.out.println("Invalid input");
       }
       printRunMenu();
       choice = scan.nextInt();

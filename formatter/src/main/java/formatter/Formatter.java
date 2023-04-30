@@ -83,7 +83,7 @@ public class Formatter {
         currentList.add(currentToken);
       }
     }
-    System.out.println(formattedCode.toString());
+    System.out.println(formattedCode);
     return formattedCode.toString();
   }
 
