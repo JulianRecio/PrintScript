@@ -44,7 +44,8 @@ publishing {
             credentials {
 //                username = System.getenv("GITHUB_USER")
                 username = "JuanPabloSenmartin"
-                password = "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"
+//                password = "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"
+                password = "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"
             }
         }
     }
