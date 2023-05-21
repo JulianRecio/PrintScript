@@ -4,6 +4,7 @@
 
 plugins {
     id 'edu.austral.ingsis.printscript.java-application-conventions'
+    id 'edu.austral.ingsis.printscript.java-common-conventions'
 }
 
 dependencies {
