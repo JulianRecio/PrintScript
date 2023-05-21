@@ -15,10 +15,8 @@
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/formatter" />
             <option value="$PROJECT_DIR$/interpreter" />
-            <option value="$PROJECT_DIR$/list" />
             <option value="$PROJECT_DIR$/staticCodeAnalyser" />
             <option value="$PROJECT_DIR$/token" />
-            <option value="$PROJECT_DIR$/utilities" />
           </set>
         </option>
       </GradleProjectSettings>
