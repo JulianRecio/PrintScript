@@ -8,11 +8,6 @@
  */
 
 rootProject.name = 'PrintScript'
-include('app', 'list', 'utilities')
-include 'interpreter'
-include 'formatter'
-include 'staticCodeAnalyser'
-include 'formatter'
-include 'token'
-include 'ast'
+include('app', 'interpreter', 'formatter','staticCodeAnalyser','token','ast')
+
 
