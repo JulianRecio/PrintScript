@@ -28,15 +28,19 @@ dependencies {
 
 publishing {
     publications {
-        gpr(MavenPublication) {
-            from(components.java)
+            register("jar", MavenPublication) {
+                from(components["java"])
+                pom {
+                    url.set("https://github.com/JulianRecio/PrintScript.git")
+                }
+
+            }
         }
-    }
 
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/JulianRecio/PrintScript")
+            url = uri("https://github.com/JulianRecio/PrintScript.git")
             credentials {
 //                username = System.getenv("GITHUB_USER")
                 username = "JuanPabloSenmartin"
