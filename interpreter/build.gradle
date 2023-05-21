@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id 'maven-publish'
 }
 
 
@@ -15,30 +14,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation 'org.javatuples:javatuples:1.2'
-}
-group 'org.example'
-archivesBaseName = 'interpreter'
-version '1.1.9'
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/JulianRecio/PrintScript")
-            credentials {
-                username = System.getenv("GITHUB_USER")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-    publications {
-        register("jar", MavenPublication) {
-            from(components["java"])
-            pom {
-                url.set("https://github.com/JulianRecio/PrintScript.git")
-            }
-        }
-    }
 }
 
 test {
