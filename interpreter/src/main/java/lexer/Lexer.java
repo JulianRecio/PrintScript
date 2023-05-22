@@ -12,32 +12,40 @@ import token.TokenType;
 
 public class Lexer {
 
-  private static Pattern KEYWORD_PATTERN;
-  private static Pattern IDENTIFIER_PATTERN;
-  private static Pattern ALLOCATOR_PATTER;
-  private static Pattern TYPE_PATTERN;
-  private static Pattern EQUAL_PATTERN;
-  private static Pattern NUMBER_PATTERN;
-  private static Pattern STRING_PATTERN;
-  private static Pattern BOOLEAN_PATTERN;
-  private static Pattern OPERATOR_PATTERN;
-  private static Pattern PRINT_PATTERN;
-  private static Pattern LEFT_PARENTHESIS_PATTERN;
-  private static Pattern RIGHT_PARENTHESIS_PATTERN;
-  private static Pattern END;
-  private static Pattern SPACE_PATTERN;
-  private static Pattern IF;
-  private static Pattern LEFT_BRACKET;
-  private static Pattern RIGHT_BRACKET;
-  private static Pattern ELSE;
-  private static Pattern READ_INPUT;
+  private Pattern KEYWORD_PATTERN;
+  private Pattern IDENTIFIER_PATTERN;
+  private Pattern ALLOCATOR_PATTER;
+  private Pattern TYPE_PATTERN;
+  private Pattern EQUAL_PATTERN;
+  private Pattern NUMBER_PATTERN;
+  private Pattern STRING_PATTERN;
+  private Pattern BOOLEAN_PATTERN;
+  private Pattern OPERATOR_PATTERN;
+  private Pattern PRINT_PATTERN;
+  private Pattern LEFT_PARENTHESIS_PATTERN;
+  private Pattern RIGHT_PARENTHESIS_PATTERN;
+  private Pattern END;
+  private Pattern SPACE_PATTERN;
+  private Pattern IF;
+  private Pattern LEFT_BRACKET;
+  private Pattern RIGHT_BRACKET;
+  private Pattern ELSE;
+  private Pattern READ_INPUT;
 
-  public static List<Token> tokenize(InputStream input, Double version) throws IOException {
-    input.mark(0);
+  private final InputStream inputStream;
+  private final Double version;
+
+  public Lexer(InputStream inputStream, Double version) {
+    this.inputStream = inputStream;
+    this.version = version;
+  }
+
+  public List<Token> tokenize() throws IOException {
+    inputStream.mark(0);
     List<Token> tokens = new ArrayList<>();
     StringBuilder chunk = new StringBuilder();
     setVersionPatterns(version);
-    int data = input.read();
+    int data = inputStream.read();
     while (data != -1) {
       char ch = (char) data;
       if (ch == ';') {
@@ -47,19 +55,19 @@ public class Lexer {
       } else {
         chunk.append(ch);
       }
-      data = input.read();
+      data = inputStream.read();
     }
     // If there is any remaining chunk, tokenize it
     if (chunk.length() > 0) {
       tokens.addAll(tokenizeChunk(chunk.toString(), version));
     }
-    if (input.markSupported()) {
-      input.reset();
+    if (inputStream.markSupported()) {
+      inputStream.reset();
     }
     return tokens;
   }
 
-  private static List<Token> tokenizeChunk(String input, Double version) {
+  private List<Token> tokenizeChunk(String input, Double version) {
     List<Token> tokens = new ArrayList<>();
     int pos = 0;
     while (pos < input.length()) {
@@ -91,7 +99,7 @@ public class Lexer {
     return tokens;
   }
 
-  private static HashMap<Matcher, TokenType> createMap(String remainder) {
+  private HashMap<Matcher, TokenType> createMap(String remainder) {
     HashMap<Matcher, TokenType> map = new HashMap<>();
     map.put(KEYWORD_PATTERN.matcher(remainder), TokenType.KEYWORD);
     map.put(TYPE_PATTERN.matcher(remainder), TokenType.TYPE);
@@ -108,7 +116,7 @@ public class Lexer {
     return map;
   }
 
-  private static int addExtendedTokens(List<Token> tokens, int pos, String remainder) {
+  private int addExtendedTokens(List<Token> tokens, int pos, String remainder) {
     HashMap<Matcher, TokenType> map = new HashMap<>();
     map.put(IF.matcher(remainder), TokenType.IF);
     map.put(BOOLEAN_PATTERN.matcher(remainder), TokenType.BOOLEAN_VALUE);
@@ -133,35 +141,35 @@ public class Lexer {
     return pos;
   }
 
-  private static void setVersionPatterns(Double version) {
+  private void setVersionPatterns(Double version) {
     ALLOCATOR_PATTER = Pattern.compile(":");
     EQUAL_PATTERN = Pattern.compile("=");
     NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");
-    STRING_PATTERN = Pattern.compile("\"[a-zA-Z][a-zA-Z0-9 ]*\"");
+    STRING_PATTERN = Pattern.compile("\".*\"");
     OPERATOR_PATTERN = Pattern.compile("[+\\-*/]");
-    PRINT_PATTERN = Pattern.compile("printLn");
+    PRINT_PATTERN = Pattern.compile("println\\b");
     LEFT_PARENTHESIS_PATTERN = Pattern.compile("\\(");
     RIGHT_PARENTHESIS_PATTERN = Pattern.compile("\\)");
     END = Pattern.compile(";");
     SPACE_PATTERN = Pattern.compile("\\s+");
     if (version == 1.0) {
-      KEYWORD_PATTERN = Pattern.compile("let");
+      KEYWORD_PATTERN = Pattern.compile("let\\b");
       IDENTIFIER_PATTERN =
           Pattern.compile(
-              "(?!printLn\\b)(?!number\\b)(?!string\\b)(?!let\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
-      TYPE_PATTERN = Pattern.compile("number|string");
+              "(?!println\\b)(?!number\\b)(?!string\\b)(?!let\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
+      TYPE_PATTERN = Pattern.compile("number\\b|string\\b");
     } else if (version == 1.1) {
-      KEYWORD_PATTERN = Pattern.compile("let|const");
+      KEYWORD_PATTERN = Pattern.compile("let\\b|const\\b");
       IDENTIFIER_PATTERN =
           Pattern.compile(
-              "(?!printLn\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)(?!if\\b)(?!else\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
-      TYPE_PATTERN = Pattern.compile("number|string|boolean");
-      IF = Pattern.compile("if");
-      BOOLEAN_PATTERN = Pattern.compile("true|false");
+              "(?!println\\b)(?!readInput\\b)(?!number\\b)(?!string\\b)(?!boolean\\b)(?!let\\b)(?!const\\b)(?!true\\b)(?!false\\b)(?!if\\b)(?!else\\b)[a-zA-Z]+(_[a-zA-Z0-9]+)*");
+      TYPE_PATTERN = Pattern.compile("number\\b|string\\b|boolean\\b");
+      IF = Pattern.compile("if\\b");
+      BOOLEAN_PATTERN = Pattern.compile("true\\b|false\\b");
       LEFT_BRACKET = Pattern.compile("\\{");
       RIGHT_BRACKET = Pattern.compile("}");
-      ELSE = Pattern.compile("else");
-      READ_INPUT = Pattern.compile("readInput");
+      ELSE = Pattern.compile("else\\b");
+      READ_INPUT = Pattern.compile("readInput\\b");
     } else {
       throw new RuntimeException("Invalid version");
     }

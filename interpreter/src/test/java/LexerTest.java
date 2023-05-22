@@ -23,7 +23,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -40,7 +41,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:string;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -57,7 +59,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let         x:number;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -74,7 +77,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let variable:string;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -93,7 +97,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -112,7 +117,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3.6;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -131,7 +137,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:string = \"a\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -150,7 +157,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:string = \"Hello World\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -173,7 +181,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3.6 + 3 * 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -199,7 +208,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3.6;" + "let x:string = \"Hello World\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -216,9 +226,10 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
-    String toTokenize = "printLn(\"Hello World\" + 3);";
+    String toTokenize = "println(\"Hello World\" + 3);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -242,9 +253,10 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
-    String toTokenize = "let x: number = 3; printLn(\"Hello World\" + x);";
+    String toTokenize = "let x: number = 3; println(\"Hello World\" + x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -265,7 +277,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -284,7 +297,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "const x:number = 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -303,7 +317,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:boolean = true";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -328,7 +343,8 @@ public class LexerTest {
     expResult.add(TokenExamples.RIGHT_BRACKET);
     String toTokenize = "if (true) {let x:number = 3;}";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
@@ -350,7 +366,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = readInput(\"Hello World\");";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    ArrayList<Token> list = (ArrayList<Token>) Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> list = lexer.tokenize();
     for (int i = 0; i < list.size(); i++) {
       Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
       Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());

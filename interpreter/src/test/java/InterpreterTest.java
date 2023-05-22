@@ -16,9 +16,10 @@ public class InterpreterTest {
 
   @Test
   public void testSimpleLine() throws IOException {
-    String toTokenize = "let x:number = 5; printLn(x);";
+    String toTokenize = "let x:number = 5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -28,9 +29,10 @@ public class InterpreterTest {
 
   @Test
   public void testVariableSave() throws IOException {
-    String toTokenize = "let x:number; x=5; printLn(x);";
+    String toTokenize = "let x:number; x=5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -40,9 +42,10 @@ public class InterpreterTest {
 
   @Test
   public void testMultipleVariableValueChange() throws IOException {
-    String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = 2.0 + y; printLn(x);";
+    String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = 2.0 + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -52,9 +55,10 @@ public class InterpreterTest {
 
   @Test
   public void testMultipleVariableValueChangeWithSameVariable() throws IOException {
-    String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = x + y; printLn(x);";
+    String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -65,9 +69,10 @@ public class InterpreterTest {
   @Test
   public void testExceptionWhenVariableAlreadyInitialized() throws IOException {
     String toTokenize =
-        "let x:number; x=5.0; let y:number = 8.0; let x:number = x + y; printLn(x);";
+        "let x:number; x=5.0; let y:number = 8.0; let x:number = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -85,7 +90,8 @@ public class InterpreterTest {
   public void testExceptionWhenMismatchingType() throws IOException {
     String toTokenize = "let x:number; x=\"hello\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -101,9 +107,10 @@ public class InterpreterTest {
 
   @Test
   public void testExceptionWhenVariableNotInitialized() throws IOException {
-    String toTokenize = "let x:number; x=5.0; let y:number; let z:number = x + y; printLn(x);";
+    String toTokenize = "let x:number; x=5.0; let y:number; let z:number = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -119,9 +126,10 @@ public class InterpreterTest {
 
   @Test
   public void testExceptionWhenVariableNotInitializedPrint() throws IOException {
-    String toTokenize = "let x:number; printLn(x);";
+    String toTokenize = "let x:number; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -139,7 +147,8 @@ public class InterpreterTest {
   public void testExpressionWithParenthesis() throws IOException {
     String toTokenize = "let x:number = (5+4)*2;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.0);
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -151,9 +160,10 @@ public class InterpreterTest {
 
   @Test
   public void testSimpleLineVersion1() throws IOException {
-    String toTokenize = "let x:number = 5; printLn(x);";
+    String toTokenize = "let x:number = 5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -163,9 +173,10 @@ public class InterpreterTest {
 
   @Test
   public void testConstDeclaration() throws IOException {
-    String toTokenize = "const x:number = 5; printLn(x);";
+    String toTokenize = "const x:number = 5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -177,7 +188,8 @@ public class InterpreterTest {
   public void testErrorWhenChangingConstValue() throws IOException {
     String toTokenize = "const x:number = 5; x = 6;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -193,9 +205,10 @@ public class InterpreterTest {
 
   @Test
   public void testBooleanValue() throws IOException {
-    String toTokenize = "let x:boolean = false; printLn(x);";
+    String toTokenize = "let x:boolean = false; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -207,7 +220,8 @@ public class InterpreterTest {
   public void testSimpleIf() throws IOException {
     String toTokenize = "if (false) {  } else {let x:number = 3;}";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
@@ -219,7 +233,8 @@ public class InterpreterTest {
   public void testReadInput() throws IOException {
     String toTokenize = "let x:number = readInput(\"Insert variable\");";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    List<Token> tokens = Lexer.tokenize(inputStream, 1.1);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
