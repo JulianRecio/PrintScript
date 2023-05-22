@@ -37,8 +37,6 @@ publishing {
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USER")
                 password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-//                username = "JuanPabloSenmartin"
-//                password = "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"
             }
         }
     }
