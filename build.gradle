@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id "com.diffplug.spotless" version "6.18.0"
-//    id 'maven-publish'
 }
 
 
@@ -13,14 +12,14 @@ repositories {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'com.diffplug.spotless'
-//    apply plugin: 'maven-publish'
 
     repositories {
         mavenCentral()
     }
 
+    version = "1.1.15-SNAPSHOT"
 
-        spotless {
+    spotless {
         java {
             googleJavaFormat()
             formatAnnotations()

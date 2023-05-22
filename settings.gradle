@@ -9,5 +9,4 @@
 
 rootProject.name = 'PrintScript'
 include('app', 'interpreter', 'formatter','sca','token','ast')
-include 'sca'
 
