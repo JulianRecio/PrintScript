@@ -14,7 +14,7 @@ dependencies {
     implementation project(path: ':ast')
     implementation project(path: ':token')
     implementation project(path: ':formatter')
-    implementation project(path: ':staticCodeAnalyser')
+    implementation project(path: ':sca')
 }
 
 application {
