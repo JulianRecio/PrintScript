@@ -3,6 +3,7 @@ plugins {
     id 'edu.austral.ingsis.printscript.java-common-conventions'
 }
 
+version = "1.1.14"
 
 repositories {
     mavenCentral()
