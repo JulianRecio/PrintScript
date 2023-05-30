@@ -35,6 +35,16 @@ public class StaticCodeAnalyser {
     ruleSet = selectRuleSet(version);
   }
 
+  public StaticCodeAnalyser(Map<String, String> map, double version){
+      this.version = version;
+
+      this.caseConvention = map.get("caseConvention");
+      this.printLnCondition = Boolean.parseBoolean(map.get("printLnCondition"));
+      this.readInputCondition = Boolean.parseBoolean(map.get("readInputCondition"));
+
+      ruleSet = selectRuleSet(version);
+  }
+
   private Set<NodeVisitor> selectRuleSet(Double version) {
     if (version == 1.0) {
       Set<NodeVisitor> rules = new HashSet<>();
