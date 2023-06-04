@@ -30,6 +30,6 @@ public class StringObj extends AttributeObject {
 
   @Override
   public AttributeObject add(AttributeObject obj2) {
-    return new StringObj(this.value + (String) obj2.getValue(), false);
+    return new StringObj(this.value + obj2.getValue().toString(), false);
   }
 }

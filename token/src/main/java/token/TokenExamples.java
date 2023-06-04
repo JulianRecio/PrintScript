@@ -13,9 +13,8 @@ public class TokenExamples {
   public static final Token EQUAL = new Token(TokenType.EQUAL, "=");
   public static final Token SIMPLE_NUMBER_VALUE = new Token(TokenType.NUMBER_VALUE, "3");
   public static final Token COMPLEX_NUMBER_VALUE = new Token(TokenType.NUMBER_VALUE, "3.6");
-  public static final Token SIMPLE_STRING_VALUE = new Token(TokenType.STRING_VALUE, "\"a\"");
-  public static final Token COMPLEX_STRING_VALUE =
-      new Token(TokenType.STRING_VALUE, "\"Hello World\"");
+  public static final Token SIMPLE_STRING_VALUE = new Token(TokenType.STRING_VALUE, "a");
+  public static final Token COMPLEX_STRING_VALUE = new Token(TokenType.STRING_VALUE, "Hello World");
   public static final Token BOOLEAN_VALUE = new Token(TokenType.BOOLEAN_VALUE, "true");
   public static final Token PLUS = new Token(TokenType.OPERATOR, "+");
   public static final Token MULTIPLICATION = new Token(TokenType.OPERATOR, "*");

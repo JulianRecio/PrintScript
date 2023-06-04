@@ -1,8 +1,6 @@
 import ast.AST;
 import interpreter.Interpreter;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import lexer.Lexer;
 import org.junit.jupiter.api.Assertions;
@@ -182,6 +180,35 @@ public class InterpreterTest {
   }
 
   @Test
+  public void printString() throws IOException {
+    String toTokenize = "let word: string = \"hello\"; println(word);";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
+
+    // Redirect System.out to a ByteArrayOutputStream
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(outputStream);
+    PrintStream originalOut = System.out;
+    System.setOut(printStream);
+
+    Interpreter interpreter = new Interpreter(ast);
+    interpreter.interpret();
+
+    // Restore the original System.out
+    System.setOut(originalOut);
+
+    // Convert the expected and actual output to strings
+    String expectedOutput = "hello";
+    String actualOutput = outputStream.toString().trim();
+
+    // Assert that the actual output matches the expected output
+    Assertions.assertEquals(expectedOutput, actualOutput);
+  }
+
+  @Test
   public void printNumberSumString() throws IOException {
     String toTokenize =
         "let someNumber: number = 1;\n"
@@ -192,9 +219,25 @@ public class InterpreterTest {
     List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.0);
     AST ast = parser.parse();
+
+    // Redirect System.out to a ByteArrayOutputStream
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(outputStream);
+    PrintStream originalOut = System.out;
+    System.setOut(printStream);
+
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(3.14, interpreter.getMap().get("pi").getValue());
+
+    // Restore the original System.out
+    System.setOut(originalOut);
+
+    // Convert the expected and actual output to strings
+    String expectedOutput = "hello world 1";
+    String actualOutput = outputStream.toString().trim();
+
+    // Assert that the actual output matches the expected output
+    Assertions.assertEquals(expectedOutput, actualOutput);
   }
 
   // Version 1.1 tests

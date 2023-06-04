@@ -94,7 +94,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
       throw new RuntimeException(errorMsg);
     } else {
       printed.add(toPrint.getValue().toString());
-      System.out.println(toPrint.getValue().toString());
+      System.out.println(toPrint.getValue());
     }
   }
 

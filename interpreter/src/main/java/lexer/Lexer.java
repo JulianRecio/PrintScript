@@ -78,8 +78,12 @@ public class Lexer {
       for (Matcher matcher : map.keySet()) {
         if (matcher.lookingAt()) {
           String str = matcher.group();
-          tokens.add(new Token(map.get(matcher), str));
           pos += str.length();
+          if (map.get(matcher) == TokenType.STRING_VALUE) {
+            // Remove the quotation marks from the string value
+            str = str.substring(1, str.length() - 1);
+          }
+          tokens.add(new Token(map.get(matcher), str));
           tmp = true;
           break;
         }
