@@ -35,14 +35,14 @@ public class StaticCodeAnalyser {
     ruleSet = selectRuleSet(version);
   }
 
-  public StaticCodeAnalyser(Map<String, String> map, double version){
-      this.version = version;
+  public StaticCodeAnalyser(Map<String, String> map, double version) {
+    this.version = version;
 
-      this.caseConvention = map.get("caseConvention");
-      this.printLnCondition = Boolean.parseBoolean(map.get("printLnCondition"));
-      this.readInputCondition = Boolean.parseBoolean(map.get("readInputCondition"));
+    this.caseConvention = map.get("caseConvention");
+    this.printLnCondition = Boolean.parseBoolean(map.get("printLnCondition"));
+    this.readInputCondition = Boolean.parseBoolean(map.get("readInputCondition"));
 
-      ruleSet = selectRuleSet(version);
+    ruleSet = selectRuleSet(version);
   }
 
   private Set<NodeVisitor> selectRuleSet(Double version) {

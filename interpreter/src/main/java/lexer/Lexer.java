@@ -144,7 +144,7 @@ public class Lexer {
   private void setVersionPatterns(Double version) {
     ALLOCATOR_PATTER = Pattern.compile(":");
     EQUAL_PATTERN = Pattern.compile("=");
-    NUMBER_PATTERN = Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?");
+    NUMBER_PATTERN = Pattern.compile("(0|[1-9]\\d*)(\\.\\d+)?");
     STRING_PATTERN = Pattern.compile("\".*\"");
     OPERATOR_PATTERN = Pattern.compile("[+\\-*/]");
     PRINT_PATTERN = Pattern.compile("println\\b");

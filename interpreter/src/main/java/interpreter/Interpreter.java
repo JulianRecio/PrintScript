@@ -167,7 +167,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     scanner.close();
     switch (type) {
       case "number":
-        return new NumberObj(Double.parseDouble(value), false);
+        return new NumberObj(Integer.parseInt(value), false);
       case "string":
         return new StringObj(value, false);
       case "boolean":

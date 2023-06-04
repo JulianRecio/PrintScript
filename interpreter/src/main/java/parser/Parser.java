@@ -193,8 +193,7 @@ public class Parser {
   private Expression<AttributeObject> factor() {
     if (tokens.get(pos).getType() == TokenType.NUMBER_VALUE) {
       Expression<AttributeObject> numberExpr =
-          new LiteralExpression(
-              new NumberObj(Double.parseDouble(tokens.get(pos).getValue()), false));
+          new LiteralExpression(new NumberObj(Integer.parseInt(tokens.get(pos).getValue()), false));
       pos++;
       return numberExpr;
     } else if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {

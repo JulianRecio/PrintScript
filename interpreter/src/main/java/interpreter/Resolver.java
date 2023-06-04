@@ -13,7 +13,7 @@ public class Resolver {
   public AttributeObject subtract(AttributeObject obj1, AttributeObject obj2) {
     AttributeObject object;
     try {
-      object = new NumberObj((double) obj1.getValue() - (double) obj2.getValue(), false);
+      object = new NumberObj((Integer) obj1.getValue() - (Integer) obj2.getValue(), false);
     } catch (Exception e) {
       throw new RuntimeException("Can only subtract Double");
     }
@@ -23,7 +23,7 @@ public class Resolver {
   public AttributeObject multiply(AttributeObject obj1, AttributeObject obj2) {
     AttributeObject object;
     try {
-      object = new NumberObj((double) obj1.getValue() * (double) obj2.getValue(), false);
+      object = new NumberObj((Integer) obj1.getValue() * (Integer) obj2.getValue(), false);
     } catch (Exception e) {
       throw new RuntimeException("Can only multiply Double");
     }
@@ -33,7 +33,7 @@ public class Resolver {
   public AttributeObject divide(AttributeObject obj1, AttributeObject obj2) {
     AttributeObject object;
     try {
-      object = new NumberObj((double) obj1.getValue() / (double) obj2.getValue(), false);
+      object = new NumberObj((Integer) obj1.getValue() / (Integer) obj2.getValue(), false);
     } catch (Exception e) {
       throw new RuntimeException("Can only divide Double");
     }

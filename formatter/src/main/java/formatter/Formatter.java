@@ -35,7 +35,7 @@ public class Formatter {
         && ruleMap.get("spaceBeforeAndAfterEqualSignInAssignment").equals("true"))
       rules.add(new SpaceBeforeAndAfterEqualSignRule());
     if (ruleMap.containsKey("AmountOfLineBreaksBeforePrintLn")
-            && Integer.parseInt(ruleMap.get("AmountOfLineBreaksBeforePrintLn")) != -1)
+        && Integer.parseInt(ruleMap.get("AmountOfLineBreaksBeforePrintLn")) != -1)
       rules.add(
           new LineBreakBeforePrintLnRule(
               Integer.parseInt(ruleMap.get("AmountOfLineBreaksBeforePrintLn"))));
@@ -48,7 +48,7 @@ public class Formatter {
     if (version == 1.1) {
       // add 1.1 version rules
       if (ruleMap.containsKey("AmountOfIndentedInIfBlock")
-              && Integer.parseInt(ruleMap.get("AmountOfIndentedInIfBlock")) != -1)
+          && Integer.parseInt(ruleMap.get("AmountOfIndentedInIfBlock")) != -1)
         rules.add(
             new IndentedIfBlockRule(Integer.parseInt(ruleMap.get("AmountOfIndentedInIfBlock"))));
       if (ruleMap.containsKey("IfKeyInSameLine") && ruleMap.get("IfKeyInSameLine").equals("true"))

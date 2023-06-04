@@ -24,7 +24,7 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
@@ -37,12 +37,12 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
   public void testMultipleVariableValueChange() throws IOException {
-    String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = 2.0 + y; println(x);";
+    String toTokenize = "let x:number; x=5; let y:number = 8; x = 2 + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
     List<Token> tokens = lexer.tokenize();
@@ -50,12 +50,12 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(10.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(10, interpreter.getMap().get("x").getValue());
   }
 
   @Test
   public void testMultipleVariableValueChangeWithSameVariable() throws IOException {
-    String toTokenize = "let x:number; x=5.0; let y:number = 8.0; x = x + y; println(x);";
+    String toTokenize = "let x:number; x=5; let y:number = 8; x = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
     List<Token> tokens = lexer.tokenize();
@@ -63,13 +63,12 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(13.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(13, interpreter.getMap().get("x").getValue());
   }
 
   @Test
   public void testExceptionWhenVariableAlreadyInitialized() throws IOException {
-    String toTokenize =
-        "let x:number; x=5.0; let y:number = 8.0; let x:number = x + y; println(x);";
+    String toTokenize = "let x:number; x=5; let y:number = 8; let x:number = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
     List<Token> tokens = lexer.tokenize();
@@ -107,7 +106,7 @@ public class InterpreterTest {
 
   @Test
   public void testExceptionWhenVariableNotInitialized() throws IOException {
-    String toTokenize = "let x:number; x=5.0; let y:number; let z:number = x + y; println(x);";
+    String toTokenize = "let x:number; x=5; let y:number; let z:number = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
     List<Token> tokens = lexer.tokenize();
@@ -153,7 +152,7 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(18.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(18, interpreter.getMap().get("x").getValue());
   }
 
   // Version 1.1 tests
@@ -168,7 +167,7 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
@@ -181,7 +180,7 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(5.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
@@ -226,7 +225,7 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(3.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
   }
 
   @Test
@@ -238,10 +237,26 @@ public class InterpreterTest {
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
-    String type = "number\n3.0";
+    String type = "number\n3";
     InputStream in = new ByteArrayInputStream(type.getBytes());
     System.setIn(in);
     interpreter.interpret();
-    Assertions.assertEquals(3.0, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
+  }
+
+  @Test
+  public void a() throws IOException {
+    String toTokenize = "let cuenta: number = 5*5-8/4+2;";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
+    for (Token token : tokens) {
+      System.out.println(token.getValue() + " " + token.getType());
+    }
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
+    Interpreter interpreter = new Interpreter(ast);
+    interpreter.interpret();
+    Assertions.assertEquals(25, interpreter.getMap().get("cuenta").getValue());
   }
 }
