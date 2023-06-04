@@ -2,9 +2,9 @@ package ast.obj;
 
 public class NumberObj extends AttributeObject {
 
-  private Integer value;
+  private Number value;
 
-  public NumberObj(Integer value, boolean modifiable) {
+  public NumberObj(Number value, boolean modifiable) {
     super(modifiable);
     this.value = value;
   }
@@ -14,22 +14,23 @@ public class NumberObj extends AttributeObject {
     this.value = null;
   }
 
-  public Integer getValue() {
+  public Number getValue() {
     return value;
   }
 
   @Override
   public boolean typeIsCorrect(Object value) {
-    try {
-      this.value = (Integer) value;
-    } catch (Exception e) {
-      return false;
-    }
-    return true;
+    return value instanceof Number;
   }
 
   @Override
   public AttributeObject add(AttributeObject obj2) {
-    return new NumberObj(this.getValue() + (Integer) obj2.getValue(), false);
+    if (this.getValue() instanceof Integer && obj2.getValue() instanceof Integer) {
+      return new NumberObj((Integer) this.getValue() + (Integer) obj2.getValue(), false);
+    } else {
+      double result =
+          ((Number) this.getValue()).doubleValue() + ((Number) obj2.getValue()).doubleValue();
+      return new NumberObj(result, false);
+    }
   }
 }

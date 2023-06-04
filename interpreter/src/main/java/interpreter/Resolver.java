@@ -13,9 +13,15 @@ public class Resolver {
   public AttributeObject subtract(AttributeObject obj1, AttributeObject obj2) {
     AttributeObject object;
     try {
-      object = new NumberObj((Integer) obj1.getValue() - (Integer) obj2.getValue(), false);
+      if (obj1.getValue() instanceof Integer && obj2.getValue() instanceof Integer) {
+        object = new NumberObj((Integer) obj1.getValue() - (Integer) obj2.getValue(), false);
+      } else {
+        double result =
+            ((Number) obj1.getValue()).doubleValue() - ((Number) obj2.getValue()).doubleValue();
+        object = new NumberObj(result, false);
+      }
     } catch (Exception e) {
-      throw new RuntimeException("Can only subtract Double");
+      throw new RuntimeException("Can only subtract Number");
     }
     return object;
   }
@@ -23,9 +29,15 @@ public class Resolver {
   public AttributeObject multiply(AttributeObject obj1, AttributeObject obj2) {
     AttributeObject object;
     try {
-      object = new NumberObj((Integer) obj1.getValue() * (Integer) obj2.getValue(), false);
+      if (obj1.getValue() instanceof Integer && obj2.getValue() instanceof Integer) {
+        object = new NumberObj((Integer) obj1.getValue() * (Integer) obj2.getValue(), false);
+      } else {
+        double result =
+            ((Number) obj1.getValue()).doubleValue() * ((Number) obj2.getValue()).doubleValue();
+        object = new NumberObj(result, false);
+      }
     } catch (Exception e) {
-      throw new RuntimeException("Can only multiply Double");
+      throw new RuntimeException("Can only multiply Number");
     }
     return object;
   }
@@ -33,9 +45,15 @@ public class Resolver {
   public AttributeObject divide(AttributeObject obj1, AttributeObject obj2) {
     AttributeObject object;
     try {
-      object = new NumberObj((Integer) obj1.getValue() / (Integer) obj2.getValue(), false);
+      if (obj1.getValue() instanceof Integer && obj2.getValue() instanceof Integer) {
+        object = new NumberObj((Integer) obj1.getValue() / (Integer) obj2.getValue(), false);
+      } else {
+        double result =
+            ((Number) obj1.getValue()).doubleValue() / ((Number) obj2.getValue()).doubleValue();
+        object = new NumberObj(result, false);
+      }
     } catch (Exception e) {
-      throw new RuntimeException("Can only divide Double");
+      throw new RuntimeException("Can only divide Number");
     }
     return object;
   }

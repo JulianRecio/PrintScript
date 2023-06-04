@@ -55,7 +55,7 @@ public class InterpreterTest {
 
   @Test
   public void testMultipleVariableValueChangeWithSameVariable() throws IOException {
-    String toTokenize = "let x:number; x=5; let y:number = 8; x = x + y; println(x);";
+    String toTokenize = "let x:number; x=5.0; let y:number = 8; x = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
     List<Token> tokens = lexer.tokenize();
@@ -63,7 +63,7 @@ public class InterpreterTest {
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
     interpreter.interpret();
-    Assertions.assertEquals(13, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(13.0, interpreter.getMap().get("x").getValue());
   }
 
   @Test
@@ -155,6 +155,48 @@ public class InterpreterTest {
     Assertions.assertEquals(18, interpreter.getMap().get("x").getValue());
   }
 
+  @Test
+  public void testMultipleOperations() throws IOException {
+    String toTokenize = "let cuenta: number = 5*5-8/4+2;";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
+    Interpreter interpreter = new Interpreter(ast);
+    interpreter.interpret();
+    Assertions.assertEquals(25, interpreter.getMap().get("cuenta").getValue());
+  }
+
+  @Test
+  public void printDivision() throws IOException {
+    String toTokenize = "let pi: number;\n" + "pi = 3.14;\n" + "println(4 + 2);\n";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
+    Interpreter interpreter = new Interpreter(ast);
+    interpreter.interpret();
+    Assertions.assertEquals(3.14, interpreter.getMap().get("pi").getValue());
+  }
+
+  @Test
+  public void printNumberSumString() throws IOException {
+    String toTokenize =
+        "let someNumber: number = 1;\n"
+            + "let someString: string = \"hello world \";\n"
+            + "println(someString + someNumber);";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    List<Token> tokens = lexer.tokenize();
+    Parser parser = new Parser(tokens, 1.0);
+    AST ast = parser.parse();
+    Interpreter interpreter = new Interpreter(ast);
+    interpreter.interpret();
+    Assertions.assertEquals(3.14, interpreter.getMap().get("pi").getValue());
+  }
+
   // Version 1.1 tests
 
   @Test
@@ -242,21 +284,5 @@ public class InterpreterTest {
     System.setIn(in);
     interpreter.interpret();
     Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
-  }
-
-  @Test
-  public void a() throws IOException {
-    String toTokenize = "let cuenta: number = 5*5-8/4+2;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
-    for (Token token : tokens) {
-      System.out.println(token.getValue() + " " + token.getType());
-    }
-    Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
-    interpreter.interpret();
-    Assertions.assertEquals(25, interpreter.getMap().get("cuenta").getValue());
   }
 }
