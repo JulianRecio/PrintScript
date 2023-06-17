@@ -315,17 +315,18 @@ public class InterpreterTest {
 
   @Test
   public void testReadInput() throws IOException {
-    String toTokenize = "let x:number = readInput(\"Insert variable\");";
+    String toTokenize =
+        "let name:string = readInput(\"Name: \"); println(\"Hello \" + name + \"!\");";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
     List<Token> tokens = lexer.tokenize();
     Parser parser = new Parser(tokens, 1.1);
     AST ast = parser.parse();
     Interpreter interpreter = new Interpreter(ast);
-    String type = "number\n3";
+    String type = "world";
     InputStream in = new ByteArrayInputStream(type.getBytes());
     System.setIn(in);
     interpreter.interpret();
-    Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals("world", interpreter.getMap().get("name").getValue());
   }
 }

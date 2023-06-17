@@ -160,17 +160,15 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
   @Override
   public AttributeObject visitExpr(ReadInputExpression readInputExpression) {
     Scanner scanner = new Scanner(System.in);
-    System.out.println("InsertType: ");
-    String type = scanner.nextLine();
     System.out.println(readInputExpression.getMessage());
     String value = scanner.nextLine();
     scanner.close();
-    switch (type) {
-      case "number":
+    switch (readInputExpression.getVariableType()) {
+      case NUMBER:
         return new NumberObj(Integer.parseInt(value), false);
-      case "string":
+      case STRING:
         return new StringObj(value, false);
-      case "boolean":
+      case BOOLEAN:
         return new BooleanObj(Boolean.parseBoolean(value), false);
       default:
         throw new RuntimeException("Unsupported type");

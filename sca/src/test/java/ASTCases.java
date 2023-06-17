@@ -64,6 +64,9 @@ public class ASTCases {
     return new AST(
         List.of(
             new DeclarationNode(
-                "x", true, VariableType.STRING, new ReadInputExpression("Hello World"))));
+                "x",
+                true,
+                VariableType.STRING,
+                new ReadInputExpression("Hello World", VariableType.STRING))));
   }
 }

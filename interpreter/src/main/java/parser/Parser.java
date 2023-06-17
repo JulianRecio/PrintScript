@@ -52,9 +52,30 @@ public class Parser {
       ast.add(declarationNode);
     } else if (tokens.get(pos).getType() == TokenType.EQUAL) {
       pos++;
-      Node declarationNode =
-          new DeclarationNode(
-              declaration.getValue0(), modifiable, declaration.getValue1(), expression());
+      Node declarationNode;
+      if (tokens.get(pos).getType() == TokenType.READ_INPUT && version == 1.1) {
+        pos++;
+        if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
+          pos++;
+          if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
+            String message = tokens.get(pos).getValue();
+            pos++;
+            if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
+              pos++;
+              declarationNode =
+                  new DeclarationNode(
+                      declaration.getValue0(),
+                      modifiable,
+                      declaration.getValue1(),
+                      new ReadInputExpression(message, declaration.getValue1()));
+            } else throw new RuntimeException(") expected");
+          } else throw new RuntimeException("message expected");
+        } else throw new RuntimeException("( expected");
+      } else {
+        declarationNode =
+            new DeclarationNode(
+                declaration.getValue0(), modifiable, declaration.getValue1(), expression());
+      }
       if (tokens.get(pos).getType() == TokenType.END) {
         pos++;
         ast.add(declarationNode);
@@ -218,19 +239,6 @@ public class Parser {
           new VariableExpression(tokens.get(pos).getValue());
       pos++;
       return identifierExpr;
-    } else if (tokens.get(pos).getType() == TokenType.READ_INPUT && version == 1.1) {
-      pos++;
-      if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
-        pos++;
-        if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
-          String message = tokens.get(pos).getValue();
-          pos++;
-          if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
-            pos++;
-            return new ReadInputExpression(message);
-          } else throw new RuntimeException(") expected");
-        } else throw new RuntimeException("message expected");
-      } else throw new RuntimeException("( expected");
     } else if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
       pos++;
       Expression<AttributeObject> expression = expression();
