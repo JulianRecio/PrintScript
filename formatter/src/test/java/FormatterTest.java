@@ -42,7 +42,6 @@ public class FormatterTest {
   @Test
   @Disabled
   public void testWholeFormatter() {
-    //      InputStream inputStream = new ByteArrayInputStream("let x:number;".getBytes());
     String formattedCode =
         Formatter.useFormatter(TokenListCases.createSimpleDeclarationList(), 1.0);
 

@@ -160,7 +160,9 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
   @Override
   public AttributeObject visitExpr(ReadInputExpression readInputExpression) {
     Scanner scanner = new Scanner(System.in);
-    System.out.println(readInputExpression.getMessage());
+    String msg = readInputExpression.getMessage();
+    System.out.println(msg);
+    printed.add(msg);
     String value = scanner.nextLine();
     scanner.close();
     switch (readInputExpression.getVariableType()) {
