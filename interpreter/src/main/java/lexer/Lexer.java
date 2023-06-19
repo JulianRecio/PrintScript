@@ -1,7 +1,7 @@
 package lexer;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,23 +33,21 @@ public class Lexer {
   private Pattern ELSE;
   private Pattern READ_INPUT;
 
-  private final InputStream inputStream;
+  private final PushbackInputStream inputStream;
   private final Double version;
   private final Iterator<Token> tokenIterator;
 
-  public Lexer(InputStream inputStream, Double version) {
+  public Lexer(PushbackInputStream inputStream, Double version) {
     this.inputStream = inputStream;
     this.version = version;
     tokenIterator =
-        new Iterator<Token>() {
+        new Iterator<>() {
           List<Token> tokens = new ArrayList<>();
 
           @Override
           public boolean hasNext() {
             try {
-              if (inputStream.available() == 0 && tokens.size() == 0) {
-                return false;
-              } else return true;
+              return inputStream.available() != 0 || tokens.size() != 0;
             } catch (IOException e) {
               return false;
             }
@@ -83,6 +81,18 @@ public class Lexer {
       char ch = (char) data;
       if (ch == ';' || ch == '}') {
         chunk.append(ch);
+        while (true) {
+          data = inputStream.read();
+          if (data == -1) {
+            break;
+          }
+          if (Character.isWhitespace((char) data)) {
+            chunk.append((char) data);
+          } else {
+            inputStream.unread(data);
+            break;
+          }
+        }
         return tokenizeChunk(chunk.toString(), version);
       } else {
         chunk.append(ch);

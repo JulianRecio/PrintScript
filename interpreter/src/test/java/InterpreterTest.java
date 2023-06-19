@@ -14,64 +14,9 @@ public class InterpreterTest {
 
   @Test
   public void testSimpleLine() {
-    String toTokenize = "let x: number = 5; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
-    Parser parser = new Parser(tokens, 1.0);
-    Iterator<Node> nodes = parser.getNodeIterator();
-    Interpreter interpreter = new Interpreter(nodes);
-    interpreter.interpret();
-    interpreter.interpret();
-    Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
-  }
-
-  @Test
-  public void a() {
-    String toTokenize = "let x: number = 5; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
-    System.out.println(tokens.hasNext());
-    System.out.println(tokens.next().getType());
-    System.out.println(tokens.next().getType());
-    System.out.println(tokens.next().getType());
-    System.out.println(tokens.next().getType());
-    System.out.println(tokens.next().getType());
-    System.out.println(tokens.next().getType());
-    System.out.println(tokens.next().getType());
-  }
-
-  @Test
-  public void b() {
-    String toTokenize = "let x: number = 5;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
-    Parser parser = new Parser(tokens, 1.0);
-    Iterator<Node> nodes = parser.getNodeIterator();
-    System.out.println(nodes.next());
-  }
-
-  @Test
-  public void c() {
-    String toTokenize = "let x: number = 5; let y: number = 10; let z: number = x + y;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
-    Parser parser = new Parser(tokens, 1.0);
-    Iterator<Node> nodes = parser.getNodeIterator();
-    Interpreter interpreter = new Interpreter(nodes);
-    interpreter.interpret();
-    System.out.println(interpreter.getMap().get("x").getValue());
-    System.out.println(interpreter.getMap().get("y").getValue());
-    System.out.println(interpreter.getMap().get("z").getValue());
-  }
-
-  @Test
-  public void d() {
-    String toTokenize = "let x:number; x=5; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    String toTokenize = "let x: number = 5; println(x);\n";
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -79,25 +24,13 @@ public class InterpreterTest {
     Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
-  }
-
-  @Test
-  public void e() {
-    String toTokenize = "if (false) {  } else {let x:number = 3;}";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    Lexer lexer = new Lexer(inputStream, 1.1);
-    Iterator<Token> tokens = lexer.getTokenIterator();
-    Parser parser = new Parser(tokens, 1.1);
-    Iterator<Node> nodes = parser.getNodeIterator();
-    Interpreter interpreter = new Interpreter(nodes);
-    interpreter.interpret();
-    Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
   }
 
   @Test
   public void testVariableSave() {
     String toTokenize = "let x:number; x=5; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -110,7 +43,8 @@ public class InterpreterTest {
   @Test
   public void testMultipleVariableValueChangeWithSameVariable() {
     String toTokenize = "let x:number; x=5.0; let y:number = 8; x = x + y; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -123,7 +57,8 @@ public class InterpreterTest {
   @Test
   public void testExceptionWhenVariableAlreadyInitialized() {
     String toTokenize = "let x:number; x=5; let y:number = 8; let x:number = x + y; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -142,7 +77,8 @@ public class InterpreterTest {
   @Test
   public void testExceptionWhenMismatchingType() {
     String toTokenize = "let x:number; x=\"hello\";";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -161,7 +97,8 @@ public class InterpreterTest {
   @Test
   public void testExceptionWhenVariableNotInitialized() {
     String toTokenize = "let x:number; x=5; let y:number; let z:number = x + y; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -180,7 +117,8 @@ public class InterpreterTest {
   @Test
   public void testExceptionWhenVariableNotInitializedPrint() {
     String toTokenize = "let x:number; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -199,7 +137,8 @@ public class InterpreterTest {
   @Test
   public void testExpressionWithParenthesis() {
     String toTokenize = "let x:number = (5+4)*2;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -212,7 +151,8 @@ public class InterpreterTest {
   @Test
   public void testMultipleOperations() {
     String toTokenize = "let cuenta: number = 5*5-8/4+2;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -225,7 +165,8 @@ public class InterpreterTest {
   @Test
   public void printDivision() {
     String toTokenize = "let pi: number;\n" + "pi = 3.14;\n" + "println(pi / pi);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -238,7 +179,8 @@ public class InterpreterTest {
   @Test
   public void printString() {
     String toTokenize = "let word: string = \"hello\"; println(word);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -270,7 +212,8 @@ public class InterpreterTest {
         "let someNumber: number = 1;\n"
             + "let someString: string = \"hello world \";\n"
             + "println(someString + someNumber);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
@@ -301,7 +244,8 @@ public class InterpreterTest {
   @Test
   public void testSimpleLineVersion1() {
     String toTokenize = "let x:number = 5; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
@@ -314,7 +258,8 @@ public class InterpreterTest {
   @Test
   public void testConstDeclaration() {
     String toTokenize = "const x:number = 5; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
@@ -327,7 +272,8 @@ public class InterpreterTest {
   @Test
   public void testErrorWhenChangingConstValue() {
     String toTokenize = "const x:number = 5; x = 6;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
@@ -346,7 +292,8 @@ public class InterpreterTest {
   @Test
   public void testBooleanValue() {
     String toTokenize = "let x:boolean = false; println(x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
@@ -359,7 +306,8 @@ public class InterpreterTest {
   @Test
   public void testSimpleIf() {
     String toTokenize = "if (false) {  } else {let x:number = 3;}";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
@@ -373,7 +321,8 @@ public class InterpreterTest {
   public void testReadInput() {
     String toTokenize =
         "let name:string = readInput(\"Name: \"); println(\"Hello \" + name + \"!\");";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);

@@ -1,5 +1,5 @@
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +22,8 @@ public class LexerTest {
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -41,7 +42,8 @@ public class LexerTest {
     expResult.add(TokenExamples.STRING_TYPE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:string;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -60,7 +62,8 @@ public class LexerTest {
     expResult.add(TokenExamples.NUMBER_TYPE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let         x:number;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -79,7 +82,8 @@ public class LexerTest {
     expResult.add(TokenExamples.STRING_TYPE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let variable:string;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -100,7 +104,8 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -121,7 +126,8 @@ public class LexerTest {
     expResult.add(TokenExamples.COMPLEX_NUMBER_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3.6;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -142,7 +148,8 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_STRING_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:string = \"a\";";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -163,7 +170,8 @@ public class LexerTest {
     expResult.add(TokenExamples.COMPLEX_STRING_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:string = \"Hello World\";";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -188,7 +196,8 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3.6 + 3 * 3;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -216,7 +225,8 @@ public class LexerTest {
     expResult.add(TokenExamples.COMPLEX_STRING_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3.6;" + "let x:string = \"Hello World\";";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -237,7 +247,8 @@ public class LexerTest {
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
     String toTokenize = "println(\"Hello World\" + 3);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -265,7 +276,8 @@ public class LexerTest {
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x: number = 3; println(\"Hello World\" + x);";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -288,7 +300,8 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = 3;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -309,7 +322,8 @@ public class LexerTest {
     expResult.add(TokenExamples.SIMPLE_NUMBER_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "const x:number = 3;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -330,7 +344,8 @@ public class LexerTest {
     expResult.add(TokenExamples.BOOLEAN_VALUE);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:boolean = true;";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -357,7 +372,8 @@ public class LexerTest {
     expResult.add(TokenExamples.END);
     expResult.add(TokenExamples.RIGHT_BRACKET);
     String toTokenize = "if (true) {let x:number = 3;}";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {
@@ -381,7 +397,8 @@ public class LexerTest {
     expResult.add(TokenExamples.RIGHT_PAR);
     expResult.add(TokenExamples.END);
     String toTokenize = "let x:number = readInput(\"Hello World\");";
-    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
     Iterator<Token> tokens = lexer.getTokenIterator();
     for (Token value : expResult) {

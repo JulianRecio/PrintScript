@@ -14,7 +14,7 @@ public class App {
     Scanner scan = new Scanner(System.in);
     printInitialMenu();
     int choice = scan.nextInt();
-    InputStream code = getString();
+    PushbackInputStream code = getString();
     double version;
     while (choice != 3) {
       switch (choice) {
@@ -38,7 +38,7 @@ public class App {
     }
   }
 
-  private static void runProgram(InputStream code, Double version) throws IOException {
+  private static void runProgram(PushbackInputStream code, Double version) throws IOException {
     Scanner scan = new Scanner(System.in);
     printRunMenu();
     int choice = scan.nextInt();
@@ -112,8 +112,9 @@ public class App {
     System.out.println("4. Exit");
   }
 
-  public static InputStream getString() throws IOException {
+  public static PushbackInputStream getString() throws IOException {
     Path filePath = Paths.get("./ToRun.txt");
-    return new BufferedInputStream(new FileInputStream(new File(filePath.toUri())));
+    return new PushbackInputStream(
+        new BufferedInputStream(new FileInputStream(new File(filePath.toUri()))));
   }
 }
