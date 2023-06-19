@@ -1,11 +1,14 @@
 package parser;
 
-import ast.AST;
 import ast.VariableType;
 import ast.expr.*;
 import ast.node.*;
-import ast.obj.*;
+import ast.obj.AttributeObject;
+import ast.obj.BooleanObj;
+import ast.obj.NumberObj;
+import ast.obj.StringObj;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.javatuples.Pair;
 import token.Token;
@@ -13,74 +16,85 @@ import token.TokenType;
 
 public class Parser {
 
-  private final List<Token> tokens;
-  private int pos;
   private final Double version;
+  private final Iterator<Token> tokenIterator;
+  private final Iterator<Node> nodeIterator;
 
-  public Parser(List<Token> tokens, Double version) {
-    this.tokens = tokens;
-    this.pos = 0;
+  public Parser(Iterator<Token> tokenIterator, Double version) {
     this.version = version;
+    this.tokenIterator = tokenIterator;
+    this.nodeIterator =
+        new Iterator<>() {
+          @Override
+          public boolean hasNext() {
+            return false;
+          }
+
+          @Override
+          public Node next() {
+            return parse();
+          }
+        };
   }
 
-  public AST parse() {
-    List<Node> ast = new ArrayList<>();
-    while (pos < tokens.size() && tokens.get(pos).getType() != TokenType.RIGHT_BRACKET) {
-      if (tokens.get(pos).getType() == TokenType.KEYWORD) {
-        createDeclarationNode(tokens.get(pos).getValue(), ast);
-      } else if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
-        createAssignationNode(ast);
-      } else if (tokens.get(pos).getType() == TokenType.PRINT) {
-        createPrintNode(ast);
-      } else if (version == 1.1 && tokens.get(pos).getType() == TokenType.IF) {
-        createIfNode(ast);
+  public Node parse() {
+    if (tokenIterator.hasNext()) {
+      Token token = tokenIterator.next();
+      if (token.getType() == TokenType.KEYWORD) {
+        return createDeclarationNodeA(token.getValue());
+      } else if (token.getType() == TokenType.IDENTIFIER) {
+        return createAssignationNode(token.getValue());
+      } else if (token.getType() == TokenType.PRINT) {
+        return createPrintNode();
+      } else if (version == 1.1 && token.getType() == TokenType.IF) {
+        return createIfNode();
       } else {
         throw new RuntimeException("Line starts with incorrect token");
       }
-    }
-    return new AST(ast);
+    } else throw new RuntimeException("There are no more tokens");
   }
 
-  private void createDeclarationNode(String keyWordValue, List<Node> ast) {
-    pos++;
+  private Node createAssignationNode(String variableName) {
+    if (tokenIterator.next().getType() == TokenType.EQUAL) {
+      Token token = tokenIterator.next();
+      Pair<Expression<AttributeObject>, Token> right = expression(token);
+      if (right.getValue1().getType() == TokenType.END) {
+        return new AssignationNode(variableName, right.getValue0());
+      } else throw new RuntimeException("; was expected but not found");
+    } else throw new RuntimeException("= was expected but not found");
+  }
+
+  private Node createDeclarationNodeA(String keyWordValue) {
     boolean modifiable = getModifiable(keyWordValue);
     Pair<String, VariableType> declaration = setType();
-    if (tokens.get(pos).getType() == TokenType.END) {
-      pos++;
-      Node declarationNode =
-          new DeclarationNode(declaration.getValue0(), modifiable, declaration.getValue1(), null);
-      ast.add(declarationNode);
-    } else if (tokens.get(pos).getType() == TokenType.EQUAL) {
-      pos++;
-      Node declarationNode;
-      if (tokens.get(pos).getType() == TokenType.READ_INPUT && version == 1.1) {
-        pos++;
-        if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
-          pos++;
-          if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
-            String message = tokens.get(pos).getValue();
-            pos++;
-            if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
-              pos++;
-              declarationNode =
-                  new DeclarationNode(
-                      declaration.getValue0(),
-                      modifiable,
-                      declaration.getValue1(),
-                      new ReadInputExpression(message, declaration.getValue1()));
+    Token token = tokenIterator.next();
+    if (token.getType() == TokenType.END) {
+      return new DeclarationNode(
+          declaration.getValue0(), modifiable, declaration.getValue1(), null);
+    } else if (token.getType() == TokenType.EQUAL) {
+      Token token2 = tokenIterator.next();
+      if (token2.getType() == TokenType.READ_INPUT && version == 1.1) {
+        if (tokenIterator.next().getType() == TokenType.LEFT_PARENTHESIS) {
+          Token token1 = tokenIterator.next();
+          if (token1.getType() == TokenType.STRING_VALUE) {
+            String message = token1.getValue();
+            if (tokenIterator.next().getType() == TokenType.RIGHT_PARENTHESIS) {
+              if (tokenIterator.next().getType() == TokenType.END) {
+                return new DeclarationNode(
+                    declaration.getValue0(),
+                    modifiable,
+                    declaration.getValue1(),
+                    new ReadInputExpression(message, declaration.getValue1()));
+              } else throw new RuntimeException("; was expected but not found");
             } else throw new RuntimeException(") expected");
           } else throw new RuntimeException("message expected");
         } else throw new RuntimeException("( expected");
       } else {
-        declarationNode =
-            new DeclarationNode(
-                declaration.getValue0(), modifiable, declaration.getValue1(), expression());
-      }
-      if (tokens.get(pos).getType() == TokenType.END) {
-        pos++;
-        ast.add(declarationNode);
-      } else {
-        throw new RuntimeException("; was expected but not found");
+        Pair<Expression<AttributeObject>, Token> expression = expression(token2);
+        if (expression.getValue1().getType() == TokenType.END) {
+          return new DeclarationNode(
+              declaration.getValue0(), modifiable, declaration.getValue1(), expression.getValue0());
+        } else throw new RuntimeException("; was expected but not found");
       }
     } else {
       throw new RuntimeException("= or ; tokens were expected but not found");
@@ -95,82 +109,14 @@ public class Parser {
     } else throw new RuntimeException("keyword not supported");
   }
 
-  private void createAssignationNode(List<Node> ast) {
-    String variable = tokens.get(pos).getValue();
-    pos++;
-    if (tokens.get(pos).getType() == TokenType.EQUAL) {
-      pos++;
-      Expression<AttributeObject> right = expression();
-      Node assignationNode = new AssignationNode(variable, right);
-      if (tokens.get(pos).getType() == TokenType.END) {
-        pos++;
-        ast.add(assignationNode);
-      } else throw new RuntimeException("; was expected but not found");
-    } else throw new RuntimeException("= was expected but not found");
-  }
-
-  private void createPrintNode(List<Node> ast) {
-    pos++;
-    if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
-      pos++;
-      Expression<AttributeObject> expression = expression();
-      if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
-        pos++;
-        Node print = new PrintNode(expression);
-        if (tokens.get(pos).getType() == TokenType.END) {
-          pos++;
-          ast.add(print);
-        } else throw new RuntimeException("; was expected but not found");
-      } else {
-        throw new RuntimeException("')' expected but not found");
-      }
-    } else {
-      throw new RuntimeException("'(' expected but not found");
-    }
-  }
-
-  private void createIfNode(List<Node> ast) {
-    pos++;
-    if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
-      pos++;
-      Expression<AttributeObject> expr = factor();
-      if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
-        pos++;
-        if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET) {
-          pos++;
-          AST ifAST = this.parse();
-          if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET) {
-            pos++;
-            if (pos < tokens.size() && tokens.get(pos).getType() == TokenType.ELSE) {
-              pos++;
-              if (tokens.get(pos).getType() == TokenType.LEFT_BRACKET) {
-                pos++;
-                AST elseAST = this.parse();
-                if (tokens.get(pos).getType() == TokenType.RIGHT_BRACKET) {
-                  pos++;
-                  ast.add(new IfNode(expr, ifAST, elseAST));
-                }
-              }
-            } else ast.add(new IfNode(expr, ifAST, null));
-          } else throw new RuntimeException("{ expected");
-        }
-      } else {
-        throw new RuntimeException("')' expected but not found");
-      }
-    } else {
-      throw new RuntimeException("'(' expected but not found");
-    }
-  }
-
   private Pair<String, VariableType> setType() {
-    if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
-      String identifier = tokens.get(pos).getValue();
-      pos++;
-      if (tokens.get(pos).getType() == TokenType.ALLOCATOR) {
-        pos++;
-        if (tokens.get(pos).getType() == TokenType.TYPE) {
-          String type = tokens.get(pos).getValue();
-          pos++;
+    Token token = tokenIterator.next();
+    if (token.getType() == TokenType.IDENTIFIER) {
+      String identifier = token.getValue();
+      if (tokenIterator.next().getType() == TokenType.ALLOCATOR) {
+        Token token1 = tokenIterator.next();
+        if (token1.getType() == TokenType.TYPE) {
+          String type = token1.getValue();
           if (type.equals("number")) {
             return new Pair<>(identifier, VariableType.NUMBER);
           } else if (type.equals("boolean")) {
@@ -181,75 +127,131 @@ public class Parser {
     } else throw new RuntimeException("There is no variable name after keyword");
   }
 
-  private Expression<AttributeObject> expression() {
-    Expression<AttributeObject> left = term();
-    while (tokens.get(pos).getType() != TokenType.END) {
-      Token token = tokens.get(pos);
-      if (token.getType() == TokenType.OPERATOR && "+-".contains(token.getValue())) {
-        pos++;
-        Expression<AttributeObject> right = term();
-        left = new BinaryExpression(token.getValue(), left, right);
-      } else {
-        break;
+  private Pair<Expression<AttributeObject>, Token> expression(Token token2) {
+    Pair<Expression<AttributeObject>, Token> left = term(token2);
+    if (tokenIterator.hasNext() && left.getValue1().getType() != TokenType.END) {
+      while (left.getValue1().getType() != TokenType.END) {
+        if (left.getValue1().getType() == TokenType.OPERATOR
+            && "+-".contains(left.getValue1().getValue())) {
+          Pair<Expression<AttributeObject>, Token> right = term(tokenIterator.next());
+          left =
+              new Pair<>(
+                  new BinaryExpression(
+                      left.getValue1().getValue(), left.getValue0(), right.getValue0()),
+                  right.getValue1());
+        } else {
+          break;
+        }
       }
     }
-    return left;
+    return new Pair<>(left.getValue0(), left.getValue1());
   }
 
-  private Expression<AttributeObject> term() {
-    Expression<AttributeObject> left = factor();
-    while (tokens.get(pos).getType() != TokenType.END) {
-      Token token = tokens.get(pos);
+  private Pair<Expression<AttributeObject>, Token> term(Token token2) {
+    Expression<AttributeObject> left = factor(token2);
+    Token token = tokenIterator.next();
+    while (token.getType() != TokenType.END) {
       if (token.getType() == TokenType.OPERATOR && "/*".contains(token.getValue())) {
-        pos++;
-        Expression<AttributeObject> right = factor();
+        Expression<AttributeObject> right = factor(tokenIterator.next());
         left = new BinaryExpression(token.getValue(), left, right);
       } else {
         break;
       }
+      token = tokenIterator.next();
     }
-    return left;
+
+    return new Pair<>(left, token);
   }
 
-  private Expression<AttributeObject> factor() {
-    if (tokens.get(pos).getType() == TokenType.NUMBER_VALUE) {
-      String numberValue = tokens.get(pos).getValue();
+  private Expression<AttributeObject> factor(Token token) {
+    if (token.getType() == TokenType.NUMBER_VALUE) {
+      String numberValue = token.getValue();
       Number number;
       if (numberValue.contains(".")) {
         number = Double.parseDouble(numberValue);
       } else {
         number = Integer.parseInt(numberValue);
       }
-      Expression<AttributeObject> numberExpr = new LiteralExpression(new NumberObj(number, false));
-      pos++;
-      return numberExpr;
-    } else if (tokens.get(pos).getType() == TokenType.STRING_VALUE) {
-      Expression<AttributeObject> stringExpr =
-          new LiteralExpression(new StringObj(tokens.get(pos).getValue(), false));
-      pos++;
-      return stringExpr;
-    } else if (tokens.get(pos).getType() == TokenType.BOOLEAN_VALUE) {
-      Expression<AttributeObject> booleanExpr =
-          new LiteralExpression(
-              new BooleanObj(Boolean.parseBoolean(tokens.get(pos).getValue()), false));
-      pos++;
-      return booleanExpr;
-    } else if (tokens.get(pos).getType() == TokenType.IDENTIFIER) {
-      Expression<AttributeObject> identifierExpr =
-          new VariableExpression(tokens.get(pos).getValue());
-      pos++;
-      return identifierExpr;
-    } else if (tokens.get(pos).getType() == TokenType.LEFT_PARENTHESIS) {
-      pos++;
-      Expression<AttributeObject> expression = expression();
-      if (tokens.get(pos).getType() == TokenType.RIGHT_PARENTHESIS) {
-        pos++;
-        return expression;
+      return new LiteralExpression(new NumberObj(number, false));
+    } else if (token.getType() == TokenType.STRING_VALUE) {
+      return new LiteralExpression(new StringObj(token.getValue(), false));
+    } else if (token.getType() == TokenType.BOOLEAN_VALUE) {
+      return new LiteralExpression(new BooleanObj(Boolean.parseBoolean(token.getValue()), false));
+    } else if (token.getType() == TokenType.IDENTIFIER) {
+      return new VariableExpression(token.getValue());
+    } else if (token.getType() == TokenType.LEFT_PARENTHESIS) {
+      Pair<Expression<AttributeObject>, Token> expression = expression(tokenIterator.next());
+      if (expression.getValue1().getType() == TokenType.RIGHT_PARENTHESIS) {
+        return expression.getValue0();
       } else {
         throw new RuntimeException("Right parenthesis expected but not found");
       }
     } else {
       throw new RuntimeException("Expression not found");
     }
+  }
+
+  private Node createPrintNode() {
+    if (tokenIterator.next().getType() == TokenType.LEFT_PARENTHESIS) {
+      Token token = tokenIterator.next();
+      Pair<Expression<AttributeObject>, Token> expression = expression(token);
+      if (expression.getValue1().getType() == TokenType.RIGHT_PARENTHESIS) {
+        if (tokenIterator.next().getType() == TokenType.END) {
+          return new PrintNode(expression.getValue0());
+        } else throw new RuntimeException("; was expected but not found");
+      } else {
+        throw new RuntimeException("')' expected but not found");
+      }
+    } else {
+      throw new RuntimeException("'(' expected but not found");
+    }
+  }
+
+  private Node createIfNode() {
+    if (tokenIterator.next().getType() == TokenType.LEFT_PARENTHESIS) {
+      Expression<AttributeObject> expr = factor(tokenIterator.next());
+      if (tokenIterator.next().getType() == TokenType.RIGHT_PARENTHESIS) {
+        if (tokenIterator.next().getType() == TokenType.LEFT_BRACKET) {
+          List<Node> ifNodes = parseIfNode();
+          Token token = tokenIterator.next();
+          if (tokenIterator.hasNext() && token.getType() == TokenType.ELSE) {
+            if (tokenIterator.next().getType() == TokenType.LEFT_BRACKET) {
+              List<Node> elseNodes = this.parseIfNode();
+              return new IfNode(expr, ifNodes, elseNodes);
+            } else throw new RuntimeException("{ expected but not found");
+          } else return new IfNode(expr, ifNodes, null);
+        } else throw new RuntimeException("{ expected but not found");
+      } else {
+        throw new RuntimeException("')' expected but not found");
+      }
+    } else {
+      throw new RuntimeException("'(' expected but not found");
+    }
+  }
+
+  public List<Node> parseIfNode() {
+    List<Node> nodes = new ArrayList<>();
+    if (tokenIterator.hasNext()) {
+      Token token = tokenIterator.next();
+      while (token.getType() != TokenType.RIGHT_BRACKET) {
+        if (token.getType() == TokenType.KEYWORD) {
+          nodes.add(createDeclarationNodeA(token.getValue()));
+        } else if (token.getType() == TokenType.IDENTIFIER) {
+          nodes.add(createAssignationNode(token.getValue()));
+        } else if (token.getType() == TokenType.PRINT) {
+          nodes.add(createPrintNode());
+        } else if (version == 1.1 && token.getType() == TokenType.IF) {
+          nodes.add(createIfNode());
+        } else {
+          throw new RuntimeException("Line starts with incorrect token");
+        }
+        token = tokenIterator.next();
+      }
+      return nodes;
+    } else throw new RuntimeException("} expected");
+  }
+
+  public Iterator<Node> getNodeIterator() {
+    return nodeIterator;
   }
 }

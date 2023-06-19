@@ -1,7 +1,7 @@
-import ast.AST;
+import ast.node.Node;
 import interpreter.Interpreter;
 import java.io.*;
-import java.util.List;
+import java.util.Iterator;
 import lexer.Lexer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,69 +10,125 @@ import token.Token;
 
 public class InterpreterTest {
 
-  // Version 1.0 tests
+  //   Version 1.0 tests
 
   @Test
-  public void testSimpleLine() throws IOException {
-    String toTokenize = "let x:number = 5; println(x);";
+  public void testSimpleLine() {
+    String toTokenize = "let x: number = 5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
+    interpreter.interpret();
     interpreter.interpret();
     Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testVariableSave() throws IOException {
+  public void a() {
+    String toTokenize = "let x: number = 5; println(x);";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    System.out.println(tokens.hasNext());
+    System.out.println(tokens.next().getType());
+    System.out.println(tokens.next().getType());
+    System.out.println(tokens.next().getType());
+    System.out.println(tokens.next().getType());
+    System.out.println(tokens.next().getType());
+    System.out.println(tokens.next().getType());
+    System.out.println(tokens.next().getType());
+  }
+
+  @Test
+  public void b() {
+    String toTokenize = "let x: number = 5;";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    Parser parser = new Parser(tokens, 1.0);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    System.out.println(nodes.next());
+  }
+
+  @Test
+  public void c() {
+    String toTokenize = "let x: number = 5; let y: number = 10; let z: number = x + y;";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    Parser parser = new Parser(tokens, 1.0);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
+    interpreter.interpret();
+    System.out.println(interpreter.getMap().get("x").getValue());
+    System.out.println(interpreter.getMap().get("y").getValue());
+    System.out.println(interpreter.getMap().get("z").getValue());
+  }
+
+  @Test
+  public void d() {
     String toTokenize = "let x:number; x=5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testMultipleVariableValueChange() throws IOException {
-    String toTokenize = "let x:number; x=5; let y:number = 8; x = 2 + y; println(x);";
+  public void e() {
+    String toTokenize = "if (false) {  } else {let x:number = 3;}";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
-    Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
-    Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    Parser parser = new Parser(tokens, 1.1);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
-    Assertions.assertEquals(10, interpreter.getMap().get("x").getValue());
+    Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testMultipleVariableValueChangeWithSameVariable() throws IOException {
+  public void testVariableSave() {
+    String toTokenize = "let x:number; x=5; println(x);";
+    InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
+    Lexer lexer = new Lexer(inputStream, 1.0);
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    Parser parser = new Parser(tokens, 1.0);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
+    interpreter.interpret();
+    Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
+  }
+
+  @Test
+  public void testMultipleVariableValueChangeWithSameVariable() {
     String toTokenize = "let x:number; x=5.0; let y:number = 8; x = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(13.0, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testExceptionWhenVariableAlreadyInitialized() throws IOException {
+  public void testExceptionWhenVariableAlreadyInitialized() {
     String toTokenize = "let x:number; x=5; let y:number = 8; let x:number = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     RuntimeException error = null;
     try {
       interpreter.interpret();
@@ -84,14 +140,14 @@ public class InterpreterTest {
   }
 
   @Test
-  public void testExceptionWhenMismatchingType() throws IOException {
+  public void testExceptionWhenMismatchingType() {
     String toTokenize = "let x:number; x=\"hello\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     RuntimeException error = null;
     try {
       interpreter.interpret();
@@ -103,14 +159,14 @@ public class InterpreterTest {
   }
 
   @Test
-  public void testExceptionWhenVariableNotInitialized() throws IOException {
+  public void testExceptionWhenVariableNotInitialized() {
     String toTokenize = "let x:number; x=5; let y:number; let z:number = x + y; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     RuntimeException error = null;
     try {
       interpreter.interpret();
@@ -122,14 +178,14 @@ public class InterpreterTest {
   }
 
   @Test
-  public void testExceptionWhenVariableNotInitializedPrint() throws IOException {
+  public void testExceptionWhenVariableNotInitializedPrint() {
     String toTokenize = "let x:number; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     RuntimeException error = null;
     try {
       interpreter.interpret();
@@ -141,52 +197,52 @@ public class InterpreterTest {
   }
 
   @Test
-  public void testExpressionWithParenthesis() throws IOException {
+  public void testExpressionWithParenthesis() {
     String toTokenize = "let x:number = (5+4)*2;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(18, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testMultipleOperations() throws IOException {
+  public void testMultipleOperations() {
     String toTokenize = "let cuenta: number = 5*5-8/4+2;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(25, interpreter.getMap().get("cuenta").getValue());
   }
 
   @Test
-  public void printDivision() throws IOException {
-    String toTokenize = "let pi: number;\n" + "pi = 3.14;\n" + "println(4 + 2);\n";
+  public void printDivision() {
+    String toTokenize = "let pi: number;\n" + "pi = 3.14;\n" + "println(pi / pi);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(3.14, interpreter.getMap().get("pi").getValue());
   }
 
   @Test
-  public void printString() throws IOException {
+  public void printString() {
     String toTokenize = "let word: string = \"hello\"; println(word);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
+    Iterator<Node> nodes = parser.getNodeIterator();
 
     // Redirect System.out to a ByteArrayOutputStream
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -194,7 +250,7 @@ public class InterpreterTest {
     PrintStream originalOut = System.out;
     System.setOut(printStream);
 
-    Interpreter interpreter = new Interpreter(ast);
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
 
     // Restore the original System.out
@@ -209,16 +265,16 @@ public class InterpreterTest {
   }
 
   @Test
-  public void printNumberSumString() throws IOException {
+  public void printNumberSumString() {
     String toTokenize =
         "let someNumber: number = 1;\n"
             + "let someString: string = \"hello world \";\n"
             + "println(someString + someNumber);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
-    AST ast = parser.parse();
+    Iterator<Node> nodes = parser.getNodeIterator();
 
     // Redirect System.out to a ByteArrayOutputStream
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -226,7 +282,7 @@ public class InterpreterTest {
     PrintStream originalOut = System.out;
     System.setOut(printStream);
 
-    Interpreter interpreter = new Interpreter(ast);
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
 
     // Restore the original System.out
@@ -243,40 +299,40 @@ public class InterpreterTest {
   // Version 1.1 tests
 
   @Test
-  public void testSimpleLineVersion1() throws IOException {
+  public void testSimpleLineVersion1() {
     String toTokenize = "let x:number = 5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testConstDeclaration() throws IOException {
+  public void testConstDeclaration() {
     String toTokenize = "const x:number = 5; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(5, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testErrorWhenChangingConstValue() throws IOException {
+  public void testErrorWhenChangingConstValue() {
     String toTokenize = "const x:number = 5; x = 6;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     RuntimeException error = null;
     try {
       interpreter.interpret();
@@ -288,41 +344,42 @@ public class InterpreterTest {
   }
 
   @Test
-  public void testBooleanValue() throws IOException {
+  public void testBooleanValue() {
     String toTokenize = "let x:boolean = false; println(x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(false, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testSimpleIf() throws IOException {
+  public void testSimpleIf() {
     String toTokenize = "if (false) {  } else {let x:number = 3;}";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
   }
 
   @Test
-  public void testReadInput() throws IOException {
+  public void testReadInput() {
     String toTokenize =
         "let name:string = readInput(\"Name: \"); println(\"Hello \" + name + \"!\");";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> tokens = lexer.tokenize();
+    Iterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
-    AST ast = parser.parse();
-    Interpreter interpreter = new Interpreter(ast);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
+
     String type = "world";
     InputStream in = new ByteArrayInputStream(type.getBytes());
     System.setIn(in);

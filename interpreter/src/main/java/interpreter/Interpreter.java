@@ -1,30 +1,33 @@
 package interpreter;
 
-import ast.AST;
 import ast.VariableType;
 import ast.expr.*;
 import ast.node.*;
 import ast.obj.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObject> {
 
-  private final AST ast;
   private final HashMap<String, AttributeObject> map = new HashMap<>();
+  private Iterator<Node> nodeIterator;
   private final List<String> errors = new ArrayList<>();
   private final List<String> printed = new ArrayList<>();
 
-  public Interpreter(AST ast) {
-    this.ast = ast;
+  public Interpreter(Iterator<Node> nodeIterator) {
+    this.nodeIterator = nodeIterator;
   }
 
   public void interpret() {
-    List<Node> nodes = ast.getAst();
-    for (Node node : nodes) {
-      node.accept(this);
+    Exception error = null;
+    while (error == null) {
+      try {
+        Node node = nodeIterator.next();
+        node.accept(this);
+      } catch (Exception e) {
+        if (e.getMessage().equalsIgnoreCase("There are no more tokens")) {
+          error = e;
+        } else throw e;
+      }
     }
   }
 
@@ -103,12 +106,12 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     AttributeObject obj = node.getValue().accept(this);
     if (node.getValue().accept(this) instanceof BooleanObj) {
       if ((boolean) obj.getValue()) {
-        List<Node> tmpAST = node.getIfAST().getAst();
+        List<Node> tmpAST = node.getIfAST();
         for (Node value : tmpAST) {
           value.accept(this);
         }
       } else if (node.getElseAST() != null) {
-        List<Node> tmpAST = node.getElseAST().getAst();
+        List<Node> tmpAST = node.getElseAST();
         for (Node value : tmpAST) {
           value.accept(this);
         }

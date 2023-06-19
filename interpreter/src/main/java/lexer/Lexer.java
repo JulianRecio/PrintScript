@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,37 +35,61 @@ public class Lexer {
 
   private final InputStream inputStream;
   private final Double version;
+  private final Iterator<Token> tokenIterator;
 
   public Lexer(InputStream inputStream, Double version) {
     this.inputStream = inputStream;
     this.version = version;
+    tokenIterator =
+        new Iterator<Token>() {
+          List<Token> tokens = new ArrayList<>();
+
+          @Override
+          public boolean hasNext() {
+            try {
+              if (inputStream.available() == 0 && tokens.size() == 0) {
+                return false;
+              } else return true;
+            } catch (IOException e) {
+              return false;
+            }
+          }
+
+          @Override
+          public Token next() {
+            if (tokens.size() == 0) {
+              try {
+                tokens = returnToken();
+              } catch (IOException e) {
+                throw new RuntimeException(e);
+              }
+            }
+            Token token = tokens.get(0);
+            tokens.remove(0);
+            return token;
+          }
+        };
   }
 
-  public List<Token> tokenize() throws IOException {
-    inputStream.mark(0);
-    List<Token> tokens = new ArrayList<>();
+  public Iterator<Token> getTokenIterator() {
+    return tokenIterator;
+  }
+
+  public List<Token> returnToken() throws IOException {
     StringBuilder chunk = new StringBuilder();
     setVersionPatterns(version);
     int data = inputStream.read();
     while (data != -1) {
       char ch = (char) data;
-      if (ch == ';') {
+      if (ch == ';' || ch == '}') {
         chunk.append(ch);
-        tokens.addAll(tokenizeChunk(chunk.toString(), version));
-        chunk = new StringBuilder();
+        return tokenizeChunk(chunk.toString(), version);
       } else {
         chunk.append(ch);
       }
       data = inputStream.read();
     }
-    // If there is any remaining chunk, tokenize it
-    if (chunk.length() > 0) {
-      tokens.addAll(tokenizeChunk(chunk.toString(), version));
-    }
-    if (inputStream.markSupported()) {
-      inputStream.reset();
-    }
-    return tokens;
+    throw new RuntimeException("Invalid input");
   }
 
   private List<Token> tokenizeChunk(String input, Double version) {

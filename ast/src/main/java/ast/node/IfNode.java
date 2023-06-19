@@ -1,16 +1,16 @@
 package ast.node;
 
-import ast.AST;
 import ast.expr.Expression;
 import ast.obj.AttributeObject;
+import java.util.List;
 
 public class IfNode implements Node {
 
   private Expression<AttributeObject> value;
-  private AST ifAST;
-  private AST elseAST;
+  private List<Node> ifAST;
+  private List<Node> elseAST;
 
-  public IfNode(Expression<AttributeObject> value, AST ifAST, AST elseAST) {
+  public IfNode(Expression<AttributeObject> value, List<Node> ifAST, List<Node> elseAST) {
     this.value = value;
     this.ifAST = ifAST;
     this.elseAST = elseAST;
@@ -20,11 +20,11 @@ public class IfNode implements Node {
     return value;
   }
 
-  public AST getIfAST() {
+  public List<Node> getIfAST() {
     return ifAST;
   }
 
-  public AST getElseAST() {
+  public List<Node> getElseAST() {
     return elseAST;
   }
 
