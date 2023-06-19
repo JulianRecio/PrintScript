@@ -1,16 +1,12 @@
 package edu.austral.ingsis.printscript.app;
 
-import formatter.Formatter;
 import interpreter.Interpreter;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Scanner;
 import lexer.Lexer;
 import parser.Parser;
-import staticCodeAnalyser.StaticCodeAnalyser;
-import token.Token;
 
 public class App {
 
@@ -51,46 +47,48 @@ public class App {
         case 1:
           {
             Lexer lexer = new Lexer(code, version);
-            List<Token> tokenList = lexer.tokenize();
-            Parser parser = new Parser(tokenList, version);
-            Interpreter interpreter = new Interpreter(parser.parse());
+            Parser parser = new Parser(lexer.getTokenIterator(), version);
+            Interpreter interpreter = new Interpreter(parser.getNodeIterator());
             interpreter.interpret();
             break;
           }
         case 2:
           {
-            Lexer lexer = new Lexer(code, version);
-            List<Token> tokenList = lexer.tokenize();
-            String formatted =
-                Formatter.format(
-                    tokenList,
-                    Formatter.getRulesFromConfig(
-                        Formatter.readConfigFile("app\\src\\main\\resources\\formatterRules.json"),
-                        version));
-            BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
-            writer.write(formatted);
-            writer.close();
-            break;
+            //            Lexer lexer = new Lexer(code, version);
+            //            List<Token> tokenList = lexer.tokenize();
+            //            String formatted =
+            //                Formatter.format(
+            //                    tokenList,
+            //                    Formatter.getRulesFromConfig(
+            //
+            // Formatter.readConfigFile("app\\src\\main\\resources\\formatterRules.json"),
+            //                        version));
+            //            BufferedWriter writer = new BufferedWriter(new
+            // FileWriter("./Result.txt"));
+            //            writer.write(formatted);
+            //            writer.close();
+            //            break;
           }
         case 3:
           {
-            Lexer lexer = new Lexer(code, version);
-            List<Token> tokenList = lexer.tokenize();
-            StaticCodeAnalyser sca =
-                new StaticCodeAnalyser(
-                    "app\\src\\main\\resources\\staticCodeAnalyserRules.json", version);
-            Parser parser = new Parser(tokenList, version);
-            List<String> messages = sca.analyze(parser.parse());
-            BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
-            if (messages.size() == 0) {
-              writer.write("There are no errors");
-            } else {
-              for (String message : messages) {
-                writer.write(message);
-              }
-            }
-            writer.close();
-            break;
+            //            Lexer lexer = new Lexer(code, version);
+            //            StaticCodeAnalyser sca =
+            //                new StaticCodeAnalyser(
+            //                    "app\\src\\main\\resources\\staticCodeAnalyserRules.json",
+            // version);
+            //            Parser parser = new Parser(lexer.getTokenIterator(), version);
+            //            List<String> messages = sca.analyze(parser.parse());
+            //            BufferedWriter writer = new BufferedWriter(new
+            // FileWriter("./Result.txt"));
+            //            if (messages.size() == 0) {
+            //              writer.write("There are no errors");
+            //            } else {
+            //              for (String message : messages) {
+            //                writer.write(message);
+            //              }
+            //            }
+            //            writer.close();
+            //            break;
           }
         default:
           System.out.println("Invalid input");

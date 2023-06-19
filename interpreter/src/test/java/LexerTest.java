@@ -1,7 +1,7 @@
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import lexer.Lexer;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +14,7 @@ public class LexerTest {
   // Version 1.0 tests
 
   @Test
-  public void testSimpleLineNumberDeclaration() throws IOException {
+  public void testSimpleLineNumberDeclaration() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -24,15 +24,16 @@ public class LexerTest {
     String toTokenize = "let x:number;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleLineStringDeclaration() throws IOException {
+  public void testSimpleLineStringDeclaration() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -42,15 +43,16 @@ public class LexerTest {
     String toTokenize = "let x:string;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testMultipleSpaces() throws IOException {
+  public void testMultipleSpaces() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -60,15 +62,16 @@ public class LexerTest {
     String toTokenize = "let         x:number;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleLineStringDeclarationWithComplexIdentifier() throws IOException {
+  public void testSimpleLineStringDeclarationWithComplexIdentifier() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.COMPLEX_IDENTIFIER);
@@ -78,15 +81,16 @@ public class LexerTest {
     String toTokenize = "let variable:string;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleLineNumberAssignment() throws IOException {
+  public void testSimpleLineNumberAssignment() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -98,15 +102,16 @@ public class LexerTest {
     String toTokenize = "let x:number = 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleLineDecimalNumberAssignment() throws IOException {
+  public void testSimpleLineDecimalNumberAssignment() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -118,15 +123,16 @@ public class LexerTest {
     String toTokenize = "let x:number = 3.6;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleLineStringAssignment() throws IOException {
+  public void testSimpleLineStringAssignment() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -138,15 +144,16 @@ public class LexerTest {
     String toTokenize = "let x:string = \"a\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleLineComplexStringAssignments() throws IOException {
+  public void testSimpleLineComplexStringAssignments() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -158,15 +165,16 @@ public class LexerTest {
     String toTokenize = "let x:string = \"Hello World\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testOperators() throws IOException {
+  public void testOperators() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -182,15 +190,16 @@ public class LexerTest {
     String toTokenize = "let x:number = 3.6 + 3 * 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testComplexLineStringAndNumberAssignments() throws IOException {
+  public void testComplexLineStringAndNumberAssignments() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -209,15 +218,16 @@ public class LexerTest {
     String toTokenize = "let x:number = 3.6;" + "let x:string = \"Hello World\";";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testPrintMethod() throws IOException {
+  public void testPrintMethod() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.PRINT);
     expResult.add(TokenExamples.LEFT_PAR);
@@ -229,15 +239,16 @@ public class LexerTest {
     String toTokenize = "println(\"Hello World\" + 3);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testPrintMethodExpression() throws IOException {
+  public void testPrintMethodExpression() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -256,17 +267,18 @@ public class LexerTest {
     String toTokenize = "let x: number = 3; println(\"Hello World\" + x);";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.0);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   // Version 1.1 tests
 
   @Test
-  public void testSimpleLineNumberAssignmentVersion1() throws IOException {
+  public void testSimpleLineNumberAssignmentVersion1() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -278,15 +290,16 @@ public class LexerTest {
     String toTokenize = "let x:number = 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleLineNumberAssignmentWithConst() throws IOException {
+  public void testSimpleLineNumberAssignmentWithConst() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.CONST_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -298,15 +311,16 @@ public class LexerTest {
     String toTokenize = "const x:number = 3;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testBooleanValue() throws IOException {
+  public void testBooleanValue() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -315,18 +329,19 @@ public class LexerTest {
     expResult.add(TokenExamples.EQUAL);
     expResult.add(TokenExamples.BOOLEAN_VALUE);
     expResult.add(TokenExamples.END);
-    String toTokenize = "let x:boolean = true";
+    String toTokenize = "let x:boolean = true;";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testSimpleIf() throws IOException {
+  public void testSimpleIf() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.IF);
     expResult.add(TokenExamples.LEFT_PAR);
@@ -344,15 +359,16 @@ public class LexerTest {
     String toTokenize = "if (true) {let x:number = 3;}";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 
   @Test
-  public void testReadInput() throws IOException {
+  public void testReadInput() {
     List<Token> expResult = new ArrayList<>();
     expResult.add(TokenExamples.LET_KEYWORD);
     expResult.add(TokenExamples.SIMPLE_IDENTIFIER_X);
@@ -367,10 +383,11 @@ public class LexerTest {
     String toTokenize = "let x:number = readInput(\"Hello World\");";
     InputStream inputStream = new ByteArrayInputStream(toTokenize.getBytes());
     Lexer lexer = new Lexer(inputStream, 1.1);
-    List<Token> list = lexer.tokenize();
-    for (int i = 0; i < list.size(); i++) {
-      Assertions.assertEquals(expResult.get(i).getType(), list.get(i).getType());
-      Assertions.assertEquals(expResult.get(i).getValue(), list.get(i).getValue());
+    Iterator<Token> tokens = lexer.getTokenIterator();
+    for (Token value : expResult) {
+      Token token = tokens.next();
+      Assertions.assertEquals(value.getType(), token.getType());
+      Assertions.assertEquals(value.getValue(), token.getValue());
     }
   }
 }
