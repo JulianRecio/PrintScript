@@ -1,10 +1,10 @@
 package lexer;
 
+import com.google.common.collect.PeekingIterator;
 import java.io.IOException;
 import java.io.PushbackInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,13 +35,13 @@ public class Lexer {
 
   private final PushbackInputStream inputStream;
   private final Double version;
-  private final Iterator<Token> tokenIterator;
+  private final PeekingIterator<Token> tokenIterator;
 
   public Lexer(PushbackInputStream inputStream, Double version) {
     this.inputStream = inputStream;
     this.version = version;
     tokenIterator =
-        new Iterator<>() {
+        new PeekingIterator<>() {
           List<Token> tokens = new ArrayList<>();
 
           @Override
@@ -51,6 +51,18 @@ public class Lexer {
             } catch (IOException e) {
               return false;
             }
+          }
+
+          @Override
+          public Token peek() {
+            if (tokens.size() == 0) {
+              try {
+                tokens = returnToken();
+              } catch (IOException e) {
+                throw new RuntimeException(e);
+              }
+            }
+            return tokens.get(0);
           }
 
           @Override
@@ -66,10 +78,17 @@ public class Lexer {
             tokens.remove(0);
             return token;
           }
+
+          @Override
+          public void remove() {
+            if (tokens.size() != 0) {
+              tokens.remove(0);
+            } else throw new RuntimeException("No tokens");
+          }
         };
   }
 
-  public Iterator<Token> getTokenIterator() {
+  public PeekingIterator<Token> getTokenIterator() {
     return tokenIterator;
   }
 

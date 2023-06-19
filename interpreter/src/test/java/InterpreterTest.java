@@ -1,4 +1,5 @@
 import ast.node.Node;
+import com.google.common.collect.PeekingIterator;
 import interpreter.Interpreter;
 import java.io.*;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -32,7 +33,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -46,7 +47,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -60,7 +61,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -80,7 +81,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -100,7 +101,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -120,7 +121,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -140,7 +141,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -154,7 +155,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -168,7 +169,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -182,7 +183,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
 
@@ -215,7 +216,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
 
@@ -247,7 +248,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -261,7 +262,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -275,7 +276,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -295,7 +296,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
@@ -309,12 +310,27 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);
     interpreter.interpret();
     Assertions.assertEquals(3, interpreter.getMap().get("x").getValue());
+  }
+
+  @Test
+  public void testSimpleIfElse() {
+    String toTokenize =
+        "if (false) { println(\"if statement is not working correctly\");} println(\"outside of"
+            + " conditional\");";
+    PushbackInputStream inputStream =
+        new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
+    Lexer lexer = new Lexer(inputStream, 1.1);
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
+    Parser parser = new Parser(tokens, 1.1);
+    Iterator<Node> nodes = parser.getNodeIterator();
+    Interpreter interpreter = new Interpreter(nodes);
+    interpreter.interpret();
   }
 
   @Test
@@ -324,7 +340,7 @@ public class InterpreterTest {
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.1);
-    Iterator<Token> tokens = lexer.getTokenIterator();
+    PeekingIterator<Token> tokens = lexer.getTokenIterator();
     Parser parser = new Parser(tokens, 1.1);
     Iterator<Node> nodes = parser.getNodeIterator();
     Interpreter interpreter = new Interpreter(nodes);

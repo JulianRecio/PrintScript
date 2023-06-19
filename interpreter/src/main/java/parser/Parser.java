@@ -7,6 +7,7 @@ import ast.obj.AttributeObject;
 import ast.obj.BooleanObj;
 import ast.obj.NumberObj;
 import ast.obj.StringObj;
+import com.google.common.collect.PeekingIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,10 +18,10 @@ import token.TokenType;
 public class Parser {
 
   private final Double version;
-  private final Iterator<Token> tokenIterator;
+  private final PeekingIterator<Token> tokenIterator;
   private final Iterator<Node> nodeIterator;
 
-  public Parser(Iterator<Token> tokenIterator, Double version) {
+  public Parser(PeekingIterator<Token> tokenIterator, Double version) {
     this.version = version;
     this.tokenIterator = tokenIterator;
     this.nodeIterator =
@@ -213,8 +214,9 @@ public class Parser {
       if (tokenIterator.next().getType() == TokenType.RIGHT_PARENTHESIS) {
         if (tokenIterator.next().getType() == TokenType.LEFT_BRACKET) {
           List<Node> ifNodes = parseIfNode();
-          Token token = tokenIterator.next();
+          Token token = tokenIterator.peek();
           if (tokenIterator.hasNext() && token.getType() == TokenType.ELSE) {
+            tokenIterator.remove();
             if (tokenIterator.next().getType() == TokenType.LEFT_BRACKET) {
               List<Node> elseNodes = this.parseIfNode();
               return new IfNode(expr, ifNodes, elseNodes);
