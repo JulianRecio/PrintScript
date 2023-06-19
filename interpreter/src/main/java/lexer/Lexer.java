@@ -46,12 +46,12 @@ public class Lexer {
 
           @Override
           public boolean hasNext() {
-                        return tokens.size() != 0;
-//            try {
-//              return inputStream.available() != 0 || tokens.size() != 0;
-//            } catch (IOException e) {
-//              return false;
-//            }
+            //                        return tokens.size() != 0;
+            try {
+              return inputStream.available() != 0 || tokens.size() != 0;
+            } catch (IOException e) {
+              return false;
+            }
           }
 
           @Override
