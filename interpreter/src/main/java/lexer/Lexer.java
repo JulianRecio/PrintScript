@@ -46,7 +46,6 @@ public class Lexer {
 
           @Override
           public boolean hasNext() {
-            //                        return tokens.size() != 0;
             try {
               return inputStream.available() != 0 || tokens.size() != 0;
             } catch (IOException e) {
@@ -93,7 +92,7 @@ public class Lexer {
     return tokenIterator;
   }
 
-  public List<Token> returnToken() throws IOException {
+  private List<Token> returnToken() throws IOException {
     StringBuilder chunk = new StringBuilder();
     setVersionPatterns(version);
     int data = inputStream.read();
