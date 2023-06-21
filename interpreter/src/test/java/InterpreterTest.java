@@ -305,7 +305,7 @@ public class InterpreterTest {
   }
 
   @Test
-  public void testSimpleIf() {
+  public void testSimpleIfElse() {
     String toTokenize = "if (false) {  } else {let x:number = 3;}";
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
@@ -319,7 +319,7 @@ public class InterpreterTest {
   }
 
   @Test
-  public void testSimpleIfElse() {
+  public void testSimpleIf() {
     String toTokenize =
         "if (false) { println(\"if statement is not working correctly\");} println(\"outside of"
             + " conditional\");";
