@@ -1,1 +1,2 @@
-Variable not written in camel case: x_Feafaf
+let x :number = 4;
+printLn(x);

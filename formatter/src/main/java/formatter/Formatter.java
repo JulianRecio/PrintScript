@@ -2,6 +2,7 @@ package formatter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.PeekingIterator;
 import formatter.rule.Rule;
 import formatter.rule.rules.*;
 import java.io.*;
@@ -14,10 +15,10 @@ import token.TokenType;
 
 public class Formatter {
 
-  public static String useFormatter(List<Token> tokens, Double version) {
+  public static String useFormatter(PeekingIterator<Token> tokenIterator, Double version) {
     List<Rule> rules =
         getRulesFromConfig(readConfigFile("src\\main\\resources\\config.json"), version);
-    return format(tokens, rules);
+    return format(tokenIterator, rules);
   }
 
   public static List<Rule> getRulesFromConfig(Map<String, String> ruleMap, Double version) {
@@ -71,21 +72,21 @@ public class Formatter {
     return null;
   }
 
-  public static String format(List<Token> tokens, List<Rule> rules) {
+  public static String format(PeekingIterator<Token> tokenIterator, List<Rule> rules) {
     StringBuilder formattedCode = new StringBuilder();
     List<Token> currentList = new ArrayList<>();
-    for (Token currentToken : tokens) {
-      if (currentToken.getType().equals(TokenType.END)
-          || currentToken.getType().equals(TokenType.RIGHT_BRACKET)) {
-        currentList.add(currentToken);
+    while (tokenIterator.hasNext()) {
+      Token token = tokenIterator.next();
+      if (token.getType().equals(TokenType.END)
+          || token.getType().equals(TokenType.RIGHT_BRACKET)) {
+        currentList.add(token);
         // adds formatted line
         formattedCode.append(formatLine(currentList, rules));
         currentList = new ArrayList<>();
       } else {
-        currentList.add(currentToken);
+        currentList.add(token);
       }
     }
-    System.out.println(formattedCode);
     return formattedCode.toString();
   }
 

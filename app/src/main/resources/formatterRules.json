@@ -1,7 +1,7 @@
 {
-  "spaceBeforeColonInDeclaration": false,
-  "spaceAfterColonInDeclaration": true,
-  "spaceBeforeAndAfterEqualSignInAssignment": false,
+  "spaceBeforeColonInDeclaration": true,
+  "spaceAfterColonInDeclaration": false,
+  "spaceBeforeAndAfterEqualSignInAssignment": true,
   "amountOfLineBreaksBeforePrintLn": 0,
   "amountOfIndentedInIfBlock": 3,
   "IfKeyInSameLine": true

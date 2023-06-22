@@ -1,5 +1,7 @@
 package edu.austral.ingsis.printscript.app;
 
+import com.google.common.collect.PeekingIterator;
+import formatter.Formatter;
 import interpreter.Interpreter;
 import java.io.*;
 import java.nio.file.Path;
@@ -9,6 +11,7 @@ import java.util.Scanner;
 import lexer.Lexer;
 import parser.Parser;
 import staticCodeAnalyser.StaticCodeAnalyser;
+import token.Token;
 
 public class App {
 
@@ -56,20 +59,18 @@ public class App {
           }
         case 2:
           {
-            //            Lexer lexer = new Lexer(code, version);
-            //            List<Token> tokenList = lexer.tokenize();
-            //            String formatted =
-            //                Formatter.format(
-            //                    tokenList,
-            //                    Formatter.getRulesFromConfig(
-            //
-            // Formatter.readConfigFile("app\\src\\main\\resources\\formatterRules.json"),
-            //                        version));
-            //            BufferedWriter writer = new BufferedWriter(new
-            // FileWriter("./Result.txt"));
-            //            writer.write(formatted);
-            //            writer.close();
-            //            break;
+            Lexer lexer = new Lexer(code, version);
+            PeekingIterator<Token> tokenIterator = lexer.getTokenIterator();
+            String formatted =
+                Formatter.format(
+                    tokenIterator,
+                    Formatter.getRulesFromConfig(
+                        Formatter.readConfigFile("app\\src\\main\\resources\\formatterRules.json"),
+                        version));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
+            writer.write(formatted);
+            writer.close();
+            break;
           }
         case 3:
           {
