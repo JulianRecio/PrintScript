@@ -23,7 +23,7 @@ public class Parser {
         new Iterator<>() {
           @Override
           public boolean hasNext() {
-            return false;
+            return tokenIterator.hasNext();
           }
 
           @Override

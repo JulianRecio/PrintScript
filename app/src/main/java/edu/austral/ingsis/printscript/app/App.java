@@ -4,9 +4,11 @@ import interpreter.Interpreter;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 import lexer.Lexer;
 import parser.Parser;
+import staticCodeAnalyser.StaticCodeAnalyser;
 
 public class App {
 
@@ -71,24 +73,22 @@ public class App {
           }
         case 3:
           {
-            //            Lexer lexer = new Lexer(code, version);
-            //            StaticCodeAnalyser sca =
-            //                new StaticCodeAnalyser(
-            //                    "app\\src\\main\\resources\\staticCodeAnalyserRules.json",
-            // version);
-            //            Parser parser = new Parser(lexer.getTokenIterator(), version);
-            //            List<String> messages = sca.analyze(parser.parse());
-            //            BufferedWriter writer = new BufferedWriter(new
-            // FileWriter("./Result.txt"));
-            //            if (messages.size() == 0) {
-            //              writer.write("There are no errors");
-            //            } else {
-            //              for (String message : messages) {
-            //                writer.write(message);
-            //              }
-            //            }
-            //            writer.close();
-            //            break;
+            Lexer lexer = new Lexer(code, version);
+            StaticCodeAnalyser sca =
+                new StaticCodeAnalyser(
+                    "app\\src\\main\\resources\\staticCodeAnalyserRules.json", version);
+            Parser parser = new Parser(lexer.getTokenIterator(), version);
+            List<String> messages = sca.analyze(parser.getNodeIterator());
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
+            if (messages.size() == 0) {
+              writer.write("There are no errors");
+            } else {
+              for (String message : messages) {
+                writer.write(message);
+              }
+            }
+            writer.close();
+            break;
           }
         default:
           System.out.println("Invalid input");

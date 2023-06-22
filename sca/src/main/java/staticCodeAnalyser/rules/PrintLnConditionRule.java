@@ -23,7 +23,8 @@ public class PrintLnConditionRule implements NodeVisitor, ExpressionVisitor {
       Object printExpression = node.getExpression().accept(this);
 
       if (printExpression.equals(ExpressionType.BINARY)
-          || printExpression.equals(ExpressionType.UNARY)) {
+          || printExpression.equals(ExpressionType.VARIABLE)
+          || printExpression.equals(ExpressionType.READ_INPUT)) {
         throw new RuntimeException("printLn argument not valid: " + printExpression);
       }
     }

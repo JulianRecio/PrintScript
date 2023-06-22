@@ -1,6 +1,5 @@
 package staticCodeAnalyser;
 
-import ast.AST;
 import ast.node.Node;
 import ast.node.NodeVisitor;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -61,25 +60,23 @@ public class StaticCodeAnalyser {
     return null;
   }
 
-  public List<String> analyze(AST ast) {
-    List<Node> nodes = ast.getAst();
-    List<String> messages = new ArrayList<>();
-
-    for (Node node : nodes) {
+  public List<String> analyze(Iterator<Node> nodeIterator) {
+    List<String> errors = new ArrayList<>();
+    while (nodeIterator.hasNext()) {
+      Node node = nodeIterator.next();
       try {
         for (NodeVisitor nodeVisitor : ruleSet) {
           node.accept(nodeVisitor);
         }
       } catch (Exception e) {
         String message = e.getMessage();
-        messages.add(message);
+        errors.add(message);
       }
     }
-
-    for (String message : messages) {
+    for (String message : errors) {
       System.out.println(message);
     }
-    return messages;
+    return errors;
   }
 
   public String getCaseConvention() {

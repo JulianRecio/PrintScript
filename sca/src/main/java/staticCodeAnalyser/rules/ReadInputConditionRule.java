@@ -12,15 +12,22 @@ public class ReadInputConditionRule implements NodeVisitor, ExpressionVisitor {
   }
 
   @Override
-  public void visitNode(DeclarationNode node) {}
+  public void visitNode(DeclarationNode node) {
+    if (readInputCondition) {
+      Object readInputExpression = node.getInitializer().accept(this);
+
+      if (readInputExpression.equals(ExpressionType.BINARY)) {
+        throw new RuntimeException("readInput argument not valid: " + readInputExpression);
+      }
+    }
+  }
 
   @Override
   public void visitNode(AssignationNode node) {
     if (readInputCondition) {
       Object readInputExpression = node.getExpression().accept(this);
 
-      if (readInputExpression.equals(ExpressionType.BINARY)
-          || readInputExpression.equals(ExpressionType.UNARY)) {
+      if (readInputExpression.equals(ExpressionType.BINARY)) {
         throw new RuntimeException("readInput argument not valid: " + readInputExpression);
       }
     }

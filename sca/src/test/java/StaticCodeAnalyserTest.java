@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.util.List;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import staticCodeAnalyser.StaticCodeAnalyser;
 
@@ -39,7 +38,7 @@ public class StaticCodeAnalyserTest {
             1.0);
 
     Assertions.assertEquals("snake case", sca.getCaseConvention());
-    Assertions.assertEquals(true, sca.isPrintLnCondition());
+    Assertions.assertTrue(sca.isPrintLnCondition());
   }
 
   @Test
@@ -51,7 +50,7 @@ public class StaticCodeAnalyserTest {
             1.0);
 
     Assertions.assertEquals("camel case", sca.getCaseConvention());
-    Assertions.assertEquals(false, sca.isPrintLnCondition());
+    Assertions.assertFalse(sca.isPrintLnCondition());
   }
 
   @Test
@@ -62,7 +61,8 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsSnakeCaseShouldReturnWithoutError", "snake case", true, true),
             1.0);
 
-    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("snake_case_variable"));
+    List<String> expected =
+        sca.analyze(ASTCases.createDeclarationAST("snake_case_variable").iterator());
 
     Assertions.assertEquals(0, expected.size());
   }
@@ -75,7 +75,8 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsCamelCaseShouldReturnWithoutError", "camel case", true, true),
             1.0);
 
-    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("camelCaseVariable"));
+    List<String> expected =
+        sca.analyze(ASTCases.createDeclarationAST("camelCaseVariable").iterator());
 
     Assertions.assertEquals(0, expected.size());
   }
@@ -88,7 +89,8 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsSnakeCaseShouldReturnWith1Error", "snake case", true, true),
             1.0);
 
-    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("snakeCaseVariable"));
+    List<String> expected =
+        sca.analyze(ASTCases.createDeclarationAST("snakeCaseVariable").iterator());
 
     Assertions.assertEquals(1, expected.size());
   }
@@ -101,7 +103,8 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsCamelCaseShouldReturnWith1Error", "camel case", true, true),
             1.0);
 
-    List<String> expected = sca.analyze(ASTCases.createDeclarationAST("camel_case_variable"));
+    List<String> expected =
+        sca.analyze(ASTCases.createDeclarationAST("camel_case_variable").iterator());
 
     Assertions.assertEquals(1, expected.size());
   }
@@ -116,7 +119,8 @@ public class StaticCodeAnalyserTest {
 
     List<String> expected =
         sca.analyze(
-            ASTCases.createMultipleDeclarationAST("snakeCaseVariable", "snake_CaseVariable2"));
+            ASTCases.createMultipleDeclarationAST("snakeCaseVariable", "snake_CaseVariable2")
+                .iterator());
 
     Assertions.assertEquals(2, expected.size());
   }
@@ -129,11 +133,12 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsCamelCaseShouldReturnWith2Errors", "camel case", true, true),
             1.0);
 
-    List<String> expected =
+    List<String> expectedErrors =
         sca.analyze(
-            ASTCases.createMultipleDeclarationAST("camel_case_variable", "camel_case_variable2"));
+            ASTCases.createMultipleDeclarationAST("camel_case_variable", "camel_case_variable2")
+                .iterator());
 
-    Assertions.assertEquals(2, expected.size());
+    Assertions.assertEquals(2, expectedErrors.size());
   }
 
   @Test
@@ -144,7 +149,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsPrintLnConditionTrueReturnWith1Errors", "camel case", true, true),
             1.0);
 
-    List<String> expected = sca.analyze(ASTCases.createPrintAST());
+    List<String> expected = sca.analyze(ASTCases.createPrintAST().iterator());
 
     Assertions.assertEquals(1, expected.size());
   }
@@ -160,7 +165,7 @@ public class StaticCodeAnalyserTest {
                 true),
             1.0);
 
-    List<String> expected = sca.analyze(ASTCases.createPrintAST());
+    List<String> expected = sca.analyze(ASTCases.createPrintAST().iterator());
 
     Assertions.assertEquals(0, expected.size());
   }
@@ -173,7 +178,7 @@ public class StaticCodeAnalyserTest {
                 "testAnalyzeWhenIsPrintLnConditionTrueReturnWith2Errors", "camel case", true, true),
             1.0);
 
-    List<String> expected = sca.analyze(ASTCases.createMultiplePrintAST());
+    List<String> expected = sca.analyze(ASTCases.createMultiplePrintAST().iterator());
 
     Assertions.assertEquals(2, expected.size());
   }
@@ -186,7 +191,7 @@ public class StaticCodeAnalyserTest {
                 "testJsonConfigConditionsWhenIsCamelCaseAndPrintIsTrue", "snake case", true, true),
             1.1);
 
-    Assertions.assertEquals(true, sca.isReadInputCondition());
+    Assertions.assertTrue(sca.isReadInputCondition());
   }
 
   @Test
@@ -197,7 +202,7 @@ public class StaticCodeAnalyserTest {
                 "testJsonConfigConditionsWhenIsCamelCaseAndPrintIsTrue", "snake case", true, false),
             1.1);
 
-    Assertions.assertEquals(false, sca.isReadInputCondition());
+    Assertions.assertFalse(sca.isReadInputCondition());
   }
 
   @Test
@@ -211,14 +216,12 @@ public class StaticCodeAnalyserTest {
                 false),
             1.1);
 
-    String code = "let x:string = readInput(\"Hola como\");";
-    List<String> expected = sca.analyze(ASTCases.createReadInputAST());
+    List<String> expected = sca.analyze(ASTCases.createReadInputAST().iterator());
 
     Assertions.assertEquals(0, expected.size());
   }
 
   @Test
-  @Disabled
   public void testAnalyzeWhenIsReadInputConditionIsTrueReturnWith1Errors() throws IOException {
     StaticCodeAnalyser sca =
         new StaticCodeAnalyser(
@@ -229,8 +232,7 @@ public class StaticCodeAnalyserTest {
                 true),
             1.1);
 
-    String code = "let x: number = 3; let y:string = readInput(\"Hola como\" + \"x\");";
-    List<String> expected = sca.analyze(ASTCases.createReadInputAST());
+    List<String> expected = sca.analyze(ASTCases.createReadInputAST().iterator());
 
     Assertions.assertEquals(1, expected.size());
   }
