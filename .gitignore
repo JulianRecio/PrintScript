@@ -1,5 +1,7 @@
 .idea
 .gradle
+ToRun.txt
+Result.txt
 
 # Ignore Gradle build output directory
 build

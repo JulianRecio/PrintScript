@@ -19,9 +19,9 @@ public class App {
     Scanner scan = new Scanner(System.in);
     printInitialMenu();
     int choice = scan.nextInt();
-    PushbackInputStream code = getString();
     double version;
     while (choice != 3) {
+      PushbackInputStream code = getString();
       switch (choice) {
         case 1:
           {
@@ -55,6 +55,11 @@ public class App {
             Parser parser = new Parser(lexer.getTokenIterator(), version);
             Interpreter interpreter = new Interpreter(parser.getNodeIterator());
             interpreter.interpret();
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
+            for (String result : interpreter.getPrinted()) {
+              writer.write(result);
+            }
+            writer.close();
             break;
           }
         case 2:

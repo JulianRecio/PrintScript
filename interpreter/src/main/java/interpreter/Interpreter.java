@@ -10,7 +10,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
 
   private final HashMap<String, AttributeObject> map = new HashMap<>();
   private Iterator<Node> nodeIterator;
-  private final List<String> errors = new ArrayList<>();
   private final List<String> printed = new ArrayList<>();
 
   public Interpreter(Iterator<Node> nodeIterator) {
@@ -37,7 +36,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     VariableType type = node.getType();
     if (map.containsKey(variable)) {
       String errorMsg = "Variable " + variable + " is already declared";
-      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     } else {
       AttributeObject classType;
@@ -57,7 +55,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
           map.put(variable, result);
         } else {
           String errorMsg = "Mismatching types";
-          errors.add(errorMsg);
           throw new RuntimeException(errorMsg);
         }
       }
@@ -77,13 +74,11 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
           map.put(variable, result);
         } else {
           String errorMsg = "Mismatching types";
-          errors.add(errorMsg);
           throw new RuntimeException(errorMsg);
         }
       } else throw new RuntimeException("Variable is const, cannot change value");
     } else {
       String errorMsg = "Variable does not exist";
-      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     }
   }
@@ -93,7 +88,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     AttributeObject toPrint = node.getExpression().accept(this);
     if (toPrint.getValue() == null) {
       String errorMsg = "Variable was not initialized";
-      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     } else {
       printed.add(toPrint.getValue().toString());
@@ -118,7 +112,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
       }
     } else {
       String errorMsg = "Expression inside if needs to be of type Boolean";
-      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     }
   }
@@ -139,7 +132,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
         return resolver.divide(left, right);
       default:
         String errorMsg = "Operator is not valid";
-        errors.add(errorMsg);
         throw new RuntimeException(errorMsg);
     }
   }
@@ -154,7 +146,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     AttributeObject myObject = map.get(variableExpression.getVariableName());
     if (myObject.getValue() == null) {
       String errorMsg = "Variable " + variableExpression.getVariableName() + " was not initialized";
-      errors.add(errorMsg);
       throw new RuntimeException(errorMsg);
     }
     return myObject;
@@ -182,10 +173,6 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
 
   public HashMap<String, AttributeObject> getMap() {
     return map;
-  }
-
-  public List<String> getErrors() {
-    return errors;
   }
 
   public List<String> getPrinted() {
