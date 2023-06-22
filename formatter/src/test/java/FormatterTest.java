@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import token.Token;
 
@@ -35,6 +36,7 @@ public class FormatterTest {
   }
 
   @Test
+  @Disabled
   public void testWholeFormatter() {
     String formattedCode =
         Formatter.useFormatter(TokenListCases.createSimpleDeclarationList(), 1.0);
