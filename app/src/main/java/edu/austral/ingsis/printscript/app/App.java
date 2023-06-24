@@ -6,6 +6,7 @@ import interpreter.Interpreter;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import lexer.Lexer;
@@ -51,12 +52,13 @@ public class App {
       switch (choice) {
         case 1:
           {
+              List<String> printed = new ArrayList<>();
             Lexer lexer = new Lexer(code, version);
             Parser parser = new Parser(lexer.getTokenIterator(), version);
-            Interpreter interpreter = new Interpreter(parser.getNodeIterator());
+            Interpreter interpreter = new Interpreter(parser.getNodeIterator(), printed::add);
             interpreter.interpret();
             BufferedWriter writer = new BufferedWriter(new FileWriter("./Result.txt"));
-            for (String result : interpreter.getPrinted()) {
+            for (String result : printed) {
               writer.write(result);
             }
             writer.close();

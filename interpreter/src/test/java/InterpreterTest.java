@@ -2,7 +2,9 @@ import ast.node.Node;
 import com.google.common.collect.PeekingIterator;
 import interpreter.Interpreter;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import lexer.Lexer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -179,7 +181,7 @@ public class InterpreterTest {
 
   @Test
   public void printString() {
-    String toTokenize = "let word: string = \"hello\"; println(word);";
+    String toTokenize = "let word: string = \"hello\"; println(word); println(\"hi\");";
     PushbackInputStream inputStream =
         new PushbackInputStream(new ByteArrayInputStream(toTokenize.getBytes()));
     Lexer lexer = new Lexer(inputStream, 1.0);
@@ -187,24 +189,17 @@ public class InterpreterTest {
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
 
-    // Redirect System.out to a ByteArrayOutputStream
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintStream printStream = new PrintStream(outputStream);
-    PrintStream originalOut = System.out;
-    System.setOut(printStream);
+    List<String> printed = new ArrayList<>();
 
-    Interpreter interpreter = new Interpreter(nodes);
+    Interpreter interpreter = new Interpreter(nodes, printed::add);
     interpreter.interpret();
 
-    // Restore the original System.out
-    System.setOut(originalOut);
-
-    // Convert the expected and actual output to strings
-    String expectedOutput = "hello";
-    String actualOutput = outputStream.toString().trim();
+    String expectedOutput1 = "hello";
+    String expectedOutput2 = "hi";
 
     // Assert that the actual output matches the expected output
-    Assertions.assertEquals(expectedOutput, actualOutput);
+    Assertions.assertEquals(expectedOutput1, printed.get(0));
+    Assertions.assertEquals(expectedOutput2, printed.get(1));
   }
 
   @Test
@@ -220,21 +215,14 @@ public class InterpreterTest {
     Parser parser = new Parser(tokens, 1.0);
     Iterator<Node> nodes = parser.getNodeIterator();
 
-    // Redirect System.out to a ByteArrayOutputStream
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintStream printStream = new PrintStream(outputStream);
-    PrintStream originalOut = System.out;
-    System.setOut(printStream);
+    List<String> printed = new ArrayList<>();
 
-    Interpreter interpreter = new Interpreter(nodes);
+    Interpreter interpreter = new Interpreter(nodes, printed::add);
     interpreter.interpret();
-
-    // Restore the original System.out
-    System.setOut(originalOut);
 
     // Convert the expected and actual output to strings
     String expectedOutput = "hello world 1";
-    String actualOutput = outputStream.toString().trim();
+    String actualOutput = printed.get(0);
 
     // Assert that the actual output matches the expected output
     Assertions.assertEquals(expectedOutput, actualOutput);

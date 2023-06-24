@@ -5,15 +5,22 @@ import ast.expr.*;
 import ast.node.*;
 import ast.obj.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObject> {
 
   private final HashMap<String, AttributeObject> map = new HashMap<>();
-  private Iterator<Node> nodeIterator;
-  private final List<String> printed = new ArrayList<>();
+  private final Iterator<Node> nodeIterator;
+  private final Consumer<String> out;
 
   public Interpreter(Iterator<Node> nodeIterator) {
     this.nodeIterator = nodeIterator;
+    this.out = null;
+  }
+
+  public Interpreter(Iterator<Node> nodeIterator, Consumer<String> out) {
+    this.nodeIterator = nodeIterator;
+    this.out = out;
   }
 
   public void interpret() {
@@ -90,8 +97,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
       String errorMsg = "Variable was not initialized";
       throw new RuntimeException(errorMsg);
     } else {
-      printed.add(toPrint.getValue().toString());
-      System.out.println(toPrint.getValue());
+      print(toPrint.getValue().toString());
     }
   }
 
@@ -155,8 +161,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
   public AttributeObject visitExpr(ReadInputExpression readInputExpression) {
     Scanner scanner = new Scanner(System.in);
     String msg = readInputExpression.getMessage();
-    System.out.println(msg);
-    printed.add(msg);
+    print(msg);
     String value = scanner.nextLine();
     scanner.close();
     switch (readInputExpression.getVariableType()) {
@@ -175,7 +180,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
     return map;
   }
 
-  public List<String> getPrinted() {
-    return printed;
+  private void print(String str) {
+    if (out != null) out.accept(str);
   }
 }
