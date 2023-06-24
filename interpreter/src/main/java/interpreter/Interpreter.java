@@ -15,7 +15,7 @@ public class Interpreter implements NodeVisitor, ExpressionVisitor<AttributeObje
 
   public Interpreter(Iterator<Node> nodeIterator) {
     this.nodeIterator = nodeIterator;
-    this.out = null;
+    this.out = System.out::println;
   }
 
   public Interpreter(Iterator<Node> nodeIterator, Consumer<String> out) {
