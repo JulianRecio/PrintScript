@@ -45,6 +45,7 @@ public class Formatter {
     rules.add(new SpaceBeforeAndAfterOperatorRule());
     rules.add(new SpaceAfterKeywordRule());
     rules.add(new MaximumOf1SpaceBetweenTokensRule());
+    rules.add(new QuotationMarkInStringRule());
 
     if (version == 1.1) {
       // add 1.1 version rules
